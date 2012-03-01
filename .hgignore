@@ -8,5 +8,6 @@ ceoc.lftp
 /.+sqlite.*
 /_build/.*
 \.testoutput/
-src/
+/src/.*
+
 
