@@ -3,10 +3,6 @@
 
 python setup.py install
 
-cd src/pdfminer
-
-python setup.py install
-
 exit 0
 
 
