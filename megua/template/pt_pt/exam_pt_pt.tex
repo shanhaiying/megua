@@ -1,0 +1,92 @@
+\documentclass{article}
+
+{% include 'common.tex' %}
+
+
+%Para o código python
+%\usepackage{verbatim}
+
+
+% Pacotes nao usados:
+%\usepackage{truetype}
+%\footskip -1cm
+
+
+%Headers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{lastpage} %guarda a ultima pagina
+
+
+%\setlength{\headheight}{50pt}
+\renewcommand{\headrulewidth}{0.0pt}
+
+
+\textheight 24.5cm \textwidth 15.5cm \topmargin -1.0cm
+\setlength{\voffset}{-15mm}
+\setlength{\headsep}{5mm}
+\textheight 26cm \textwidth 18.5cm \topmargin -5mm
+\oddsidemargin -1cm
+
+\def\novapagina{\newpage\lhead{Página \thepage\ de \pageref{LastPage} páginas}}
+
+
+\begin{document}
+
+%\fancyhf{}
+\lhead{Total de \pageref{LastPage} páginas}
+%\chead{\today}
+%\rfoot{\thepage}
+
+\newcommand{\quadra}{\mbox{\LARGE{\raisebox{-.2ex}{$\sqcup \!\!\!\!\sqcap$}}}}
+
+
+\vspace*{5mm}
+
+\noindent\includegraphics*[width=1.5cm,height=1.5cm]{logotipo.pdf}
+\hspace{1cm}
+\parbox[c]{10.8cm}{
+ \large 
+ \begin{tabular}{c}
+ {{ tipoexame }} \\
+ {{ unidadecurricular }}\\
+ Data: {{ data }} \hfill Dura\c{c}\~ao: {{ duracao }} 
+ \end{tabular}
+}
+
+\vspace*{0.5cm}
+
+\noindent Nome:\hrulefill{}N\'umero MEC.: \rule{2cm}{0.1mm}
+
+\noindent Curso:\hrulefill{}Já obtive aprovação na unidade curricular: \quadra \hspace*{1cm} Nº de folhas suplementares: \rule{5mm}{0.1mm}
+
+\noindent Declaro que desisto do exame:\hrulefill{} { \quadra}
+
+\vspace*{0.3cm}
+
+% ==================
+% Lista de Questões
+% ==================
+{% for question in questionlist %}
+\noindent \textbf{{ question.number }}.~{{ question.problem }}
+\par
+{% endfor %}
+
+
+\newpage
+
+
+\section*{Resolução}
+
+% ==================
+% Lista de Respostas
+% ==================
+{% for question in questionlist %}
+\noindent \textbf{ {{ question.number }} }.~{{ question.answer }}
+\par
+{% endfor %}
+
+
+\end{document}
+
+

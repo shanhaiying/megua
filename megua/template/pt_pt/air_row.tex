@@ -1,0 +1,22 @@
+
+\clearpage
+
+% Using label={{elabel}} as a \begin{Exercise} option does not work.
+% It is necessary to specify elevel because the exercise must be imidialty after the section (sub, or subsubcetion).
+
+\begin{Exercise}[title={ {{ename}} }]
+%\pdfbookmark[{{elevel}}]{E: {{ename}} }{-EE{{elabel}}-}
+\pdfbookmark[{{elevel}}]{\theExercise~\ExerciseTitle}{-EE{{elabel}}-}
+{{ problem }}
+\end{Exercise}
+
+\clearpage
+
+\begin{Answer}
+%\pdfbookmark[{{elevel}}]{R: {{ename}} }{-AA{{elabel}}-}
+\pdfbookmark[{{elevel}}]{Resolução do \theExercise}{-AA{{elabel}}-}
+{{ answer }}
+\end{Answer}
+
+\clearpage
+

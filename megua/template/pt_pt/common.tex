@@ -1,0 +1,44 @@
+
+%
+% common.tex: common packages and declarations.
+%
+% MegUA package for Sage Math
+% University of Aveiro @ 2012
+% http://cms.ua.pt/meg
+%
+
+% =====
+% Fonts
+% =====
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{euro}
+
+
+% =============
+% Graphics
+% =============
+\usepackage{pgf,tikz}
+\usetikzlibrary{arrows}
+%TODO: Removed until proved otherwise
+%\usepackage[pdftex]{graphicx} 
+
+
+% =================
+% Language settings
+% =================
+%\usepackage[utf8]{inputenc}
+\usepackage[latin1]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[T1]{fontenc} %TODO: what is T1 for ???
+
+
+\let\tan\undefined
+\DeclareMathOperator{\tan}{tg}
+\let\sin\undefined
+\DeclareMathOperator{\sin}{sen}
+%\let\log\undefined
+%\DeclareMathOperator*{\log}{ln}
+
+

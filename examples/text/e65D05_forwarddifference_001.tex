@@ -1,0 +1,39 @@
+%PROBLEM
+
+%marcas: interpolação, inteiros
+%tags: interpolation
+
+Seja $p_2$ o polinómio interpolador com base no suporte:
+\[
+\begin{array}{c|cccc}
+x & inx0 & inx1 & inx2  \\ \hline
+y & iny0 & iny1 & iny2  \\
+\end{array}
+\]
+Determine o valor de $p_2(inxv)$ usando o método das diferenças progressivas?
+
+
+%ANSWER
+
+Usando diferenças progressivas:
+\[
+\begin{array}{c|ccc}
+x & y  & \Delta_1(f(\cdot)) & \Delta_1^2(f(x_0)) \\ \hline
+inx0 & iny0 \\
+   &    & ondp1 \\
+inx1  & iny1  &    &  ondp3 \\
+   &    & ondp2 \\
+inx2  & iny2
+\end{array}
+\]
+Sendo $h=inh$, temos, pelas diferenças divididas, 
+\begin{eqnarray*}
+ p_2(x=inxv) & = & y_0 + \frac{\Delta_1}{1! h} (x-x_0) + \frac{\Delta_2}{2! h^2} (x-x_0)(x-x_1) \\
+            & = & iny0 + \frac{ondp1}{1! inh} (x-onx0) + \frac{ondp3}{2! inh^2} (x-onx0)(x-onx1) \\
+           & = & onresultexact\simeq onresultapprox$.
+\end{eqnarray*}
+
+
+
+
+

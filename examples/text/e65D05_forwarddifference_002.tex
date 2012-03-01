@@ -1,0 +1,36 @@
+%PROBLEM
+
+%marcas: interpolação, reais com 2 decimais no output
+%tags: interpolation
+
+Seja $p_2$ o polinómio interpolador com base no suporte:
+\[
+\begin{array}{c|cccc}
+x & inx0 & inx1 & inx2  \\ \hline
+y & iny0 & iny1 & iny2  \\
+\end{array}
+\]
+Determine o valor de $p_2(inxv)$ usando o método das diferenças progressivas?
+
+
+%ANSWER
+
+Usando diferenças progressivas:
+\[
+\begin{array}{c|ccc}
+x & y  & \Delta_1(f(\cdot)) & \Delta_1^2(f(x_0)) \\ \hline
+inx0 & iny0 \\
+   &    & ondp1 \\
+inx1  & iny1  &    &  ondp3 \\
+   &    & ondp2 \\
+inx2  & iny2
+\end{array}
+\]
+Sendo $h=inh$, temos 
+\[
+ p_2(x)= iny0 + \frac{ondp1}{1! 1} (x-inx0) + \frac{ondp3}{2! 1} (x-inx0)(x-inx1)
+\]
+Assim $p_2(invx)=onresultexact%\simeq onresultapprox$.
+
+
+

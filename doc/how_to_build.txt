@@ -1,0 +1,16 @@
+
+Referências:
+  
+  http://sphinx.pocoo.org/intro.html
+
+
+make html
+
+
+Despejar para o sagemath.clients.ua.pt
+
+$ cd /home/jpedro/all/meg/meg-0.2/doc/build/html
+$ scp -vr * jpedro@sagemath.clients.ua.pt:/home/jpedro/www
+
+
+

@@ -1,0 +1,50 @@
+
+
+\documentclass[12pt,landscape]{article}
+
+
+{% include 'common.tex' %}
+
+
+% ============
+% Exercises
+% ============
+%\usepackage[lastexercise,answerdelayed]{exercise}
+\usepackage[lastexercise]{exercise}
+
+
+\renewcommand{\AnswerListHeader}{\textbf{Resolução do ex.~\ExerciseHeaderNB\ ---\ }}
+\renewcommand{\theExercise}{\arabic{section}.\arabic{Exercise}} %texto da numeracao de cada exercicio
+\renewcommand{\ExerciseName}{\LARGE Exercício}
+\renewcommand{\AnswerName}{Resolução do Exercício}
+\renewcommand{\AnswerListName}{Resolução do Exercício}
+
+
+\usepackage[pdftex,bookmarks=true]{hyperref}
+
+% ===============
+% Geometry of page
+% ================
+%\usepackage[height=10in,a5paper,hmargin={3cm,0.8in}]{geometry}
+\usepackage[hmargin={5mm,5mm},vmargin={5mm,5mm}]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing 
+% \singlespacing, \doublespacing, or \onehalfspacing 
+
+\setlength\parindent{0pt}
+
+
+\begin{document}
+
+\pagestyle{empty}
+
+%\LARGE
+\Large
+
+{{ allsections }}
+
+
+\end{document}
+
+
