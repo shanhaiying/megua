@@ -21,6 +21,9 @@ setup(name='megua',
       packages=['megua'],
       #package_dir={'megua': 'megua', 'pdfminer': 'src/pdfminer'},
       package_data={'megua': ['template/pt_pt/*']},
+      install_requires=[
+        'pdfminer'
+      ]
 )
 
 
