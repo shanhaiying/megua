@@ -12,15 +12,16 @@ from distutils.core import setup
 
 
 
-setup(name='meg',
-      version='0.2.2',
-      description='Meg Learning Objects',
+setup(name='megua',
+      version='0.1',
+      description='MEGUA: build your database of parameterized exercises.',
       author='Pedro Cruz',
       author_email='pedrocruz@ua.pt',
-      url='https://code.google.com/p/meg/',
-      packages=['meg','pdfminer'],
-      package_dir={'meg': 'meg', 'pdfminer': 'meg/src/pdfminer'},
-      package_data={'meg': ['template/pt_pt/*']},
+      url='https://code.google.com/p/megua/',
+      packages=['megua'],
+      #package_dir={'megua': 'megua', 'pdfminer': 'src/pdfminer'},
+      package_data={'megua': ['template/pt_pt/*']},
 )
+
 
 

@@ -34,8 +34,8 @@ from ex import exerciseinstance, to_unicode
 from platex import pcompile
 
 #pdfminer
-from src.pdfminer.pdfparser import PDFParser, PDFDocument
-from src.pdfminer.pdftypes import PDFStream, PDFObjRef, resolve1, stream_value
+from pdfminer.pdfparser import PDFParser, PDFDocument
+from pdfminer.pdftypes import PDFStream, PDFObjRef, resolve1, stream_value
 
 
 
