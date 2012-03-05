@@ -4,22 +4,22 @@
    contain the root `toctree` directive.
 
 ##########################
-  meg-0.2 Documentation
+  megua-0.1 Documentation
 ##########################
 
 :Release: |version|
 :Date: |today|
 
 
-.. **Welcome to meg-0.2 documentation**
+.. **Welcome to megua-0.1 documentation**
 
-This documentation contains the user and development guides of the Meg package that can be instaled under |sagemath|_. Meg package can be found at
+This documentation contains the user and development guides of the MEGUA package that can be instaled under |sagemath|_. MEGUA package can be found at
 `megcode`_.
 
 With Meg one can build a local database of exercises, or parameterized exercises template, written in LaTeX.
 
 
-.. _megcode: http://code.google.com/p/meg/
+.. _megcode: http://code.google.com/p/megua/
 .. |sagemath| replace:: *Sage math*
 .. _sagemath: http://www.sagemath.org
 

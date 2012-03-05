@@ -6,23 +6,15 @@
 
 .. _ch:intro:
 
-Welcome to Meg's Reference Manual!
-==================================
-
-This is the manual for the Sage mathematical software system. Sage
-is free open source math software that supports research and
-
-This work is licensed under a `Creative Commons Attribution-Share Alike
-3.0 License`__.
-
-__ http://creativecommons.org/licenses/by-sa/3.0/
+Welcome to MEGUA's Reference Manual!
+====================================
 
 
 
 Unified Random
 --------------
 
-.. automodule:: meg.ur
+.. automodule:: megua.ur
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,18 +24,18 @@ Unified Random
 LocalStore
 ----------
 
-.. automodule:: meg.localstore
+.. automodule:: megua.localstore
    :members:
    :undoc-members:
    :show-inheritance:
 
 
 
-Meg Book Module
+MegBook Module
 ---------------
 
 
-.. automodule:: meg.megbook
+.. automodule:: megua.megbook
    :members:
    :undoc-members:
    :show-inheritance:
@@ -53,7 +45,7 @@ Exercise Module
 ---------------
 
 
-.. automodule:: meg.ex
+.. automodule:: megua.ex
    :members:
    :undoc-members:
    :show-inheritance:
@@ -63,7 +55,7 @@ Exercise Module
 Parsing an Exercise 
 -------------------
 
-.. automodule:: meg.exerparse
+.. automodule:: megua.exerparse
    :members:
    :undoc-members:
    :show-inheritance:
@@ -72,7 +64,7 @@ Parsing an Exercise
 Variable Parsing
 ----------------
 
-.. automodule:: meg.paramparse
+.. automodule:: megua.paramparse
    :members:
    :undoc-members:
    :show-inheritance:

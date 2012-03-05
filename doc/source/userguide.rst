@@ -4,7 +4,7 @@
 User Guide
 ==========
 
-Meg is originally an acronym of 'Mathematics Exercise Generator'. It is a package to use in |sagemath|_ for create and edit a personal
+MEGUA is originally an acronym of 'Mathematics Exercise Generator'. It is a package to use in |sagemath|_ for create and edit a personal
 database of LaTeX_ exercise templates. The package is ready for command line use or notebook use. 
     
 Meg operations are:
