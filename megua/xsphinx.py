@@ -78,17 +78,23 @@ class SphinxExporter:
         #If does not exist create
         if not os.path.exists(self.sphinx_folder):
             os.makedirs(self.sphinx_folder)
-            os.mkdir(self.sphinx_folder+'/build')
-            os.mkdir(self.sphinx_folder+'/build/html')
-            os.mkdir(self.sphinx_folder+'/build/html/_templates')
-            os.mkdir(self.sphinx_folder+'/build/html/_static')
+            os.mkdir(os.path.join(self.sphinx_folder,'build'))
+            os.mkdir(os.path.join(self.sphinx_folder,'build/html'))
+            os.mkdir(os.path.join(self.sphinx_folder,'build/html/_templates'))
+            os.mkdir(os.path.join(self.sphinx_folder,'build/html/_static'))
 
-        #Build conf.py
+
+        from pkg_resources import resource_filename
+        #sphinx_theme_dir = os.path.join(resource_filename(__name__,''),'default2')
+        sphinx_theme_dir = resource_filename(__name__,'')
+
+        #Build a new conf.py based on template at conf_sphinx.py.
         cpy_str = self.megbook.template("conf_sphinx.py",
             language=lang_set(self.megbook.megbook_store.natural_language),
-            local_store_filename = self.megbook.local_store_filename
+            local_store_filename = self.megbook.local_store_filename,
+            megua_theme_dir = sphinx_theme_dir
         )
-        f = open( self.sphinx_folder+'/conf.py', 'w') #TODO: usar conf.py em templates
+        f = open( os.path.join(self.sphinx_folder,'conf.py'), 'w') 
         f.write(cpy_str)
         f.close()
         #end sphinx setup folders
@@ -114,9 +120,9 @@ class SphinxExporter:
 
         #Build HTML from rst files.
         argv = ['/usr/bin/sphinx-build', '-a', '-b', 'html', '-d', 
-            self.sphinx_folder+'/build/doctrees', 
+            os.path.join(self.sphinx_folder,'/build/doctrees'), 
             self.sphinx_folder, 
-            self.sphinx_folder+'/build/html']
+            os.path.join(self.sphinx_folder,'/build/html')]
 
         if debug:
             print sphinx.main(argv)

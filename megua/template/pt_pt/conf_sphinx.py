@@ -24,7 +24,7 @@ exclude_patterns = []
 pygments_style = 'sphinx'
 
 # HTML builder
-html_theme_path = ['/usr/share/sphinx/themes', '/home/jpedro/meg/meg-0.2/meg']
+html_theme_path = ['/usr/share/sphinx/themes', '{{ megua_theme_dir }}' ]
 html_theme = 'default2'
 #html_theme_options = {
 #    "rightsidebar": True

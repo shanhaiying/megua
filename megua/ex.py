@@ -187,6 +187,11 @@ class Exercise:
 # Instantiators
 # --------------
 
+"""
+ERRORS:
+- during class text preparse (including class name).
+- 
+"""
 
 def exerciseclass(row):
     r"""
@@ -240,19 +245,26 @@ def exerciseinstance(row, ekey=None, edict=None):
     """
 
 
-    #Create the class (not yet the instance)
+    #Create the class (not yet the instance). See exerciseclass definition above.
     ex_class = exerciseclass(row)
 
     #Create one instance of ex_class
-    try:
-        ex_instance = ex_class(row['owner_key'],ekey,edict)
+    #With exception control:
+    #try:
+    #    print "ekey ", ekey, " start."
+    #    ex_instance = ex_class(row['owner_key'],ekey,edict)
+    #    print "ekey ", ekey, " end."
     #TODO: not working
     #except DeprecationWarning as dw:
     #    print "Warning on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
     #    raise dw
-    except Exception as ee: # Exception will be in memory.
-        print "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
-        raise ee
+    #except Exception as ee: # Exception will be in memory.
+    #    print "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
+    #    raise ee
+
+    #Create one instance of ex_class
+    #without exception control.
+    ex_instance = ex_class(row['owner_key'],ekey,edict)
 
     return ex_instance
 

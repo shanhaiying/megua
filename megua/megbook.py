@@ -168,7 +168,7 @@ class MegBook:
         else:
             from pkg_resources import resource_filename
             TEMPLATE_PATH = os.path.join(resource_filename(__name__,''),'template',natlang)
-        print "Templates for '%s' language." % natlang
+        print "Templates for '%s' language: %s" % (natlang,TEMPLATE_PATH)
         #print "Templates in: " + TEMPLATE_PATH
         self.env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
 
@@ -232,10 +232,12 @@ class MegBook:
         INPUT::
 
         - ``exercisestr`` -- a `python string`_ text containing a summary, problem, answer and class according to meg exercise sintax.
+        - ``dest`` -- directory where latex compilation will be done.
 
         OUTPUT::
 
-            textual messages.
+            Textual messages with errors.
+            Check ``dest`` directory (default is current) for compilation results.
 
         .. _python string: http://docs.python.org/release/2.6.7/tutorial/introduction.html#strings
 
@@ -331,13 +333,16 @@ class MegBook:
 
         #Testing        
         try:
-            #Create a class and a first instance for ekey=start.
-            ex_instance = exerciseinstance(row,ekey=start,edict=edict)
-
             #Do the test for other keys
             if not silent:
                 print "Testing python/sage class '%s' with %d different keys." % (row['owner_key'],many)
+
+            #Create a class and a first instance for ekey=start.
+            print "Testing for ekey =",start
+            ex_instance = exerciseinstance(row,ekey=start,edict=edict)
+
             for ekey in range(start+1,start+many):
+                print "Testing for ekey =",ekey
                 ex_instance.update(ekey=ekey)
         except SyntaxError as se:
             print "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
@@ -345,8 +350,17 @@ class MegBook:
             if len(cl)>se.lineno:
                 print "      check line: %s" % cl[se.lineno-1]
             success = False
-        except Exception as ee:
-            print ee,"\n"
+        except Exception as ee: # Exception will be in memory.
+            print "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
+            print "   error description: ", ee
+            if is_notebook():
+                print "   Copy exercise code, only the class part, to a new cell. Then add the following command"
+                print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
+                print "and execute with shift+enter. This may help finding the error line."
+            else:
+                print "   Test the exercise code, only the class part using the following command"
+                print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
+                print "This may help finding the error line."
             success = False
         
         #Conclusion
@@ -810,12 +824,12 @@ class MegBook:
 
 
 
-    def make_index(self,where='.'):
+    def make_index(self,where=None,debug=False):
         """
         Produce rst code files from the database and an index reading first line of the %summary field.
 
         Command line use: 
-            The ``where`` input argument, when specified,  will contain all details of Sphix compilation.
+            The ``where`` input argument, when specified,  will contain all details of Sphinx compilation.
 
         LINKS:
 
@@ -823,7 +837,7 @@ class MegBook:
 
         """
 
-        html_index = SphinxExporter(self,where)
+        html_index = SphinxExporter(self,where,debug)
         print "Index is at: "+ html_index.htmlfile
 
         if is_notebook():
@@ -839,7 +853,8 @@ class MegBook:
                     pos = pos2
                 html(r'<a href="%s" target=_blank>Press to open database index.</a>' % html_index.htmlfile[pos:])
             else:
-                print "Index is at: "+ html_index.htmlfile
+                #print "Index is at: "+ html_index.htmlfile
+                print "See index at Megua button at top."
         else:
             print "firefox -no-remote ", html_index.htmlfile
 
