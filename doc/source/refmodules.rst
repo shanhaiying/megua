@@ -6,8 +6,8 @@
 
 .. _ch:intro:
 
-Welcome to MEGUA's Reference Manual!
-====================================
+Reference Manual
+================
 
 
 
@@ -61,13 +61,35 @@ Parsing an Exercise
    :show-inheritance:
 
 
-Variable Parsing
-----------------
+Parameter Parsing
+-----------------
 
 .. automodule:: megua.paramparse
    :members:
    :undoc-members:
    :show-inheritance:
+
+
+Build the list of sections
+--------------------------
+
+.. automodule:: megua.csection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Compiling in pdlatex
+--------------------
+
+.. automodule:: megua.platex
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+
 
 
 

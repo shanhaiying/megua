@@ -316,7 +316,7 @@ class LocalStore:
         """
         Insert or change an entry in database with key ``owner_key``.
 
-        INPUT::
+        INPUT:
 
         - ``row`` -- data dictionary with entries:
 
@@ -328,7 +328,7 @@ class LocalStore:
             * ``answer_text`` -- Answer text description (unicode).
             * ``classtext`` -- python class code in textual form ready for Python ``eval``.
 
-        OUTPUT::
+        OUTPUT:
 
         -   Funtion returns a ``row`` object (see sqlite3 documentation).
         

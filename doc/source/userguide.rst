@@ -4,20 +4,18 @@
 User Guide
 ==========
 
-MEGUA name is originally based the acronym for 'Mathematics Exercise Generator' and UA stand for University of Aveiro. 
+MEGUA acronym stands for 'Mathematics Exercise Generator' and 'UA' stand for University of Aveiro (Portugal). 
 
 It's a package for |sagemath|_ to create and edit a personal 
 or group databases of parameterized exercise templates written in LaTeX_ typeset. 
 The package is ready for command line use or Sage notebook use. 
     
-Currently MEGUA operations are:
+Currently, MEGUA operations are:
 
 1. Open one or more local databases.
-2. Produce, edit and delete exercises.
-3. Produce configurable PDF file from a list of exercises.
-4. Search for one or a group of exercises.
-5. Generate exercises based on existing templates with random entries or giving some entries.
-
+2. Produce, edit and delete exercises from it.
+3. Search for one or a group of exercises.
+4. Produce a PDF document from a selected list of exercises (and the tex file).
 
 To create an exercise, elementary programming skills are needed. |sagemath|_ uses Python_ language 
 with very little preparsing. Currently MEGUA uses LaTeX_ and you have here_ a collection of introductory level tutorials.
@@ -104,13 +102,13 @@ How does this work?
 .. _megvariables: 
 
 
-Parameters can be **filtered** as the following examples show. Consider the variables::
+Parameters can be **filtered** as the following examples show. Consider these variables::
 
-   ``name1 = -12.123456``
-   ``name2 = -34.32``
-   ``name3 = 1``. 
+   name1 = -12.123456``
+   name2 = -34.32
+   name3 = 1
 
-Then the following table summaries replacements:
+The following table summaries replacements:
 
 .. http://docutils.sourceforge.net/docs/user/rst/quickref.html#tables
 
@@ -119,13 +117,13 @@ Then the following table summaries replacements:
 +=============================+====================+========================================+
 | name1                       |  -12.123456        | straight replacement.                  |
 +-----------------------------+--------------------+----------------------------------------+
-| name1@()                    |  (-12.123456)      | put (...) around number if negative.   |
+| name1\@()                   |  (-12.123456)      | put (...) around number if negative.   |
 +-----------------------------+--------------------+----------------------------------------+
-| name1@f{2.3g}               | -12.1              | use printf_ notation (C users).        | 
+| name1\@f{2.3g}              | -12.1              | use printf_ notation (C users).        | 
 +-----------------------------+--------------------+----------------------------------------+
-| name2@s{sin}                | 0.42857465435      | call 1 argument function on parameter. |
+| name2\@s{sin}               | 0.42857465435      | call 1 argument function on parameter. |
 +-----------------------------+--------------------+----------------------------------------+
-| name3@c{"text0", "text1"}   | text1              | choose one string of the list.         |
+| name3\@c{"text0", "text1"}  | text1              | choose one string of the list.         |
 +-----------------------------+--------------------+----------------------------------------+
 
 .. _printf: http://docs.python.org/library/stdtypes.html#string-formatting
@@ -135,7 +133,7 @@ Then the following table summaries replacements:
 Use from Sage notebook
 ----------------------
 
-A first cell in the worksheet should define the database and the ``megua`` object::
+First define the database and the ``megua`` object::
 
    from megua.all import *
    meg = MegBook(r'/home/user/a_meg_base.sqlite')
@@ -144,7 +142,13 @@ Then, in a new cell, the command::
 
    meg.save(...)
 
-is used to save exercises in ``meg`` database.
+is used to save exercises in ``meg`` database. Saving an exercise template on the database is only allowed if:
+
+1. The textual part, in LaTex, makes no compilation compilation errors.
+2. It has no python syntactical error.
+3. Parameters are replaced by several random values in order to possible detect mistakes in function algorithm.
+
+If some one of the above errors appear then user is warned.
 
 A possible of work flow is:
 
@@ -197,16 +201,17 @@ In a new cell of an opened worksheet do, as in the example:
 
 
 Previously we address the content of the template of the exercise.
-Now we describe how to use it:
 
-1. Notice the ``txt = '''`` in the top of the cell. We are defining a textual string containing all information. 
-The string starts with ``'''`` and ends with the same ``'''`` and contains the LaTeX and Python_ coding for the exercise.
+Now we describe how to declare it in the Sage notebook.
+
+1. Notice the ``txt = '''`` in the top of the cell. This defines a string containing with both TeX and Python parts. 
+The string starts with ``'''`` and ends with the same ``'''`` and contains the LaTeX in the beginning and then the Python_ coding for the exercise.
 2. The exercise must have a name. The recommended pattern for names is::  
  
    E<math code>_name_number
 
 where codes are taken from MSC_ classification, ``name`` some suggestive name and a numeration scheme like 001, 002, etc, as 
-more exercices could share same name. All conected by an underscore ``_``.
+more exercises could share same name. All connected by an underscore ``_``.
 3. Finally, the command ``meg.save(txt)`` will save the exercise textual definition to the database.
 
 
@@ -252,8 +257,8 @@ Developing a new exercise:
  
 
 
-Creating books
---------------
+Creating booklets
+-----------------
 
 The title word "books" could be a little ostentatious! Maybe booklets, book of exercises, exercise sheets, and so on.
 

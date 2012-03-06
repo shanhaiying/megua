@@ -3,16 +3,16 @@ Group together random generators for Sage, Python, Numpy and R (RPy2 module).
 
 AUTHORS:
 
-- Pedro Cruz (2011-05-06): initial version
-- Pedro Cruz (2011-08-23): documentation test strings (``sage:``)
+- Pedro Cruz (2011-05-06): initial version.
+- Pedro Cruz (2011-08-23): documentation test strings.
 
-EXAMPLES:
+EXAMPLES
 
 .. test with: sage -t ur.py
 
 Using Sage random numbers::
 
-    sage: from meg.ur import ur
+    sage: from megua.ur import ur
     sage: ur.set_seed(10)
     10
     sage: print ZZ.random_element(-10,11) 
@@ -28,7 +28,7 @@ Using Sage random numbers::
 
 Using python random numbers::
 
-    sage: from meg.ur import *
+    sage: from megua.ur import *
     sage: #python module 'random' is imported above.
     sage: ur.set_seed(10) 
     10
@@ -46,7 +46,7 @@ Using python random numbers::
 
 Using numpy random numbers::
 
-    sage: from meg.ur import ur
+    sage: from megua.ur import ur
     sage: #python module 'numpy.random' as 'nprandom' is imported above.
     sage: ur.set_seed(10)
     10
@@ -65,7 +65,7 @@ Using numpy random numbers::
 
 Using RPy2 random numbers::
 
-    sage: from meg.ur import ur
+    sage: from megua.ur import ur
     sage: ur.set_seed(10)
     10
     sage: ur.rpy2_rnorm(0,1)
@@ -84,7 +84,7 @@ Using ur (this module) random functions::
 
     Integers:
 
-    sage: from meg.ur import ur
+    sage: from megua.ur import ur
     sage: ur.set_seed(10)
     10
     sage: ur.iunif(-10,10)
@@ -100,7 +100,7 @@ Using ur (this module) random functions::
 
     Random set:
 
-    sage: from meg.ur import ur
+    sage: from megua.ur import ur
     sage: ur.set_seed(10)
     10
     sage: ur.random_element()
@@ -191,9 +191,12 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
         """ Set seeds from all random number libraries to the "same" value.
 
         INPUT:
+
         - ``seed_value`` -- an Integer.
+
         OUTPUT:
-            Same integer.
+
+           Same integer.
 
         Seed commands:
 
@@ -264,7 +267,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 
         EXAMPLES::
 
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
             sage: ur.iunif(-10,10)
@@ -295,7 +298,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 
         EXAMPLES::
 
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
             sage: ur.iunif_nonset(-10,10,[-1,0,1]) #exclude [-1,0,1]
@@ -340,7 +343,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 
         EXAMPLES::
 
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
             sage: ur.runif(-10,10,2) 
@@ -374,7 +377,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 
         EXAMPLES::
 
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
             sage: ur.rnorm(0,1,2) 
@@ -410,7 +413,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 
         EXAMPLES::
 
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
             sage: ur.rbernoulli() 
@@ -446,7 +449,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 
         EXAMPLES::
  
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
             sage: ur.squnif() 
@@ -469,7 +472,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
             [1/9, 1/8, 1/7, 1/6, 1/5, 2/9, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 4/9, 1/2, 5/9, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 7/9, 4/5, 5/6, 6/7, 7/8, 8/9]
             sage: len(ql)
             27
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: print ur._qlist
             [1/9, 1/8, 1/7, 1/6, 1/5, 2/9, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 4/9, 1/2, 5/9, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 7/9, 4/5, 5/6, 6/7, 7/8, 8/9]
             sage: print ur._qlen
@@ -527,7 +530,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 
         EXAMPLES::
  
-            sage: from meg.ur import ur
+            sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
             sage: ur.rpy2_rnorm(0,1,2) #two decimals 
@@ -551,7 +554,7 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
 """
 The global instance ``ur=UnifiedRandom()``::
 
-   sage: from meg.ur import ur
+   sage: from megua.ur import ur
    sage: ur 
    UnifiedRandom(10)
 """

@@ -12,28 +12,27 @@
 Developer Guide
 ===============
 
-This section is for developers who want to contribute to Meg code. 
-Section :ref:`userguide` contains an initial description of Meg and on 
+This section is for developers who want to contribute to or change MEGUA code. 
+Section :ref:`userguide` contains an initial description of MEGUA and on 
 Sage tutorial `Writing Code for Sage`_ one can find the standards of programing for Sage.
-
 
 .. _Writing Code for Sage: http://www.sagemath.org/doc/developer/writing_code.html
 
-You can improve Meg by solving issues (improvements and defects) listed here_.
+.. You can improve Meg by solving issues (improvements and defects) listed here_.
 
-.. _here: http://code.google.com/p/meg/issues/list
+.. here http://code.google.com/p/meg/issues/list
 
 
 Workflow
 --------
 
-Meg uses Mercurial_ versioning system. To get Meg you can create a clone of it some folder (ex. /home/user1/)::
+MEGUA uses Mercurial_ versioning system. To get MEGUA you can create a clone of it some folder (ex. /home/user1/)::
   
-   $ hg clone https://meg.googlecode.com/hg/ meg  
+   $ hg clone https://megua.googlecode.com/hg/ megua  
 
 .. _Mercurial: http://mercurial.selenic.com/
 
-A possible procedure to get Meg knowable by Sage is doing the following. 
+A possible procedure to get MEGUA knowable by Sage Math is doing the following. 
 Consider that Sage packages are instaled at::
 
    /opt/sage/local/lib/python2.6/site-packages/
@@ -48,9 +47,7 @@ that produces a symbolic link::
 
 and to confirm do::
 
-   sage: from meg import all
-
-Now you can edit ``meg/*.py`` files and check changes using Sage.
+   sage: from megua.all import *
 
 
 Packages on SAGE
@@ -91,9 +88,13 @@ Mercurial versioning system
 
 Versioning server: https://code.google.com/p/meg/
 
-Clone:
+Clone::
 
    hg clone https://meg.googlecode.com/hg/ meg  
+
+Commit::
+
+   hg ci -m"Some description of changes"
 
 
 Push changes:
@@ -102,8 +103,8 @@ Push changes:
 
 
 
-Produce documentation for Meg
------------------------------
+Produce documentation for MEGUA
+-------------------------------
 
 Guided markup here: `restructuredtext`_ and `sphinx`_.
 
@@ -127,7 +128,7 @@ In documentation folder there exists ``conf.py``
    \# If extensions (or modules to document with autodoc) are in another directory,
    \# add these directories to sys.path here. If the directory is relative to the
    \# documentation root, use os.path.abspath to make it absolute, like shown here.
-   sys.path.append(os.path.abspath('/home/jpedro/all/meg/meg-0.2/meg/'))
+   sys.path.append(os.path.abspath('/home/jpedro/all/megua/megua-0.1/megua/'))
 
 2. and this::
 
@@ -145,9 +146,10 @@ The following commands can be used for testing examples in documentation strings
    sage -t -verbose exerparse.py
    sage -t exerparse.py
 
-If modules are pure python using ">>>" for examples:
+Also modules, usually in 'pure' python using ">>>" for examples, are tested with::
 
-python -m doctest -v example.py
+   python -m doctest -v example.py
+
 
 
 Unicode utf8
@@ -159,16 +161,15 @@ To use portuguese one must use this on a vim file::
    # -*- coding: iso-8859-15 -*-
 
 where the first line informs vim about the character set and second line informs python.
- More details here_.
+More details here_.
 
 .. _here: http://www.python.org/peps/pep-0263.ht
 
-#ISO-8859-1 (also called “latin-1”),
-#http://diveintopython.org/xml_processing/unicode.html
-# http://docs.python.org/howto/unicode.html
-
-VIM
-http://vim.wikia.com/wiki/Working_with_Unicode
+.. #ISO-8859-1 (also called “latin-1”),
+.. #http://diveintopython.org/xml_processing/unicode.html
+.. # http://docs.python.org/howto/unicode.html
+.. VIM
+.. http://vim.wikia.com/wiki/Working_with_Unicode
 
 
 

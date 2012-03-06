@@ -32,7 +32,6 @@ With Meg one can build a local database of exercises, or parameterized exercises
 
    userguide
    develguide
-   references
    refmodules 
 
 **Indices and tables**
