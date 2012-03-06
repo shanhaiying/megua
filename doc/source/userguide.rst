@@ -5,7 +5,8 @@ User Guide
 ==========
 
 MEGUA name is originally based the acronym for 'Mathematics Exercise Generator' and UA stand for University of Aveiro. 
-It uses |sagemath|_ as the plataform support for mathematics to create and edit a personal 
+
+It's a package for |sagemath|_ to create and edit a personal 
 or group databases of parameterized exercise templates written in LaTeX_ typeset. 
 The package is ready for command line use or Sage notebook use. 
     
@@ -50,7 +51,7 @@ The following block is a full exercise template:
        def make_random(self):
 
            self.a = ZZ.random_element(-4,4)
-           self.b = QQ.random_element(-4,4)
+           self.b = RR.random_element(-4,4)
 
        def solve(self):
 
@@ -85,68 +86,75 @@ Tag **%Problem** and tag **%Answer**
 
     In front of tag **%problem** one can write an suggestive name for the exercise.
 
-How doest this work? 
+How does this work? 
 
-1. In the text one writes a parameter identifier where a value, math expression, etc is to appear; 
-   In the above example ``$a x + b@()$`` has two parameters.
-2. In the *make_random* function one give a 'Sage value or expression' to the parameter.  In the example:
-   a) ``self.a = ZZ.random_element()``: a random integer value is given to ``a``.
-   b) ``self.prim = integrate(self.a * x + self.b,x)``: parameter ``prim`` will get the integration result.
-3. The Sage value (formula, number, etc) is converted to its LaTeX representation and replaced on the parameter place.
+1. Textual parts contains **parameters** where a value, math expression, etc is to appear; As seen in the example above:
+
+   *  in the expression ``a x + b@()``, parameters could be ``a``, ``x`` and a filtered one ``b@()``.
+
+2. In the *make_random* function one set a Sage value or expression to the parameter.  As seen in the example:
+
+   * ``self.a = ZZ.random_element()``: a random integer value is given to ``a``;
+   * ``self.b = RR.random_element(-4,4)``: a random real value is given to ``b``;
+   * ``self.prim = integrate(self.a * x + self.b,x)``: parameter ``prim`` will get the integration result on variable ``x``.
+
+3. The Sage Math value, formula, or number is converted to its LaTeX representation and replaced on the parameter place.
 
 
 .. _megvariables: 
 
 
-Parameters can be **filtered** as the following examples show. Consider that ``name = -12.123456``, ``name2 = -34.32`` and
-``name3 = 1``. Then the following table summaries changes:
+Parameters can be **filtered** as the following examples show. Consider the variables::
 
+   ``name1 = -12.123456``
+   ``name2 = -34.32``
+   ``name3 = 1``. 
 
-+ ----------------------------+--------------------+----------------------------------------+
+Then the following table summaries replacements:
+
+.. http://docutils.sourceforge.net/docs/user/rst/quickref.html#tables
+
++-----------------------------+--------------------+----------------------------------------+
 | parameter                   | after substitution | comment                                |
-+ ----------------------------+--------------------+----------------------------------------+
-| name                        |  -12.123456        | straight replacement.                  |
-| name@()                     |  (-12.123456)      | put (...) around number if negative.   |
-| name@f{2.3g}                | -12.1              | use printf_ notation (C users).        | 
++=============================+====================+========================================+
+| name1                       |  -12.123456        | straight replacement.                  |
++-----------------------------+--------------------+----------------------------------------+
+| name1@()                    |  (-12.123456)      | put (...) around number if negative.   |
++-----------------------------+--------------------+----------------------------------------+
+| name1@f{2.3g}               | -12.1              | use printf_ notation (C users).        | 
++-----------------------------+--------------------+----------------------------------------+
 | name2@s{sin}                | 0.42857465435      | call 1 argument function on parameter. |
++-----------------------------+--------------------+----------------------------------------+
 | name3@c{"text0", "text1"}   | text1              | choose one string of the list.         |
 +-----------------------------+--------------------+----------------------------------------+
 
 .. _printf: http://docs.python.org/library/stdtypes.html#string-formatting
 
-And also:
-
-1. If v=exp(1) in |sagemath|_ then $v$ will be replaced by $e$. 
-   
 
 
 Use from Sage notebook
------------------------
+----------------------
 
 A first cell in the worksheet should define the database and the ``megua`` object::
-   #auto
+
    from megua.all import *
    meg = MegBook(r'/home/user/a_meg_base.sqlite')
 
-In the example above, the database file will be available only in the current worksheet. This is caused by a restriction 
-on DATA (Sage notebook variable). This should be improved for the database to be available to every worksheet from the same user.
+Then, in a new cell, the command::
 
-Another possibility is using some folder where an user as permissions to write like ``/home/paula/paula.sqlite``, for example, if one is using 
-Sage notebook in the local host.
+   meg.save(...)
 
-**Workflow**
+is used to save exercises in ``meg`` database.
 
-If the objective is to create a database of exercises then a one possible of work flow is:
+A possible of work flow is:
 
-1. Create an exercise in each worksheet. In the same worksheet execute a command to save the exercise to the database.
+1. Create each different exercise in its own worksheet. In the same worksheet execute a command to save the exercise to the database.
 2. After all verifications on the exercise one can store a copy on the local disk (as sws file) and archive it on the notebook. 
 3. Recall the exercise by searching the database (using exercise name or by words).
 
-If the objective is to build only few exercises then it is using the same worksheet is a good solution. 
+If the objective is to build only a few exercises then using the same worksheet is a good solution. 
 
-**Create and editing a template**
-
-
+**Creating and editing a template**
 
 In a new cell of an opened worksheet do, as in the example:
 
@@ -156,14 +164,17 @@ In a new cell of an opened worksheet do, as in the example:
    
    txt = r'''
 
-   %Summary
+   %Summary Section name; Subsection name; Subsubsection name
+
    Here one can write few words, keywords about the exercise.
    For example, the subject, MSC code, and so on.
 
-   %Problem
+   %Problem Suggestive name
+
    What is the primitive of $a x + b@()$ ?
 
    %Answer
+
    The answer is $prim+C$, for $C in \mathbb{R}$.
 
    class E28E28_pdirect_001(Exercise):
@@ -171,7 +182,7 @@ In a new cell of an opened worksheet do, as in the example:
        def make_random(self):
 
            self.a = ZZ.random_element(-4,4)
-           self.b = QQ.random_element(-4,4)
+           self.b = RR.random_element(-4,4)
 
        def solve(self):
 
@@ -188,25 +199,28 @@ In a new cell of an opened worksheet do, as in the example:
 Previously we address the content of the template of the exercise.
 Now we describe how to use it:
 
-1. Notice the ``txt = '''`` in the top of the cell. We are defining a textual string containing all information. The string starts with ``'''`` and ends with the same ``'''``. The string will contain LaTeX and Python_ coding for the exercise.
-2. The exercise must have a name. The recommended pattern for names is: letter ``E``, a possible MSC code, a name and a number, all joined by an ``_`` underscore.
-3. Now, the command ``meg.save_string(txt)`` will save the exercise to the database.
+1. Notice the ``txt = '''`` in the top of the cell. We are defining a textual string containing all information. 
+The string starts with ``'''`` and ends with the same ``'''`` and contains the LaTeX and Python_ coding for the exercise.
+2. The exercise must have a name. The recommended pattern for names is::  
+ 
+   E<math code>_name_number
+
+where codes are taken from MSC_ classification, ``name`` some suggestive name and a numeration scheme like 001, 002, etc, as 
+more exercices could share same name. All conected by an underscore ``_``.
+3. Finally, the command ``meg.save(txt)`` will save the exercise textual definition to the database.
+
+
+.. _MSC: http://www.ams.org/mathscinet/msc/msc2010.html
 
 **Notes:**
 
-* the keyword ``self`` can be replaced by a single letter identifier ``s`` but there is no way, in a class definition, to avoid it complytely.
+* the keyword ``self`` can be replaced by a single letter identifier ``s`` but there is no way, in a class definition, to avoid it completely.
 
+To produce new exercise from the template there is the command::
 
-4. After it stores the exercise in the database one can produce an example to check if everything is ok. This is command ``e = meg.new("E28E28_pdirect_001",ekey=2)``
-    e = meg.new("E28E28_pdirect_001",ekey=2)
+   meg.new("E28E28_pdirect_001",ekey=2)
 
-
-
-meg.search("E26A36")
-
-
-
-
+where ``"E28E28_pdirect_001"`` is the exercise name and ``ekey=2`` is a number to generate a set of values for parameters.
 
 
 
@@ -216,29 +230,26 @@ Use from Text files
 
 Developing a new exercise:
 
-1. Edit a new file, named for example, "E28E28_pdirect_001.sage" and use this sintax:
+1. Edit a new file, named for example, "E28E28_pdirect_001.sage" and use this syntax:
 
 .. code-block:: python    
 
    txt = '''
+
       exercise TeX and Sage/Python definition (see above E28E28_pdirect_001)
 
    ''' 
-   from meg.all import *
+   from megua.all import *
    meg = MegBook(r'/home/user/a_meg_base.sqlite')
-   meg.save_string(txt)
-   meg.new("E28E28_pdirect_001", ekey=10)
-
+   meg.save(txt)
 
 2. At shell prompt do::
 
    sage E28E28_pdirect_001.sage
 
-3. Check E28E28_pdirect_001.tex and E28E28_pdirect_001.pdf files.
+3. Check E28E28_pdirect_001.tex and E28E28_pdirect_001.pdf files for an example.
 
  
-
-
 
 
 Creating books
