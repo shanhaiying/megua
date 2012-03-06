@@ -4,22 +4,24 @@
 User Guide
 ==========
 
-MEGUA is originally an acronym of 'Mathematics Exercise Generator'. It is a package to use in |sagemath|_ for create and edit a personal
-database of LaTeX_ exercise templates. The package is ready for command line use or notebook use. 
+MEGUA name is originally based the acronym for 'Mathematics Exercise Generator' and UA stand for University of Aveiro. 
+It uses |sagemath|_ as the plataform support for mathematics to create and edit a personal 
+or group databases of parameterized exercise templates written in LaTeX_ typeset. 
+The package is ready for command line use or Sage notebook use. 
     
-Meg operations are:
+Currently MEGUA operations are:
 
-1. Open one or more databases.
+1. Open one or more local databases.
 2. Produce, edit and delete exercises.
-3. Produce a configurable PDF from list of exercises.
+3. Produce configurable PDF file from a list of exercises.
 4. Search for one or a group of exercises.
 5. Generate exercises based on existing templates with random entries or giving some entries.
 
 
-Meg uses |sagemath|_ as support for mathematics. A very introductory programming skills are needed (|sagemath|_ uses Python_ language 
-with very little pre parsing). Currently Meg uses LaTeX_ and you have here_ a collection of introductory level tutorials.
+To create an exercise, elementary programming skills are needed. |sagemath|_ uses Python_ language 
+with very little preparsing. Currently MEGUA uses LaTeX_ and you have here_ a collection of introductory level tutorials.
 
-One can use the command-line of |sagemath|_ (Linux environment) or the front-end, usually in a server.
+One can use the command-line of |sagemath|_ (on a Linux environment) or the Sage notebook front-end, usually in a server.
 
 .. |sagemath| replace:: *Sage math*
 .. _sagemath: http://www.sagemath.org
@@ -27,21 +29,19 @@ One can use the command-line of |sagemath|_ (Linux environment) or the front-end
 .. _LaTeX: http://www.tug.org
 .. _here: http://www.tug.org/begin.html
 
-The following is an exercise template:
-
+The following block is a full exercise template:
 
 .. code-block:: latex
 
-   %Summary
+   %Summary Section; Subsection; Subsubsection
    Here one can write few words, keywords about the exercise.
    For example, the subject, MSC code, and so on.
 
-   %Problem
+   %Problem Some Name Here
    What is the primitive of $a x + b@()$ ?
 
    %Answer
    The answer is $prim+C$, for $C in \mathbb{R}$.
-
 
 .. code-block:: python
 
@@ -57,7 +57,11 @@ The following is an exercise template:
            x=var('x')
            self.prim = integrate(self.a * x + self.b,x)
 
-and that's all. This exercise has a LaTeX_ part and a Python_ (with |sagemath|_ pre parse) part.
+First part is the exercise LaTeX_ part and the second part is the Python_ part (Sage math preparses_ mathematics notation).
+
+
+.. _preparses: http://www.sagemath.org/doc/reference/sage/misc/preparser.html
+
 
 The LaTeX part has 3 sections marked by respective tags:
 
@@ -69,42 +73,59 @@ Tag **%Summary**
     Text in this field can help searching for a specific exercise. 
     This part is usually hidden from a student to whom this exercise is presented.
 
+    In front of tag **%summary** one can add sections as if this exercise is taken from a section of a book.
 
 Tag **%Problem** and tag **%Answer**
 
-    In the problem and answer place, one poses the problem and in separate the answer. 
-    The text may contain placeholders or 'Meg variables'. Meg variables 
-    are a mix of letters or letters and numbers and it will be replaced by some LaTeX_ expression (formula, numbers, etc.). 
-    In the above example, `a` and `b@()` are the Meg variables (the second has a decorator @()). 
+    Problem and answer are separated text parts.
+    Textual parts may contain parameters to be changed by values on the final text. 
+    These parameters are identified by letters or letters and numbers and they will be replaced by some LaTeX_ expression (formula, numbers, etc.). 
+
+    In the above example, `a` and `b@()` are parameters (the second has a output filter @()). 
+
+    In front of tag **%problem** one can write an suggestive name for the exercise.
+
+How doest this work? 
+
+1. In the text one writes a parameter identifier where a value, math expression, etc is to appear; 
+   In the above example ``$a x + b@()$`` has two parameters.
+2. In the *make_random* function one give a 'Sage value or expression' to the parameter.  In the example:
+   a) ``self.a = ZZ.random_element()``: a random integer value is given to ``a``.
+   b) ``self.prim = integrate(self.a * x + self.b,x)``: parameter ``prim`` will get the integration result.
+3. The Sage value (formula, number, etc) is converted to its LaTeX representation and replaced on the parameter place.
 
 
-How it works? 
-
-1. Put the Meg variable where you want to appear a number, a value or math expression; The example ``$a x + b@()$`` has two variables.
-2. In the *make_random* function one give a 'Sage value or expression' to the Meg variable.  In the example, ``self.a = ZZ.random_element()`` a random integer value is given to ``a``.
-3. When a new exercise instance is produced the Sage value is converted to the LaTeX representation.
+.. _megvariables: 
 
 
-.. _megvariables:
+Parameters can be **filtered** as the following examples show. Consider that ``name = -12.123456``, ``name2 = -34.32`` and
+``name3 = 1``. Then the following table summaries changes:
 
-Meg Variables
--------------
 
-Variables can be **decorated** as the following examples show:
++ ----------------------------+--------------------+----------------------------------------+
+| parameter                   | after substitution | comment                                |
++ ----------------------------+--------------------+----------------------------------------+
+| name                        |  -12.123456        | straight replacement.                  |
+| name@()                     |  (-12.123456)      | put (...) around number if negative.   |
+| name@f{2.3g}                | -12.1              | use printf_ notation (C users).        | 
+| name2@s{sin}                | 0.42857465435      | call 1 argument function on parameter. |
+| name3@c{"text0", "text1"}   | text1              | choose one string of the list.         |
++-----------------------------+--------------------+----------------------------------------+
+
+.. _printf: http://docs.python.org/library/stdtypes.html#string-formatting
+
+And also:
 
 1. If v=exp(1) in |sagemath|_ then $v$ will be replaced by $e$. 
-2. If v=-10, a negative number, then ``$v@()$`` will be replaced by ``$(-10)$``, i.e., with parenthesis around it.
-3. A precision notation, like C *printf*, can be used on numbers:  ``$v@f{0.4g}$`` prints the number with 4 decimal places.
-4. And ``$v@s{sin}$`` calls function sin on ``v: sin(v)``.
-    
+   
 
 
 Use from Sage notebook
 -----------------------
 
-A first cell in the worksheet should define the database and the ``meg`` object::
+A first cell in the worksheet should define the database and the ``megua`` object::
    #auto
-   from meg.all import *
+   from megua.all import *
    meg = MegBook(r'/home/user/a_meg_base.sqlite')
 
 In the example above, the database file will be available only in the current worksheet. This is caused by a restriction 
@@ -159,8 +180,7 @@ In a new cell of an opened worksheet do, as in the example:
 
     '''
 
-    meg.save_string(txt)
-    e = meg.new("E28E28_pdirect_001",ekey=2)
+    meg.save(txt)
 
     #END of the cell ------------------
 
@@ -171,11 +191,15 @@ Now we describe how to use it:
 1. Notice the ``txt = '''`` in the top of the cell. We are defining a textual string containing all information. The string starts with ``'''`` and ends with the same ``'''``. The string will contain LaTeX and Python_ coding for the exercise.
 2. The exercise must have a name. The recommended pattern for names is: letter ``E``, a possible MSC code, a name and a number, all joined by an ``_`` underscore.
 3. Now, the command ``meg.save_string(txt)`` will save the exercise to the database.
-4. After it stores the exercise in the database one can produce an example to check if everything is ok. This is command ``e = meg.new("E28E28_pdirect_001",ekey=2)``
 
 **Notes:**
 
 * the keyword ``self`` can be replaced by a single letter identifier ``s`` but there is no way, in a class definition, to avoid it complytely.
+
+
+4. After it stores the exercise in the database one can produce an example to check if everything is ok. This is command ``e = meg.new("E28E28_pdirect_001",ekey=2)``
+    e = meg.new("E28E28_pdirect_001",ekey=2)
+
 
 
 meg.search("E26A36")

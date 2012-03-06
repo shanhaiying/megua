@@ -17,7 +17,7 @@ Types of variables are:
 2. ``name@()``: substitution for ``\left( latex(value) \right)`` if value for name is negative (w.o. () otherwise).
 3. ``name@f{2.3g}``: formatted substitution. In the example: substitution for ``"%2.3g" % value`` (this is a python expression).
 4. ``name2@s{R15}``: function call substitution. In the example: substitution for ``R15(value)`` (R15 is a user function).
-5. ``name3@{"text0","text1",...}``: In the example, if name3 is 0 then "texto0" will appear, if name3 is 1 then text1" will appear, and so on.
+5. ``name3@{"text0","text1",...}``: In the example, if name3 is 0 then "text0" will appear, if name3 is 1 then text1" will appear, and so on.
 
 
 EXAMPLES:
@@ -26,15 +26,14 @@ EXAMPLES:
 
 An example of each kind::
 
-The text "1) name  2) name2@() 3) name@f{2.3g} 4) name2@s{R15}" has 4 placeholders that will be changed.
+The text "1) name  2) name2@() 3) name@f{2.3g} 4) name2@s{sin}" has 4 placeholders that will be changed.
 
    >>> from paramparse import parameter_change
-   >>> txt = r'''Examples: 1) name  2) name2@() 3) name@f{2.3g} 4) name2@s{R15} 5) name3@c{"text0", "text1"} 6) name3@c{"text0", name}'''
+   >>> txt = r'''Examples: 1) name  2) name2@() 3) name@f{2.3g} 4) name@s{sin} 5) name3@c{"text0", "text1"}'''
    >>> newdict = {'name': -12.123456, 'name2': -34.32, 'name3': 1, '__init__': 'the init', 'self': 'the self' }
    >>> parameter_change(txt,newdict)
-   Use double quotes even on names (case: name 'name' is not defined in '"text0", name').
-   u'Examples: 1) -12.123456  2) \\left(-34.32\\right) 3) -12.123456@f{2.3g} 4) -34.32 5) text1 6) text1'
-   >>> newdict = {'name1': -12.3456, 'name2': r'\mathbb{R}', 'name3': 1 }
+   u'Examples: 1) -12.123456  2) \\left(-34.32\\right) 3) -12.1 4) 0.42857465435 5) text1'
+   >>> newdict = {'name3': 1 }
    >>> txt = u'''1) name3@c{"text0", "c\xc3o"} 2) name3@c{"n\xc3o", "name1"} 3) name3@c{"nop", "text2"} '''
    >>> parameter_change(txt,newdict)
    u'1) c\xc3o 2) name1 3) text2 '
@@ -143,7 +142,7 @@ def parameter_change(inputtext,datadict):
     """
     #ReEX definition:
     re_str = r'\W(\w+)@\(\)|'\
-             r'\W(\w+)@f\{([#0bcdeEfFgGnosxX<>=\^+\- 0-9\%]+)\}|'\
+             r'\W(\w+)@f\{([\.#bcdeEfFgGnosxX<>=\^+\- 0-9\%]+)\}|'\
              r'\W(\w+)@s\{(\w+)\}|'\
              r'\W(\w+)@c\{([\s",\w]+)\}|' + \
              r'\W(' + c_dict_keys + ')'
