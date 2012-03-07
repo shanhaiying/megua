@@ -12,7 +12,8 @@
 Developer Guide
 ===============
 
-This section is for developers who want to contribute to or change MEGUA code. 
+This section contains memory notes for the MEGUA authors and also for new developers who want to contribute to or change MEGUA code. 
+
 Section :ref:`userguide` contains an initial description of MEGUA and on 
 Sage tutorial `Writing Code for Sage`_ one can find the standards of programing for Sage.
 
@@ -39,11 +40,11 @@ Consider that Sage packages are instaled at::
 
 inside of it do (0.2 is current version)::
 
-   $ ln -s /home/user1/meg-0.2/meg/
+   $ ln -s /home/user1/megua-0.1/megua/
 
 that produces a symbolic link::
 
- /opt/sage/local/lib/python2.6/site-packages/meg/
+ /opt/sage/local/lib/python2.6/site-packages/megua/
 
 and to confirm do::
 
@@ -61,15 +62,17 @@ Put lines like these on .bashrc::
    export LD_LIBRARY_PATH=/home/user1/sage/local/lib
    export DYLD_LIBRARY_PATH=/home/user1/sage/local/lib
 
-To create a package do, above directory  ``meg-0.2``::
+To create a package do, above directory  ``megua-0.1``::
 
-   $ sage -pkg meg-0.2
-   $ sudo sage -f meg-0.2.spkg 
+   $ sage -pkg megua-0.1 #create
+   $ sudo sage -f megua-0.1.spkg  #install
 
-To download and install a package
+To download and install a package::
+
     sage -i package_name
 
-To look inside a package:
+To look inside a package::
+
     tar -jxvf mypackage-version.spkg
 
 Managing packages inside Sage:
@@ -103,50 +106,67 @@ Push changes:
 
 
 
-Produce documentation for MEGUA
--------------------------------
 
-Guided markup here: `restructuredtext`_ and `sphinx`_.
+Documenting
+-----------
 
-.. _restructuredtext:   http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html
-.. _sphinx: http://sphinx.pocoo.org/index.html
+MEGUA is documented using `Sphinx`_ system based on markup syntax `Restructuredtext`_.
 
-See the `Python home page`_ for info.
+.. _Restructuredtext:   http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html
+.. _Sphinx: http://sphinx.pocoo.org/index.html
 
-.. _Python home page: http://www.python.org
+The following steps have been done to be able to use `automodules`_:
 
-Using automodule for building reference manuals: 
+ - Start a new documentation tree using this `tutorial`_.
 
-http://www.sagemath.org/doc/developer/sage_manuals.html#building-the-manuals
+ - For automodules to work with Sage (it seems that) is needed to change variable ``SPHINXBUILD`` in Makefile to::
 
-http://sphinx.pocoo.org/tutorial.html#running-the-build
+      SPHINXBUILD   = /home/jpedro/sage/sage -python /usr/bin/sphinx-build
 
-In documentation folder there exists ``conf.py``
+ - In documentation folder there exists ``conf.py``. Then
 
-1. Add this lines::
+   * add this lines::
+ 
+      \# If extensions (or modules to document with autodoc) are in another directory,
+      \# add these directories to sys.path here. If the directory is relative to the
+      \# documentation root, use os.path.abspath to make it absolute, like shown here.
+      sys.path.append(os.path.abspath('/home/user1/megua/megua-0.1/megua/'))
 
-   \# If extensions (or modules to document with autodoc) are in another directory,
-   \# add these directories to sys.path here. If the directory is relative to the
-   \# documentation root, use os.path.abspath to make it absolute, like shown here.
-   sys.path.append(os.path.abspath('/home/jpedro/all/megua/megua-0.1/megua/'))
+   * and this::
 
-2. and this::
+      \# Add any Sphinx extension module names here, as strings. They can be extensions
+      \# coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+      extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.pngmath', 'sphinx.ext.graphviz']
 
-   \# Add any Sphinx extension module names here, as strings. They can be extensions
-   \# coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-   extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.pngmath', 'sphinx.ext.graphviz']
+ - Command ``make html`` will produce ``_build`` tree with html.
+
+
+.. _tutorial: http://sphinx.pocoo.org/tutorial.html
+.. _automodules: http://sphinx.pocoo.org/tutorial.html#autodoc
+
+
+
+Just for reference (but not used in MEGUA) there is a page about Sage manuals_.
+
+.. _manuals: http://www.sagemath.org/doc/developer/sage_manuals.html#building-the-manuals
+
+To publish documentation in `Read The Docs`_ create an hook on ``.hg/hgrc`` file like explained in here_.
+
+.. _`Read The Docs`: http://megua.ReadTheDocs.org
+.. _hook: http://mercurial.selenic.com/wiki/Hook
+..http://stackoverflow.com/questions/3120503/how-to-make-mercurial-run-script-on-push
 
 
 
 Testing
 -------
 
-The following commands can be used for testing examples in documentation strings::
+The following commands can be used for testing Sage examples in documentation strings::
 
    sage -t -verbose exerparse.py
    sage -t exerparse.py
 
-Also modules, usually in 'pure' python using ">>>" for examples, are tested with::
+Modules in 'pure' python, ie. using ">>>" for examples, are tested with::
 
    python -m doctest -v example.py
 
@@ -155,7 +175,9 @@ Also modules, usually in 'pure' python using ">>>" for examples, are tested with
 Unicode utf8
 ------------
 
-To use portuguese one must use this on a vim file::
+MEGUA is intended to be used with several languages.
+
+For exameplo, to use portuguese one must use this on a vim file::
 
    # vim:fileencoding=iso-8859-15
    # -*- coding: iso-8859-15 -*-
@@ -170,12 +192,5 @@ More details here_.
 .. # http://docs.python.org/howto/unicode.html
 .. VIM
 .. http://vim.wikia.com/wiki/Working_with_Unicode
-
-
-
-
-
-
-
 
 
