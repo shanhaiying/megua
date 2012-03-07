@@ -13,4 +13,7 @@ $ cd /home/jpedro/all/meg/meg-0.2/doc/build/html
 $ scp -vr * jpedro@sagemath.clients.ua.pt:/home/jpedro/www
 
 
+http://stackoverflow.com/questions/3120503/how-to-make-mercurial-run-script-on-push
+http://mercurial.selenic.com/wiki/Hook
+
 
