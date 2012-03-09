@@ -1,6 +1,9 @@
 
 
-\documentclass[12pt,landscape]{article}
+%\documentclass[14pt,landscape]{exarticle}
+%\documentclass[12pt]{extarticle}
+%\documentclass[12pt]{article}
+\documentclass[10pt]{article}
 
 
 {% include 'common.tex' %}
@@ -15,7 +18,7 @@
 
 \renewcommand{\AnswerListHeader}{\textbf{Resolução do ex.~\ExerciseHeaderNB\ ---\ }}
 \renewcommand{\theExercise}{\arabic{section}.\arabic{Exercise}} %texto da numeracao de cada exercicio
-\renewcommand{\ExerciseName}{\LARGE Exercício}
+\renewcommand{\ExerciseName}{Exercício} %\flushleft 
 \renewcommand{\AnswerName}{Resolução do Exercício}
 \renewcommand{\AnswerListName}{Resolução do Exercício}
 
@@ -26,7 +29,7 @@
 % Geometry of page
 % ================
 %\usepackage[height=10in,a5paper,hmargin={3cm,0.8in}]{geometry}
-\usepackage[hmargin={5mm,5mm},vmargin={5mm,5mm}]{geometry}
+\usepackage[hmargin={5mm,5mm},a6paper,landscape,vmargin={5mm,5mm}]{geometry}
 
 \usepackage{setspace}
 \onehalfspacing 
@@ -40,7 +43,7 @@
 \pagestyle{empty}
 
 %\LARGE
-\Large
+%\Large
 
 {{ allsections }}
 
