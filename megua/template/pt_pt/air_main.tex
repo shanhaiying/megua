@@ -1,6 +1,6 @@
 
 
-%\documentclass[14pt,landscape]{exarticle}
+%\documentclass[14pt,landscape]{extarticle} %Pedro
 %\documentclass[12pt]{extarticle}
 %\documentclass[12pt]{article}
 \documentclass[10pt]{article}
@@ -16,11 +16,23 @@
 \usepackage[lastexercise]{exercise}
 
 
-\renewcommand{\AnswerListHeader}{\textbf{Resolução do ex.~\ExerciseHeaderNB\ ---\ }}
+\renewcommand{\AnswerListHeader}{Resolução do ex.~\ExerciseHeaderNB\ ---\ }
 \renewcommand{\theExercise}{\arabic{section}.\arabic{Exercise}} %texto da numeracao de cada exercicio
 \renewcommand{\ExerciseName}{Exercício} %\flushleft 
 \renewcommand{\AnswerName}{Resolução do Exercício}
 \renewcommand{\AnswerListName}{Resolução do Exercício}
+
+\renewcommand{\ExerciseHeader}{\color{blue}
+\ExerciseName~\ExerciseHeaderNB\ExerciseHeaderTitle
+\ExerciseHeaderOrigin}
+
+\renewcommand{\AnswerHeader}{\color{blue}
+Resolução~do~\ExerciseName\ \ExerciseHeaderNB \ExerciseHeaderTitle}
+
+%http://en.wikibooks.org/wiki/LaTeX/List_Structures#Enumerate
+%\renewcommand{\labelenumi}{\color{blue} \Alph{enumi}}
+\renewcommand{\labelenumi}{\color{blue} \arabic{enumi}.\ }
+\renewcommand{\labelenumii}{\color{blue} (\alph{enumii})\ }
 
 
 \usepackage[pdftex,bookmarks=true]{hyperref}
