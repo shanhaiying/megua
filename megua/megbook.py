@@ -137,7 +137,12 @@ class MegBook:
        >>> meg.remove('E28E28_nonexistant',dest=r'.testoutput')
        Exercise E28E28_nonexistant is not on the database.
     """
-    #TODO: increase docstring examples.
+
+    #TODO 1: increase docstring examples.
+
+    #TODO 2: assure that there is a natlang folder in templates (otherwise put it in english). Warn for existing languages if specifies lan does not exist.
+
+    #TODO 3: remove html_output and latex_debug=False; create debug only.
 
 
     def __init__(self,filename,natlang='pt_pt',markuplang='latex',html_output=False,latex_debug=False):
@@ -145,6 +150,8 @@ class MegBook:
 
         INPUT::
         - ``filename`` -- filename where the database is stored.
+        - ``natlang`` -- For example 'pt_pt' for portuguese (of portugal), 'en_us' for english from USA.
+        - ``markuplang`` -- 'latex' (currently is the only supported option.
 
         """
         #Variable DATA is only defined after worksheet is opened so it cannot be imported to here.
@@ -387,7 +394,8 @@ class MegBook:
             sname=ex_instance.name,
             summtxt=ex_instance.summary(),
             probtxt=ex_instance.problem(),
-            answtxt=ex_instance.answer()
+            answtxt=ex_instance.answer(),
+            ekey = ex_instance.ekey,
         )
 
         if not silent:
@@ -527,7 +535,7 @@ class MegBook:
         sname   =  ex_instance.name
 
         #Use jinja2 template to generate LaTeX.
-        latex_string = self.template("print_instance_latex.tex",sname=sname,summtxt=summtxt,probtxt=probtxt,answtxt=answtxt)
+        latex_string = self.template("print_instance_latex.tex",sname=sname,summtxt=summtxt,probtxt=probtxt,answtxt=answtxt,ekey=ex_instance.ekey)
 
         if is_notebook():
 
@@ -537,7 +545,7 @@ class MegBook:
 
             #If user requests html on sage notebook. 
             if self.html_output:               
-                sthtml = self.template("print_instance_html.html",sname=sname,summtxt=summtxt,probtxt=probtxt,answtxt=answtxt)
+                sthtml = self.template("print_instance_html.html",sname=sname,summtxt=summtxt,probtxt=probtxt,answtxt=answtxt,ekey=ex_instance.ekey)
                 html(sthtml)
 
             #Produce PDF file from LaTeX.
@@ -603,7 +611,8 @@ class MegBook:
                 codetxt =  to_unicode( row['class_text'] ), 
                 problem =  to_unicode( ex_instance.problem() ), 
                 answer  =  to_unicode( ex_instance.answer() ),
-                elabel  =  elabel
+                elabel  =  elabel,
+                ekey = ekey
             )
 
         return utxt

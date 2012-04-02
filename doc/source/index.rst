@@ -31,6 +31,7 @@ With Meg one can build a local database of exercises, or parameterized exercises
    :maxdepth: 2
 
    userguide
+   authorguide
    develguide
    refmodules 
 

@@ -162,19 +162,19 @@ class Exercise:
 
     def summary(self):
         """
-        Use class text self._summary_text and replace for parameteres on dictionary. Nothing is saved.
+        Use class text self._summary_text and replace for parameters on dictionary. Nothing is saved.
         """
         return parameter_change(self._summary_text,self.__dict__)
 
     def problem(self):
         """
-        Use class text self._problem_text and replace for parameteres on dictionary. Nothing is saved.
+        Use class text self._problem_text and replace for parameters on dictionary. Nothing is saved.
         """
         return parameter_change(self._problem_text,self.__dict__)
 
     def answer(self):
         """
-        Use class text self._answer_text and replace for parameteres on dictionary. Nothing is saved.
+        Use class text self._answer_text and replace for parameters on dictionary. Nothing is saved.
         """
         return parameter_change(self._answer_text,self.__dict__)
 

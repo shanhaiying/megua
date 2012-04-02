@@ -1,3 +1,5 @@
+# -*- coding: iso-8859-15 -*-
+# vim:fileencoding=iso-8859-15
 r"""
 Convert an input text containing an exercise template into a tuple ``(owner_key,txt_summary,txt_problem,txt_answer,txt_class)`` extracted from text.
 See ``exer_parse`` function.

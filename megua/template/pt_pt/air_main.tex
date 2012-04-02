@@ -22,17 +22,28 @@
 \renewcommand{\AnswerName}{Resolução do Exercício}
 \renewcommand{\AnswerListName}{Resolução do Exercício}
 
-\renewcommand{\ExerciseHeader}{\color{blue}
+%Cor azul no air: 0x657BB5
+%RGB 101 123 181
+%RGB 0,39453125 0,48046875 0,70703125
+\definecolor{MyBlue}{rgb}{0.39453125,0.48046875,0.70703125}
+
+
+\renewcommand{\ExerciseHeader}{\color{MyBlue}
 \ExerciseName~\ExerciseHeaderNB\ExerciseHeaderTitle
 \ExerciseHeaderOrigin}
 
-\renewcommand{\AnswerHeader}{\color{blue}
+\renewcommand{\AnswerHeader}{\color{MyBlue}
 Resolução~do~\ExerciseName\ \ExerciseHeaderNB \ExerciseHeaderTitle}
 
+
 %http://en.wikibooks.org/wiki/LaTeX/List_Structures#Enumerate
-%\renewcommand{\labelenumi}{\color{blue} \Alph{enumi}}
-\renewcommand{\labelenumi}{\color{blue} \arabic{enumi}.\ }
-\renewcommand{\labelenumii}{\color{blue} (\alph{enumii})\ }
+\renewcommand{\labelenumi}{\color{MyBlue} \alph{enumi})\ }
+%\renewcommand{\labelenumi}{\color{blue} \arabic{enumi}.\ }
+%\renewcommand{\labelenumii}{\color{blue} (\alph{enumii})\ }
+%\renewcommand{\labelenumii}{\color{blue} (\roman{enumii})\ }
+\renewcommand{\labelenumii}{(\roman{enumii})\ }
+
+
 
 
 \usepackage[pdftex,bookmarks=true]{hyperref}

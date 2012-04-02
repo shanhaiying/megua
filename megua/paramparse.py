@@ -29,10 +29,10 @@ An example of each kind::
 The text "1) name  2) name2@() 3) name@f{2.3g} 4) name2@s{sin}" has 4 placeholders that will be changed.
 
    >>> from paramparse import parameter_change
-   >>> txt = r'''Examples: 1) name  2) name2@() 3) name@f{2.3g} 4) name@s{sin} 5) name3@c{"text0", "text1"}'''
+   >>> txt = r'''Examples: 1) name  2) name2@() 3) name@f{2.3g} 4) name@s{sin} 5) name3@c{"text0", "tex-t1"}'''
    >>> newdict = {'name': -12.123456, 'name2': -34.32, 'name3': 1, '__init__': 'the init', 'self': 'the self' }
    >>> parameter_change(txt,newdict)
-   u'Examples: 1) -12.123456  2) \\left(-34.32\\right) 3) -12.1 4) 0.42857465435 5) text1'
+   u'Examples: 1) -12.123456  2) \\left(-34.32\\right) 3) -12.1 4) 0.42857465435 5) tex-t1'
    >>> newdict = {'name3': 1 }
    >>> txt = u'''1) name3@c{"text0", "c\xc3o"} 2) name3@c{"n\xc3o", "name1"} 3) name3@c{"nop", "text2"} '''
    >>> parameter_change(txt,newdict)
@@ -144,7 +144,7 @@ def parameter_change(inputtext,datadict):
     re_str = r'\W(\w+)@\(\)|'\
              r'\W(\w+)@f\{([\.#bcdeEfFgGnosxX<>=\^+\- 0-9\%]+)\}|'\
              r'\W(\w+)@s\{(\w+)\}|'\
-             r'\W(\w+)@c\{([\s",\w]+)\}|' + \
+             r'\W(\w+)@c\{([\s",\-\w]+)\}|' + \
              r'\W(' + c_dict_keys + ')'
 
 

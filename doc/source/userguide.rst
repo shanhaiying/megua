@@ -129,6 +129,17 @@ The following table summaries replacements:
 .. _printf: http://docs.python.org/library/stdtypes.html#string-formatting
 
 
+Team work
+---------
+
+Sage notebook provides a natural and graphical way for team work were users are able to share worksheets. 
+We recomend using a worksheet for each exercise template for better organization. 
+
+Using it via Linux command line has the means well known to programmers: each text file 
+could be an exercise template, everything organized in folders and a versioning program 
+could be use to share work and keep records of changes. Note for current version: to use this package on 
+a server the administrator should install it locally (currently, a single user cannot install it).
+
 
 Use from Sage notebook
 ----------------------
