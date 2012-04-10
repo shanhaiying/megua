@@ -71,6 +71,8 @@ from paramparse import parameter_change
 #Import the random generator object.
 from ur import ur 
 
+from msc15 import *
+
 #Sage
 from sage.all import *
 

@@ -345,6 +345,7 @@ class MegBook:
                 print "Testing python/sage class '%s' with %d different keys." % (row['owner_key'],many)
 
             #Create a class and a first instance for ekey=start.
+            ekey = start #for exceptions
             print "Testing for ekey =",start
             ex_instance = exerciseinstance(row,ekey=start,edict=edict)
 
