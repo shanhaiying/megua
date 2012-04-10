@@ -203,7 +203,7 @@ class MegBook:
 
     def template(self, filename, **user_context):
         """
-        Returns HTML, CSS, etc., for a template file rendered in the given
+        Returns HTML, CSS, LaTeX, etc., for a template file rendered in the given
         context.
 
         INPUT:

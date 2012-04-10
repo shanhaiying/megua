@@ -46,7 +46,19 @@ that produces a symbolic link::
 
  /opt/sage/local/lib/python2.6/site-packages/megua/
 
-and to confirm do::
+Install pdfminer::
+
+1. see  http://www.unixuser.org/~euske/python/pdfminer/#download
+2. download from pypi
+3. tar xvzf pdfminer-20110515.tar.gz
+4. enter pdfminer-20110515
+5. sage -python setup.py install
+
+
+pdfminer is included on package but not for developing. It should be installed by hand.
+
+
+To confirm do::
 
    sage: from megua.all import *
 
