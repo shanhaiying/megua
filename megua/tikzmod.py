@@ -14,10 +14,14 @@ AUTHORS:
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
 #*****************************************************************************
-  
 
-def tikz_getpointsstr(pointlist):
-    return join( [ str( (round(p[0],3),round(p[1],3)) ) for p in pointlist ], ' ' )
+
+from sage.all import *
+
+R20 = RealField(20)
+
+def getpoints_str(pointlist):
+    return join( [ str( ( R20(p[0]), R20(p[1]) ) ) for p in pointlist ], ' ' )
 
 
 

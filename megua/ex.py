@@ -72,6 +72,7 @@ from paramparse import parameter_change
 from ur import ur 
 
 from msc15 import *
+import tikzmod
 
 #Sage
 from sage.all import *
