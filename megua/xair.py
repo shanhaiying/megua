@@ -139,7 +139,9 @@ class AirExporter:
                 problem =  to_unicode( ex_instance.problem() ), 
                 answer  =  to_unicode( ex_instance.answer() ),
                 elabel  =  "%s-%d" % ( remove_underscore(owner_keystring), ekey),
-                elevel = elevel+2
+                elevel = elevel+2,
+                ekey=ekey,
+                exname=owner_keystring
             )
         except:
             utxt = u"Exercise %s could not be created (ekey=%d).\n" % (owner_keystring,ekey)
