@@ -75,7 +75,8 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
         error = subprocess.call(lt, cwd=workdir) #Output is given in both command line and notebook.
 
     if error:
-        print "   Possible errors during pdflatex compilation. See %s.log for a description. (%d error)" % (filename,error)
+        print ""
+        print "ERRORS:   Possible errors during pdflatex compilation. See %s.log for a description. (%d error)" % (filename,error)
         return not error
 
     if runs>1:
