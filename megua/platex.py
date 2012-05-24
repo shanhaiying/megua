@@ -69,10 +69,11 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
 
     #TODO: study efect of this in notebook
     if hideoutput:
-        redirect = subprocess.PIPE#With this "PIPE" argument no text is outputed neither to the commandline or notebook.
-        error = subprocess.call(lt, stdout=redirect, stderr=redirect, cwd=workdir)
+        #read http://docs.python.org/library/subprocess.html about PIPE. The stdout will get full.
+        redirect = None#subprocess.PIPE#With this "PIPE" argument no text is outputed neither to the commandline or notebook.
+        error = subprocess.check_call(lt, stdout=redirect, stderr=redirect, cwd=workdir)
     else:
-        error = subprocess.call(lt, cwd=workdir) #Output is given in both command line and notebook.
+        error = subprocess.check_call(lt, cwd=workdir) #Output is given in both command line and notebook.
 
     if error:
         print ""
