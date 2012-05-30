@@ -1,0 +1,12 @@
+\.swp$
+\.hg$
+\.py[co]$
+ceoc.lftp
+/_images/.*
+/_sources/.*
+/.+sqlite.*
+/_build/.*
+/src/.*
+\.testoutput/
+
+

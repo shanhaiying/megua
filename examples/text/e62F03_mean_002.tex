@@ -1,0 +1,64 @@
+% Teste de Hipóteses, Média, População Normal, teste Bilateral, Variância Desconhecida. Pequena amostra fornecida. Caso de não-rejeição. Método da Região Crítica (Região de Rejeição).
+% 
+% Utilização: 
+%   from meg.statistics.ic import st_th_mean_002
+%   meg.sk.skins.new(st_th_mean_002,key=10)
+
+% Tag: Folha 3 de ME, Exercício 6.
+
+%PROBLEM
+
+Admite-se que a quantidade de nicotina (medida em mg) existente num cigarro de determinada marca tem distribuição Normal.
+Observaram-se $inN$ cigarros da referida marca tendo-se retirado a seguinte amostra
+\[
+  inAmostra
+\]
+Teste, ao nível de $\alpha=inAlpha$, as hipóteses
+\[
+H_0:\, \mu=mu0 \quad\text{vs}\quad H_1:\, \mu\neq mu0   
+\]
+usando o Método da Região Crítica.
+
+Procurar as palavras do __dict__ no texto.
+
+a00:
+a11:-
+a22:l
+a34:"%0.2g"
+
+
+%ANSWER
+
+
+Temos que $X\frown N(\mu,\sigma^2)$ onde os parâmetros da média populacional $\mu$ e variância $\sigma^2$ são desconhecidos.
+Então podemos usar a seguinte relação
+\[
+T=\frac{\bar X - \mu}{S_c/\sqrt n} \,|\, H_0 \frown t_{n-1}
+\]
+em que $t_{n-1}$ designa a distribuição t-student com $n-1$ graus de liberdade.
+Em virtude da hipótese alternativa $H_1$ ser uma desigualdade então a 
+região crítica é bilateral e fica definida por:
+\[
+RC= ]-\infty,t_{\alpha/2,n-1}[ \cup ]t_{1-\alpha/2,n-1},+\infty[
+\]
+Pela simetria da distribuição t-student temos
+$t_{\alpha/2,n-1} = - t_{1-\alpha/2,n-1}$
+e consultando uma tabela ou calculadora $t_{1-\alpha/2,n-1} = t_{onRightAlpha,onN1} = onTcrit$.
+A região crítica fica assim definida por:
+\[
+RC= ]-\infty,-onTcrit[ \cup ]+onTcrit,+\infty[
+\]
+Vamos agora verificar se o valor da estatística de teste $T$ está em RC.
+Com base na amostra calculamos o valor das estatísticas:
+\begin{itemize}
+\item $\displaystyle \bar x=(1/n)\sum_{i=1}^n x_i=onSMean$ 
+\item $\displaystyle s_c=(1/(n-1))\sum_{i=1}^n (x_i-\bar x)^2=onSDev$
+\end{itemize}
+de onde
+\[
+t_{obs} = \frac{\bar x - \mu}{s_c/\sqrt n} = onTobs
+\]
+Em virtude de $t_{obs} \not\in$RC temos razões para não rejeitar que $\mu = inMu$ (rejeitamos $H_1$).
+
+
+
