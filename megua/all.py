@@ -7,7 +7,11 @@
   
 
 #Meg modules:
-from megbook import *
+from megbook import *  #latex
+from megbookbase import *  #text
+from megbookweb import *  #web
+
+
 #from ur import *
 
 #Specific math subject modules:

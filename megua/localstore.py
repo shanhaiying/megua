@@ -156,14 +156,7 @@ class LocalStore:
         # =================
         # 1. Get a filename 
         # =================
-
-        if not filename: #not means None
-            #Create or open an exercise store
-            fhome = os.getenv("HOME")
-            self.local_store_filename  = fhome+r"/megdb.sqlite"
-        else:
-            self.local_store_filename  = filename
-
+        self.local_store_filename = get_dbfilename(filename)
 
 
         # =============================
@@ -256,9 +249,11 @@ class LocalStore:
                 version = '0.1'
             else:
                 c2 = conn.cursor()
-                c2.execute("SELECT version from metameg")
+                c2.execute("SELECT version,natural_language,markup_language from metameg")
                 row = c2.fetchone()
                 version = row['version']
+                assert(self.natural_language == row['natural_language']) #TODO: check this
+                assert(self.markup_language == row['markup_language'])
                 c2.close()
 
         else:
@@ -515,6 +510,29 @@ class LocalStore:
         sname = 'Record %03d: %s' % (row['problem_id'],row['owner_key'])
         print sname + '\n\n' + row['problem_text'] + '\n'
 
+
+
+
+def get_dbfilename(filename=None):
+    """
+    Get an os accessible filename if no filename is given or test if the given filename is accessible.
+
+    INPUT:
+    - ``filename`` -- filename or None
+    
+    OUTPUT:
+        a filename
+    """
+    if filename:
+        #TODO: check if os accessible and valid filename here.
+        # if bad filename:
+        #    raise IOError("MegBook needs a database filename to be specified.")
+        return filename
+    else:    
+        #Create or open an exercise store
+        fhome = os.getenv("HOME")
+        s = os.path.join(fhome,"meguadb.sqlite")
+        return s
 
 
 

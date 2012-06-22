@@ -70,8 +70,10 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
     #TODO: study efect of this in notebook
     if hideoutput:
         #read http://docs.python.org/library/subprocess.html about PIPE. The stdout will get full.
-        redirect = None#subprocess.PIPE#With this "PIPE" argument no text is outputed neither to the commandline or notebook.
-        error = subprocess.check_call(lt, stdout=redirect, stderr=redirect, cwd=workdir)
+        #redirect = fout #None#subprocess.PIPE#With this "PIPE" argument no text is outputed neither to the commandline or notebook.
+        fout = open('/dev/null','w')
+        error = subprocess.check_call(lt, stdout=fout, stderr=fout, cwd=workdir)
+        fout.close()
     else:
         error = subprocess.check_call(lt, cwd=workdir) #Output is given in both command line and notebook.
 
@@ -82,16 +84,17 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
 
     if runs>1:
         if hideoutput:
-            subprocess.call(lt, stdout=redirect, stderr=redirect, cwd=workdir)
+            fout = open('/dev/null','w')
+            subprocess.check_call(lt, stdout=fout, stderr=fout, cwd=workdir)
+            fout.close()
         else:
             print "============================"
             print "Second pdflatex compilation."
             print "============================"
-            subprocess.call(lt, cwd=workdir)
+            subprocess.check_call(lt, cwd=workdir)
         
     if not silent:
-        if hideoutput:
-            print "   No errors found during pdflatex compilation. Check %s.log for details." % filename
+        print "\nNo errors found during pdflatex compilation. Check %s.log for details." % filename
     
     return not error
 

@@ -40,7 +40,7 @@ Consider that Sage packages are instaled at::
 
 inside of it do (0.2 is current version)::
 
-   $ ln -s /home/user1/megua-0.1/megua/
+   $ ln -s /home/user1/megua-0.2/megua/
 
 that produces a symbolic link::
 

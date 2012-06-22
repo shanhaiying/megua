@@ -3,16 +3,19 @@ MegBook -- Build your own database of exercises.
 
 AUTHORS:
 
-- Pedro Cruz (2011-06): initial version
+- Pedro Cruz (2011-06): initial version (use of pdflatex)
 - Pedro Cruz (2011-10): another version
 - Pedro Cruz (2011-11): another version
 - Pedro Cruz (2012-01): including jinja2 templating.
+
+- Pedro Cruz (2012-06): starting project for use of web and pdflatex.
+
 
 """
 
 
 #*****************************************************************************
-#       Copyright (C) 2011 Pedro Cruz <PedroCruz@ua.pt>
+#       Copyright (C) 2011,2012 Pedro Cruz <PedroCruz@ua.pt>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
@@ -525,9 +528,7 @@ class MegBook:
 
     def print_instance(self, ex_instance):
         """
-        NOTES:
-
-            See platex.py for more details.
+        Routine used to produce an exercise output to notebook or command line mode.
         """
 
         summtxt =  ex_instance.summary()
@@ -543,11 +544,6 @@ class MegBook:
             # ---------------
             # Using notebook.
             # ---------------
-
-            #If user requests html on sage notebook. 
-            if self.html_output:               
-                sthtml = self.template("print_instance_html.html",sname=sname,summtxt=summtxt,probtxt=probtxt,answtxt=answtxt,ekey=ex_instance.ekey)
-                html(sthtml)
 
             #Produce PDF file from LaTeX.
             pcompile(latex_string,'.',sname, hideoutput=True)

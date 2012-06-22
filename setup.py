@@ -13,7 +13,7 @@ from distutils.core import setup
 
 
 setup(name='megua',
-      version='0.1',
+      version='0.2',
       description='MEGUA: build your database of parameterized exercises.',
       author='Pedro Cruz',
       author_email='pedrocruz@ua.pt',

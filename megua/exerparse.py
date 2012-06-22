@@ -265,7 +265,8 @@ def exerc_parse(inputtext):
                         print "Each exercise can belong to a section/subsection/subsubsection. \n"\
                               "Write sections using ';' in the '%summary' line. For ex., '%summary Section; Subsection; Subsubsection'.\n"
                     txt_sections = txtinfo
-                txt_summary = '\n%summary ' + txtinfo + '\n'
+                #TODO review: txt_summary = '\n%summary ' + txtinfo + '\n'
+                txt_summary = '\n'
                 current+=1
             else:
                 error_found = True
@@ -280,14 +281,15 @@ def exerc_parse(inputtext):
             elif tag  == 're_problem':
                 #action
                 state=ExState.PROBLEM
-                txt_problem = '\n%problem\n'
+                txt_problem = '' #TODO review '\n%problem\n'
                 if classlines[current].lineinfo is not None:
                     txtinfo = classlines[current].lineinfo.strip()
                     if txtinfo == '':
                         print "Each problem can have a suggestive name. \n"\
                               "Write in the '%problem' line a name, for ex., '%problem The Fish Problem'.\n"
                     txt_problemname = txtinfo
-                txt_problem = '\n%problem ' + txtinfo + '\n'
+                #TODO Review this txt_problem = '\n%problem ' + txtinfo + '\n'
+                txt_problem = '\n'
                 current+=1
             else:
                 error_found = True
@@ -302,7 +304,7 @@ def exerc_parse(inputtext):
             elif tag  == 're_answer':
                 #action
                 state=ExState.ANSWER
-                txt_answer = '\n%answer\n'    
+                txt_answer = '\n' #TODO review '\n%answer\n'    
                 if classlines[current].lineinfo is not None:
                     txtinfo = classlines[current].lineinfo.strip()
                     if  txtinfo != '':
