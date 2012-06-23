@@ -20,6 +20,9 @@ AUTHORS:
 #Meg modules:
 from megbookbase import *
 
+from xc3web import C3WebExporter
+
+
 #TODO Is it necessary to import other libs?
 
 
@@ -142,6 +145,19 @@ class MegBookWeb(MegBookBase):
             # -------------------
             print html_string
 
+
+
+    def make_c3web(self,where='.',debug=False):
+        """
+        Produce html files from the database based on the %summary field.
+
+        Command line use: 
+            The ``where`` input argument, when specified.
+
+        LINKS:
+
+        """
+        html_index = C3WebExporter(self,where,debug)
 
 
 

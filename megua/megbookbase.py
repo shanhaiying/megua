@@ -237,8 +237,6 @@ class MegBookBase:
         # ---------------------------------------
         row = exerc_parse(exercisestr)
 
-        print row['problem_text']
-
         if not row:
             print self.template('exercise_syntax.txt')
             print "==================================="
@@ -307,11 +305,11 @@ class MegBookBase:
 
             #Create a class and a first instance for ekey=start.
             ekey = start #for exceptions
-            print "Testing for ekey =",start
+            print "    Testing for ekey =",start
             ex_instance = exerciseinstance(row,ekey=start,edict=edict)
 
             for ekey in range(start+1,start+many):
-                print "Testing for ekey =",ekey
+                print "    Testing for ekey =",ekey
                 ex_instance.update(ekey=ekey)
         except SyntaxError as se:
             print "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
@@ -320,14 +318,14 @@ class MegBookBase:
                 print "      check line: %s" % cl[se.lineno-1]
             success = False
         except Exception as ee: # Exception will be in memory.
-            print "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
-            print "   error description: ", ee
+            print "    Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
+            print "    error description: ", ee
             if is_notebook():
-                print "   Copy exercise code, only the class part, to a new cell. Then add the following command"
+                print "    Copy exercise code, only the class part, to a new cell. Then add the following command"
                 print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
                 print "and execute with shift+enter. This may help finding the error line."
             else:
-                print "   Test the exercise code, only the class part using the following command"
+                print "    Test the exercise code, only the class part using the following command"
                 print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
                 print "This may help finding the error line."
             success = False
@@ -337,7 +335,7 @@ class MegBookBase:
             if success:
                 print "    No problems found in this test."
             else:
-                print "Review exercise '%s' based on the reported cases." % row['owner_key']
+                print "    Review exercise '%s' based on the reported cases." % row['owner_key']
 
         return success
 
