@@ -10,6 +10,10 @@ LINKS::
 
    http://sphinx.pocoo.org/config.html#confval-html_theme_options
 
+NOTES: 
+   from sphinx import cmdline
+   cmdline??
+
 """
 
 
@@ -119,7 +123,7 @@ class SphinxExporter:
         self._save_to_files()
 
         #Build HTML from rst files.
-        argv = ['/usr/bin/sphinx-build', '-a', '-b', 'html', '-d', 
+        argv = ['/usr/bin/sphinx-build', '-q', '-a', '-b', 'html', '-d', 
             os.path.join(self.sphinx_folder,'build/doctrees'), #don't put a leader / like  /build/doctrees
             self.sphinx_folder, 
             os.path.join(self.sphinx_folder,'build/html')]

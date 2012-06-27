@@ -478,6 +478,9 @@ class MegBookBase:
         print answtxt.encode('utf8')
 
 
+    def make_sws(self, dest='.'):
+        sws = SWSExporter(self,dest)
+
 
 
 #end class MegBook

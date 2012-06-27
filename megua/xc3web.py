@@ -83,9 +83,10 @@ class C3WebExporter:
         self._save_to_files()
 
         #ZIP the folder
-        fnull = open('/dev/null','w')
+        #http://stackoverflow.com/questions/699325/suppress-output-in-python-calls-to-executables
+        fnull = open(os.devnull,'w')
         import subprocess
-        subprocess.check_call([ "zip", "-r",  self.c3web_folder+".zip", self.c3web_folder],stdout=fnull,stderr=fnull) 
+        subprocess.check_call([ "zip", self.c3web_folder, self.c3web_folder],stdout=fnull,stderr=fnull) 
         fnull.close()
 
 

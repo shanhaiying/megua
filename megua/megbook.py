@@ -29,7 +29,7 @@ from exerparse import exerc_parse
 from xsphinx import SphinxExporter
 from xair import AirExporter, BookmarkList
 from platex import pcompile
-
+from xsws import SWSExporter
 
 #Because sage.plot.plot.EMBEDDED_MODE
 #This variable indicates if notebook is present.
@@ -830,7 +830,7 @@ class MegBook:
 
 
 
-    def make_index(self,where=None,debug=False):
+    def make_index(self,where='.',debug=False):
         """
         Produce rst code files from the database and an index reading first line of the %summary field.
 
@@ -871,6 +871,8 @@ class MegBook:
             BookmarkList(os.path.join(dest,'air_out.pdf'))
         #print bm.bm_list #TODO: export to xml
 
+    def make_sws(self, dest='.',tagstr=''):
+        sws = SWSExporter(self,dest,tagstr=tagstr)
 
 
 #end class MegBook
