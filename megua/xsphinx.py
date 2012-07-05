@@ -140,7 +140,7 @@ class SphinxExporter:
     def _save_to_files(self):
         
         #Create index.rst from xsphinx_index.rst template.
-        for sec_number,sec_name in enumerate(self.sc.contents):
+        for sec_number,sec_name in enumerate(sorted(self.sc.contents)):
 
             #Get Section with sec_name (see class Section from csection.py)
             section = self.sc.contents[sec_name]
