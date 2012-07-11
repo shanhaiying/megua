@@ -29,12 +29,15 @@ import os
 import jinja2
 import codecs
 import subprocess
+import re
 
 #megua package
 from localstore import ExIter
 from csection import SectionClassifier, Section
 from ex import *
 
+TO_REST = 1
+TO_HTML = 2
 
 class SWSExporter:
     """
@@ -46,13 +49,13 @@ class SWSExporter:
     #char_level = { 0: '#', 1: '*', 2: '=', 3:'-', 4:'^' }
 
 
-    def __init__(self,megbook,where=None,tagstr='',debug=False):
+    def __init__(self,megbook,where=None,tagstr='',optvalues=0, debug=False):
       
         #save megstore reference
         self.megbook = megbook
         self.megbook_store = self.megbook.megbook_store
 
-
+        self.optvalues = optvalues
         self.tagstr = tagstr
 
         # --------------------    
@@ -89,10 +92,13 @@ class SWSExporter:
 
         #ZIP the folder
         #http://stackoverflow.com/questions/699325/suppress-output-in-python-calls-to-executables
-        fnull = open(os.devnull,'w')
+        #fnull = open(os.devnull,'w')
         #note: use of tagstr for a filename. TODO: check this str if is a filename.
-        subprocess.check_call([ "zip", self.tagstr, os.path.join(self.sws_folder,'*.sws')],stdout=fnull,stderr=fnull) 
-        fnull.close()
+        #TODO: this is causing error
+        #subprocess.check_call([ "zip", self.tagstr, os.path.join(self.sws_folder,'*.sws')],stdout=fnull,stderr=fnull) 
+        #fnull.close()
+        osstr = "zip %s %s" %  (self.tagstr, os.path.join(self.sws_folder,'*.sws') )
+        os.system(osstr)
 
 
     def _save_to_sws(self):
@@ -151,13 +157,105 @@ class SWSExporter:
                     ownerkey = e,
                     secnames = secnames,
                     summary=row['summary_text'],
-                    problem=row['problem_text'],
-                    answer=row['answer_text'],
+                    problem=self.convert(row['problem_text']),
+                    answer=self.convert(row['answer_text']),
                     sage_python=row['class_text']
             )
             self.ofile.write(etxt)
 
         for subsection in section.subsections.itervalues():
             self.sec_print(subsection, secnames + ";" + subsection.sec_name )
+
+
+    def convert(self,input_str):
+        if TO_REST & self.optvalues:
+            return convert_to_rest(input_str)
+        elif TO_HTML & self.optvalues:
+            return convert_to_html(input_str)
+        else:
+            return input_str
+
+
+# TODO: see pandoc: http://johnmacfarlane.net/pandoc/installing.html
+
+
+def indent_repl(matchobj):
+    #Debug
+    #print "Grupo:"
+    #print matchobj.group(1)
+    #print "Fim do grupo"
+
+    txt = "   " + matchobj.group(1).replace("\n","\n   ")
+    return '\n\n.. math::\n\n%s\n\n' % txt
+
+
+def convert_to_rest(input_str):
+    """
+
+    TODO:
+    1. Keep tikz pictures without convertion.
+    1. Keep tabular pictures without convertion.
+
+    LINKS:
+
+    1. About MathJax and Latex: http://www.mathjax.org/docs/2.0/tex.html
+
+    NOTES:
+
+    1. Using 
+        #Convertion of $$ form $$ into ..math: notation
+        #txt = re.sub(r'\b\$\$(.+)\$\$\b', indent_repl, input_str, re.M|re.DOTALL)
+        #txt = re.sub(r'\$(.+)\$',r':math:`\1`', txt, re.M|re.DOTALL) 
+    does not work because it matches $$ and end of line and not the next one.
+
+    2. This routine is using version "pandoc 1.5.1.1". Should be adapted for other version.
+    """
+
+    #TODO: filter /; because "pandoc 1.5" application does not like them.
+
+    f = codecs.open('temp.tex',encoding='utf-8', mode='w+')
+    #f =open('temp.tex','w')
+    f.write(input_str)
+    f.close()
+    try:
+        #TODO: review error code of this.
+        os.system("pandoc -f latex -t rst temp.tex -o temp.rst")
+    except:
+        return input_str
+    f = codecs.open('temp.rst',encoding='utf-8', mode='r')
+    #f =open('temp.rst','r')
+    output_str = f.read()
+    f.close()
+
+    #os.system("rm temp.tex temp.rst")
+
+    #Convertion of :math:`$$ ... $$` into ..math: notation
+    #TODO: if line contains $$...$$ and $$...$$ then a probem: inside $$ are going to be ignored.
+    txt = re.sub(ur':math:`\$\$(.+)\$\$`', indent_repl, output_str, re.DOTALL|re.U)
+
+    #Replace `$ and $` only by `  and ` 
+    txt = re.sub(ur'`\$', r'`', txt, re.DOTALL|re.U)
+    txt = re.sub(ur'\$`', r'`', txt, re.DOTALL|re.U)
+
+    #TODO:
+    #This does not work by the above reason.
+    #txt = re.sub(r':math:`\$(.+)\$`', r':math:`\1`', txt, re.DOTALL)
+
+    print type(txt)
+    return txt
+
+
+
+def convert_to_html(input_str):
+    """
+    See convert_to_rest notes.
+    """
+
+    return input_str
+
+
+def str_indent(s):
+    return "   " + s.replace("\n","\n   ")
+
 
 

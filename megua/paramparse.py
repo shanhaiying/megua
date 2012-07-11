@@ -153,6 +153,7 @@ def parameter_change(inputtext,datadict):
     match_iter = re.finditer(re_str,inputtext,re.UNICODE)
 
 
+    #TODO: maybe this should be above.
     if type(inputtext) == str:
         inputtext = unicode(inputtext,'utf-8')
 

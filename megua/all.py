@@ -10,6 +10,7 @@
 from megbook import *  #latex
 from megbookbase import *  #text
 from megbookweb import *  #web
+from megbookrest import *  #rest
 
 
 #from ur import *

@@ -871,8 +871,8 @@ class MegBook:
             BookmarkList(os.path.join(dest,'air_out.pdf'))
         #print bm.bm_list #TODO: export to xml
 
-    def make_sws(self, dest='.',tagstr=''):
-        sws = SWSExporter(self,dest,tagstr=tagstr)
+    def make_sws(self, dest='.',tagstr='',optvalues=0):
+        sws = SWSExporter(self,dest,tagstr=tagstr,optvalues=optvalues)
 
 
 #end class MegBook
