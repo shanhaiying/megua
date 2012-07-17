@@ -4,7 +4,8 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 #SPHINXBUILD   = /home/jpedro/sage/sage -python /home/jpedro/all/meg/meg-0.2/doc/sphinx-build
-SPHINXBUILD   = /home/jpedro/sage/sage -python /usr/bin/sphinx-build
+#SPHINXBUILD   = /home/jpedro/sage/sage -python /usr/local/bin/sphinx-build
+SPHINXBUILD   = /usr/local/bin/sphinx-build
 
 PAPER         =
 BUILDDIR      = _build

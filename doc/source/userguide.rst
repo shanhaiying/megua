@@ -37,7 +37,7 @@ The following block is a full exercise template:
    For example, the subject, MSC code, and so on.
 
    %Problem Some Name Here
-   What is the primitive of $a x + b@()$ ?
+   What is the primitive of $ap x + bp@()$ ?
 
    %Answer
    The answer is $prim+C$, for $C in \mathbb{R}$.
@@ -46,15 +46,15 @@ The following block is a full exercise template:
 
    class E28E28_pdirect_001(Exercise):
 
-       def make_random(self):
+       def make_random(s):
 
-           self.a = ZZ.random_element(-4,4)
-           self.b = RR.random_element(-4,4)
+           s.ap = ZZ.random_element(-4,4)
+           s.bp = RR.random_element(-4,4)
 
-       def solve(self):
+       def solve(s):
 
-           x=var('x')
-           self.prim = integrate(self.a * x + self.b,x)
+           x=SR.var('x')
+           s.prim = integrate(s.ap * x + s.bp,x)
 
 First part is the exercise LaTeX_ part and the second part is the Python_ part (Sage math preparses_ mathematics notation).
 
@@ -80,7 +80,7 @@ Tag **%Problem** and tag **%Answer**
     Textual parts may contain parameters to be changed by values on the final text. 
     These parameters are identified by letters or letters and numbers and they will be replaced by some LaTeX_ expression (formula, numbers, etc.). 
 
-    In the above example, `a` and `b@()` are parameters (the second has a output filter @()). 
+    In the above example, `ap` and `bp@()` are parameters (the second has a output filter @()). 
 
     In front of tag **%problem** one can write an suggestive name for the exercise.
 
@@ -88,13 +88,13 @@ How does this work?
 
 1. Textual parts contains **parameters** where a value, math expression, etc is to appear; As seen in the example above:
 
-   *  in the expression ``a x + b@()``, parameters could be ``a``, ``x`` and a filtered one ``b@()``.
+   *  in the expression ``ap x + bp@()`` parameters could be ``ap``, ``x`` and a filtered one ``bp@()``.
 
 2. In the *make_random* function one set a Sage value or expression to the parameter.  As seen in the example:
 
-   * ``self.a = ZZ.random_element()``: a random integer value is given to ``a``;
-   * ``self.b = RR.random_element(-4,4)``: a random real value is given to ``b``;
-   * ``self.prim = integrate(self.a * x + self.b,x)``: parameter ``prim`` will get the integration result on variable ``x``.
+   * ``s.a = ZZ.random_element()``: a random integer value is given to ``ap``;
+   * ``s.b = RR.random_element(-4,4)``: a random real value is given to ``bp``;
+   * ``s.prim = integrate(s.ap * x + s.bp,x)``: parameter ``prim`` will get the integration result on variable ``x``.
 
 3. The Sage Math value, formula, or number is converted to its LaTeX representation and replaced on the parameter place.
 
@@ -177,7 +177,7 @@ In a new cell of an opened worksheet do, as in the example:
 
    #START of the cell  ------------------
    
-   txt = r'''
+   meg.save( r'''
 
    %Summary Section name; Subsection name; Subsubsection name
 
@@ -186,7 +186,7 @@ In a new cell of an opened worksheet do, as in the example:
 
    %Problem Suggestive name
 
-   What is the primitive of $a x + b@()$ ?
+   What is the primitive of $ap x + bp@()$ ?
 
    %Answer
 
@@ -194,19 +194,17 @@ In a new cell of an opened worksheet do, as in the example:
 
    class E28E28_pdirect_001(Exercise):
 
-       def make_random(self):
+       def make_random(s):
 
-           self.a = ZZ.random_element(-4,4)
-           self.b = RR.random_element(-4,4)
+           s.ap = ZZ.random_element(-4,4)
+           s.bp = RR.random_element(-4,4)
 
-       def solve(self):
+       def solve(s):
 
-           x=var('x')
-           self.prim = integrate(self.a * x + self.b,x)
+           x=SR.var('x')
+           s.prim = integrate(s.ap * x + s.bp,x)
 
-    '''
-
-    meg.save(txt)
+    ''')
 
     #END of the cell ------------------
 
@@ -215,22 +213,19 @@ Previously we address the content of the template of the exercise.
 
 Now we describe how to declare it in the Sage notebook.
 
-1. Notice the ``txt = '''`` in the top of the cell. This defines a string containing with both TeX and Python parts. 
-The string starts with ``'''`` and ends with the same ``'''`` and contains the LaTeX in the beginning and then the Python_ coding for the exercise.
+1. Notice the ``r'''`` in the top of the cell. This defines a string containing with both TeX and Python parts. 
+The raw string starts with ``r'''`` and ends with ``'''`` and contains the LaTeX in the beginning and the Python_ coding for the exercise.
 2. The exercise must have a name. The recommended pattern for names is::  
  
-   E<math code>_name_number
+   E<MSC code>_name_number
 
 where codes are taken from MSC_ classification, ``name`` some suggestive name and a numeration scheme like 001, 002, etc, as 
 more exercises could share same name. All connected by an underscore ``_``.
-3. Finally, the command ``meg.save(txt)`` will save the exercise textual definition to the database.
 
 
 .. _MSC: http://www.ams.org/mathscinet/msc/msc2010.html
 
 **Notes:**
-
-* the keyword ``self`` can be replaced by a single letter identifier ``s`` but there is no way, in a class definition, to avoid it completely.
 
 To produce new exercise from the template there is the command::
 
@@ -250,18 +245,18 @@ Developing a new exercise:
 
 .. code-block:: python    
 
-   txt = '''
+   from megua.all import *
+   meg = MegBook(r'/home/user/a_meg_base.sqlite')
+   meg.save( r'''
 
       exercise TeX and Sage/Python definition (see above E28E28_pdirect_001)
 
-   ''' 
-   from megua.all import *
-   meg = MegBook(r'/home/user/a_meg_base.sqlite')
-   meg.save(txt)
+   ''')
 
-2. At shell prompt do::
+2. At shell prompt do:
 
    sage E28E28_pdirect_001.sage
+
 
 3. Check E28E28_pdirect_001.tex and E28E28_pdirect_001.pdf files for an example.
 
@@ -368,7 +363,7 @@ Short configuration:
 With LaTeX package "exercise":
 
 
-.. code-block:: latex
+.. code-block:: python
 
    # 
    # Using \usepackage{exercise}

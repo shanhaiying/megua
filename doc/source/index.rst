@@ -4,14 +4,14 @@
    contain the root `toctree` directive.
 
 ##########################
-  megua-0.1 Documentation
+  megua-0.2 Documentation
 ##########################
 
 :Release: |version|
 :Date: |today|
 
 
-.. **Welcome to megua-0.1 documentation**
+.. **Welcome to megua-0.2 documentation**
 
 This documentation contains the user and development guides of the MEGUA package that can be instaled under |sagemath|_. MEGUA package can be found at
 `megcode`_.
@@ -32,8 +32,10 @@ With Meg one can build a local database of exercises, or parameterized exercises
 
    userguide
    authorguide
-   develguide
-   refmodules 
+
+
+..   develguide
+..   refmodules 
 
 **Indices and tables**
 
