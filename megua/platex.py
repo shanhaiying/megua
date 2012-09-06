@@ -65,7 +65,8 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
     f.close()
 
     #compile
-    lt = ['sage-native-execute', 'pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
+    #lt = ['sage-native-execute', 'pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
+    lt = ['/usr/bin/pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
 
     #TODO: study efect of this in notebook
     if hideoutput:

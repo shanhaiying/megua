@@ -23,7 +23,10 @@ NOTES:
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
 #*****************************************************************************
-  
+
+
+#sage
+from sage.all import *  
 
 
 #python package
@@ -123,7 +126,13 @@ class SphinxExporter:
         self._save_to_files()
 
         #Build HTML from rst files.
-        argv = ['/usr/bin/sphinx-build', '-q', '-a', '-b', 'html', '-d', 
+
+        #argv = ['/usr/bin/sphinx-build', '-q', '-a', '-b', 'html', '-d', 
+        #    os.path.join(self.sphinx_folder,'build/doctrees'), #don't put a leader / like  /build/doctrees
+        #    self.sphinx_folder, 
+        #    os.path.join(self.sphinx_folder,'build/html')]
+
+        argv = [os.path.join(SAGE_ROOT,'local/bin/sphinx-build'), '-q', '-a', '-b', 'html', '-d', 
             os.path.join(self.sphinx_folder,'build/doctrees'), #don't put a leader / like  /build/doctrees
             self.sphinx_folder, 
             os.path.join(self.sphinx_folder,'build/html')]
