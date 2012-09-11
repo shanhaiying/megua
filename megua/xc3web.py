@@ -84,10 +84,11 @@ class C3WebExporter:
 
         #ZIP the folder
         #http://stackoverflow.com/questions/699325/suppress-output-in-python-calls-to-executables
-        fnull = open(os.devnull,'w')
+        #fnull = open(os.devnull,'w')
         import subprocess
-        subprocess.check_call([ "zip", self.c3web_folder, self.c3web_folder],stdout=fnull,stderr=fnull) 
-        fnull.close()
+        #subprocess.check_call([ "zip", self.c3web_folder, self.c3web_folder],stdout=fnull,stderr=fnull) 
+        subprocess.call("zip %s %s" % (self.c3web_folder, self.c3web_folder+r'/*'), shell=True) 
+        #fnull.close()
 
 
         #Output links to chapters in current cell
@@ -101,6 +102,8 @@ class C3WebExporter:
         """
         
         for sec_number,sec_name in enumerate(self.sc.contents):
+
+            print sec_number,sec_name
 
             #Get Section with sec_name (see class Section from csection.py)
             section = self.sc.contents[sec_name]
@@ -127,6 +130,7 @@ class C3WebExporter:
                 #Create exercise instance
                 row = self.megbook_store.get_classrow(exer) #e is exer name (same as owner_keystring)
                 ex_instance = exerciseinstance(row, ekey=ekey)
+
 
                 #Print problem
                 problem_html = self.problem_template.render(
