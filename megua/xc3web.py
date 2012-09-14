@@ -144,24 +144,24 @@ class C3WebExporter:
                 # {{ exsmall }} Ex. L.1
  
                 problem_html = self.problem_template.render(
-                    extitle = "Ex. L.%d" % exnr,
-                    exsmall = "Res. Ex. L.%d" % exnr,
+                    extitle = "Ex. L. %d" % exnr,
+                    exsmall = "Ex. L. %d" % exnr,
                     problem = ex_instance.problem()
                 )
                 #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-P%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
-                ofile = open( os.path.join( self.c3web_folder, "e%s%2d.aspx" % (fn,exnr) ), 'w')
+                ofile = open( os.path.join( self.c3web_folder, "e%s%02d.aspx" % (fn,exnr) ), 'w')
                 ofile.write(problem_html.encode('latin1'))
                 ofile.close()
 
                 #Print problem and answer
                 problemanswer_html = self.problemanswer_template.render(
-                    extitle = "Ex. Q.%d" % exnr,
-                    exsmall = "Res. L.%d" % exnr,
+                    extitle = "Res. L. %d" % exnr,
+                    exsmall = "Res. L. %d" % exnr,
                     problem = ex_instance.problem(),
                     answer = ex_instance.answer()
                 )
                 #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-A%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
-                ofile = open( os.path.join( self.c3web_folder, "r%s%2d.aspx" % (fn,exnr) ), 'w')
+                ofile = open( os.path.join( self.c3web_folder, "r%s%02d.aspx" % (fn,exnr) ), 'w')
                 ofile.write(problemanswer_html.encode('latin1'))
                 ofile.close()
 
