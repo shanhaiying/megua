@@ -250,7 +250,7 @@ class MegBook:
             Check ``dest`` directory (default is current) for compilation results.
 
         .. _python string: http://docs.python.org/release/2.6.7/tutorial/introduction.html#strings
-
+ 
         """
 
         #print "TYPE OF INPUT ", str(type(exercisestr))
@@ -261,7 +261,8 @@ class MegBook:
 
         # ---------------------------------------
         # Check exercise syntax: 
-        #    summary, problem, answer and class.
+        #    exer_parse return tuple:    
+        #       summary, problem, answer and classtext.
         # ---------------------------------------
         row = exerc_parse(exercisestr)
         if not row:
