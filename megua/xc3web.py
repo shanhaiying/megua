@@ -121,13 +121,17 @@ class C3WebExporter:
             self.ofile = codecs.open( os.path.join( self.c3web_folder, "e%02d.rst" % (sec_number+1) ),encoding='utf-8', mode='w+')
           if utf8 is needed.
         """
+	if sec_number==0:
+            fn="2"
+        else:
+            fn="3"
 
-        for e_number,exer in enumerate(section.exercises):
+        for e_number,exer in enumerate(section.exercises):   
 
             for ekey in range(10):
 
 		#Continuous numeration of exercises
-		exnr = e_number*10 + ekey
+		exnr = e_number*10 + (ekey+1)
 
                 #Create exercise instance
                 row = self.megbook_store.get_classrow(exer) #e is exer name (same as owner_keystring)
@@ -140,11 +144,12 @@ class C3WebExporter:
                 # {{ exsmall }} Ex. L.1
  
                 problem_html = self.problem_template.render(
-                    extitle = "Ex. Q.%d" % exnr,
-                    exsmall = "Ex. L.%d" % exnr,
+                    extitle = "Ex. L.%d" % exnr,
+                    exsmall = "Res. Ex. L.%d" % exnr,
                     problem = ex_instance.problem()
                 )
-                ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-P%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+                #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-P%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+                ofile = open( os.path.join( self.c3web_folder, "e%s%2d.aspx" % (fn,exnr) ), 'w')
                 ofile.write(problem_html.encode('latin1'))
                 ofile.close()
 
@@ -155,7 +160,8 @@ class C3WebExporter:
                     problem = ex_instance.problem(),
                     answer = ex_instance.answer()
                 )
-                ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-A%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+                #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-A%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+                ofile = open( os.path.join( self.c3web_folder, "r%s%2d.aspx" % (fn,exnr) ), 'w')
                 ofile.write(problemanswer_html.encode('latin1'))
                 ofile.close()
 
