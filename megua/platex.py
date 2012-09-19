@@ -66,17 +66,21 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
 
     #compile
     #lt = ['sage-native-execute', 'pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
-    lt = ['/usr/bin/pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
+    ###lt = ['/usr/bin/pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
+    lt = r'/usr/bin/pdflatex -interaction=nonstopmode ' + filename + r'.tex'
 
     #TODO: study efect of this in notebook
+    """
     if hideoutput:
         #read http://docs.python.org/library/subprocess.html about PIPE. The stdout will get full.
         #redirect = fout #None#subprocess.PIPE#With this "PIPE" argument no text is outputed neither to the commandline or notebook.
-        fout = open('/dev/null','w')
+        ifout = open('/dev/null','w')
         error = subprocess.check_call(lt, stdout=fout, stderr=fout, cwd=workdir)
         fout.close()
     else:
         error = subprocess.check_call(lt, cwd=workdir) #Output is given in both command line and notebook.
+    """
+    error = subprocess.check_call(lt,shell=True)
 
     if error:
         print ""
@@ -84,6 +88,7 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
         return not error
 
     if runs>1:
+        """
         if hideoutput:
             fout = open('/dev/null','w')
             subprocess.check_call(lt, stdout=fout, stderr=fout, cwd=workdir)
@@ -93,7 +98,9 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
             print "Second pdflatex compilation."
             print "============================"
             subprocess.check_call(lt, cwd=workdir)
-        
+        """
+        subprocess.check_call(lt,shell=True)
+
     if not silent:
         print "\nNo errors found during pdflatex compilation. Check %s.log for details." % filename
     
