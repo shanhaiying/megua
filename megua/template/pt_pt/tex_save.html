@@ -1,0 +1,102 @@
+
+<head>
+
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>MEGUA Save Result</title>
+
+</head>
+
+<script language="javascript">
+
+function toggle(what) {
+
+   divlatex   = document.getElementById("divlatex");
+   divlog     = document.getElementById("divlog");
+   divpdf     = document.getElementById("divpdf");
+   divmathjax = document.getElementById("divmathjax");
+
+   if (what=='latex') {
+     divlatex.style.display = "inline";
+     divlog.style.display = "none";
+     divpdf.style.display = "none";
+     divmathjax.style.display = "none";
+   } else if  (what=='log') {
+     divlatex.style.display = "none";
+     divlog.style.display = "inline";
+     divpdf.style.display = "none";
+     divmathjax.style.display = "none";
+  } else if (what=='pdf') {
+     divlatex.style.display = "none";
+     divlog.style.display = "none";
+     divpdf.style.display = "inline";
+     divmathjax.style.display = "none";
+  } else if (what=='mathjax') {
+     divlatex.style.display = "none";
+     divlog.style.display = "none";
+     divpdf.style.display = "none";
+     divmathjax.style.display = "inline";
+  } else {
+     divlatex.style.display = "none";
+     divlog.style.display = "none";
+     divpdf.style.display = "none";
+     divmathjax.style.display = "none";
+   }
+}
+</script>
+
+<style  type="text/css">
+
+#headerDiv {
+border: 1px solid blue;
+padding 5px;
+float: left;
+width: 80px;
+background-color: #99CCFF;
+color: #9EB6FF;
+}
+
+#headerDiv a {
+margin: 10px 10px 5px 5px;
+}
+
+#headerDiv a:hover {
+color: #FFFFFF;
+}
+</style>
+
+<html>
+<small><a href="http://code.google.com/p/megua/">MEGUA</a> package for 
+    <a href="http://www.sagemath.org">Sage Mathematics</a> and 
+    <a href="http://nb.sagemath.org/">SageNB</a>
+</small>
+<h3>Saving {{exercisename}}</h3>
+ <table>
+ <tbody >
+   <tr>
+   <td  valign='top' align='left' id="headerDiv">
+   <p>
+   <a id="latex" href="javascript:toggle('latex');" >LaTeX</a>
+   </p>
+   <p>
+   <a id="log" href="javascript:toggle('log');">LOG</a>
+   </p>
+   <p>
+   <a id='pdf'  href="javascript:toggle('pdf');">PDF</a>
+   </p>
+   <p>
+   <a id='mathjax' href="javascript:toggle('mathjax');">MathJax</a>
+   </p>
+   </td>
+   <td valign='top'>
+   <div id="divlatex" style="display: inline;">{{latexcode}}</div>
+   <div id="divlog" style="display: none;">{{logcode}}</div>
+   <div id="divpdf" style="display: none;"><embed src="the.pdf" width="500" height="375"></div>
+   <div id="divmathjax" style="display: none;">{{mathjaxcode}}</div>
+   </tr>
+  </tbody>
+  </table>
+
+
+</html>
