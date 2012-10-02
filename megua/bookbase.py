@@ -1,14 +1,13 @@
 r"""
-MegBookBase -- Base class for build your own database of exercises on some markup language.
+BookBase -- Base class for build your own database of exercises on some markup language. 
 
-MegBookBase is ready for textual form exercises. See derivatives of this class for
+BookBase is ready for textual form exercises. See derivatives of this class for
 other markup languages.
 
 
 AUTHORS:
 
 - Pedro Cruz (2012-06): initial version (based on megbook.py)
-
 
 """
 
@@ -24,10 +23,11 @@ AUTHORS:
 #*****************************************************************************
   
 
-#Meg modules:
+#Megua modules:
 from localstore import LocalStore,ExIter
 from ex import *
 from exerparse import exerc_parse
+from xsphinx import SphinxExporter
 
 
 #Because sage.plot.plot.EMBEDDED_MODE
@@ -51,7 +51,7 @@ import jinja2
 # print "Template folders are: " + str(env.loader.searchpath)
 
 
-class MegBookBase:
+class BookBase:
     r"""
     Base routines for exercise templating. Abstract class.
 
@@ -77,7 +77,7 @@ class MegBookBase:
     Create or edit a database::
 
        >>> from all import *
-       >>> meg = MegBookBase(r'.testoutput/megbasedb.sqlite')
+       >>> meg = BookBase(r'.testoutput/megbasedb.sqlite')
        MegBook opened. Execute `MegBook?` for examples of usage.
        Templates for 'pt_pt' language.
 
@@ -482,6 +482,40 @@ class MegBookBase:
         sws = SWSExporter(self,dest)
 
 
+
+    def make_index(self,where='.',debug=False):
+        """
+        Produce rst code files from the database and an index reading first line of the %summary field.
+
+        Command line use: 
+            The ``where`` input argument, when specified,  will contain all details of Sphinx compilation.
+
+        LINKS:
+
+        http://code.activestate.com/recipes/193890-using-rest-restructuredtext-to-create-html-snippet/
+
+        """
+
+        html_index = SphinxExporter(self,where,debug)
+        print "Index is at: "+ html_index.htmlfile
+
+        if is_notebook():
+            if where == '.': 
+                #To open a browser
+                pos = html_index.htmlfile.find(".")
+                html(r'<a href="%s" target=_blank>Press to open database index.</a>' % html_index.htmlfile[pos:])
+            elif 'data' in where:
+                #To open a browser
+                pos = html_index.htmlfile.find("/home")
+                pos2 = html_index.htmlfile.find("/home",pos+1)
+                if pos2>=0:
+                    pos = pos2
+                html(r'<a href="%s" target=_blank>Press to open database index.</a>' % html_index.htmlfile[pos:])
+            else:
+                #print "Index is at: "+ html_index.htmlfile
+                print "See index at Megua button at top."
+        else:
+            print "firefox -no-remote ", html_index.htmlfile
 
 #end class MegBook
 
