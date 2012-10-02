@@ -1,9 +1,9 @@
 r"""
-MegBookWeb -- Build your own database of exercises to the web.
+bookmathjax -- Build your own database of exercises to the web.
 
 AUTHORS:
 
-- Pedro Cruz (2012-06): initial version.
+- Pedro Cruz (2012-10): initial version.
 
 
 """
@@ -23,7 +23,7 @@ import codecs
 
 
 #Megua modules:
-from megbookbase import *
+from bookbase import *
 from xc3web import C3WebExporter
 from platex import pcompile
 
@@ -33,7 +33,7 @@ from platex import pcompile
 
 
 
-class MegBookWeb(MegBookBase):
+class MathjaxBook(BaseBook):
     r"""
     Set of routines for exercise templating to the web.
 
@@ -52,16 +52,16 @@ class MegBookWeb(MegBookBase):
         - ``natlang`` -- natural language ('pt_pt', etc).
 
         """
-        MegBookBase.__init__(self,filename=filename,natlang=natlang,markuplang='web')
+        BaseBook.__init__(self,filename=filename,natlang=natlang,markuplang='mathjax')
 
 
 
     def __str__(self):
-        return "MegBookWeb('%s') for %s and markup language %s" % (self.local_store_filename,self.megbook_store.natural_language,self.megbook_store.markup_language)
+        return "MathjaxBook('%s') for %s and markup language %s" % (self.local_store_filename,self.megbook_store.natural_language,self.megbook_store.markup_language)
 
 
     def __repr__(self):
-        return "MegBookWeb('%s')" % (self.local_store_filename)
+        return "MathjaxBook('%s')" % (self.local_store_filename)
 
 
     def is_exercise_ok(self,row,dest,silent=True):
@@ -218,5 +218,5 @@ class MegBookWeb(MegBookBase):
 
 
 
-#end class MegBookWeb
+#end class MathjaxBook
 
