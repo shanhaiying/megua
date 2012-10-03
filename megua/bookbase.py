@@ -51,7 +51,7 @@ import jinja2
 # print "Template folders are: " + str(env.loader.searchpath)
 
 
-class BaseBook:
+class BookBase:
     r"""
     Base routines for exercise templating. Abstract class.
 
@@ -59,7 +59,7 @@ class BaseBook:
 
     - ``filename`` -- filename where the database is stored.
 
-    This module provides a means to produce a database of exercises that can be seen as a book of some author or authors.
+    This module provides means to produce a database of exercises that can be seen as a book of some author or authors.
 
     Using exercices:
 
@@ -72,7 +72,7 @@ class BaseBook:
 
     Examples of use:
 
-    .. test with: sage -python -m doctest megbook.py
+    .. test with: sage -python -m doctest bookbase.py
 
     Create or edit a database::
 
@@ -171,10 +171,10 @@ class BaseBook:
 
 
     def __str__(self):
-        return "BaseBook(%s) for natural language %s and markup language  %s." % (self.local_store_filename,self.natlang,self.markuplang)
+        return "BookBase(%s) for natural language %s and markup language  %s." % (self.local_store_filename,self.natlang,self.markuplang)
 
     def __repr__(self):
-        return "BaseBook(%s)" % (self.local_store_filename)
+        return "BookBase(%s)" % (self.local_store_filename)
 
     def template(self, filename, **user_context):
         """

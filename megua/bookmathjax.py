@@ -33,7 +33,7 @@ from platex import pcompile
 
 
 
-class MathjaxBook(BaseBook):
+class BookMathjax(BookBase):
     r"""
     Set of routines for exercise templating to the web.
 
@@ -52,16 +52,16 @@ class MathjaxBook(BaseBook):
         - ``natlang`` -- natural language ('pt_pt', etc).
 
         """
-        BaseBook.__init__(self,filename=filename,natlang=natlang,markuplang='mathjax')
+        BookBase.__init__(self,filename=filename,natlang=natlang,markuplang='mathjax')
 
 
 
     def __str__(self):
-        return "MathjaxBook('%s') for %s and markup language %s" % (self.local_store_filename,self.megbook_store.natural_language,self.megbook_store.markup_language)
+        return "BookMathjax('%s') for %s and markup language %s" % (self.local_store_filename,self.megbook_store.natural_language,self.megbook_store.markup_language)
 
 
     def __repr__(self):
-        return "MathjaxBook('%s')" % (self.local_store_filename)
+        return "BookMathjax('%s')" % (self.local_store_filename)
 
 
     def is_exercise_ok(self,row,dest,silent=True):
