@@ -264,6 +264,7 @@ class MegBookBase:
         inserted_row = self.megbook_store.insertchange(row)
         if inserted_row: 
             print 'Exercise name %s inserted or changed.' % inserted_row['owner_key']
+            self.new(row['owner_key'], ekey=10)
         else:
             print 'Problem in access to the database. Could not save the exercise on the database.'
 

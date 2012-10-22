@@ -26,7 +26,7 @@ import codecs
 from megbookbase import *
 from xc3web import C3WebExporter
 from platex import pcompile
-
+from xmoodle import MoodleExporter
 
 
 #TODO Is it necessary to import other libs?
@@ -148,8 +148,11 @@ class MegBookWeb(MegBookBase):
             #file with html to export (extension txt prevents html display).
 
             #To be viewed on browser
-            f = open(sname+'.html','w')
-            f.write(html_string.encode('latin1'))
+            #f = open(sname+'.html','w')
+            #f.write(html_string.encode('latin1'))
+            #f.close()
+            f = codecs.open(sname+'.html', mode='w', encoding='utf-8')
+            f.write(html_string)
             f.close()
 
             #To be used on sphinx
@@ -216,6 +219,8 @@ class MegBookWeb(MegBookBase):
         """
         html_index = C3WebExporter(self,where,debug)
 
+    def make_moodlexml(self,where='.',debug=False):
+        MoodleExporter(self, where, debug)  
 
 
 #end class MegBookWeb
