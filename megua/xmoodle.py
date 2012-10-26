@@ -131,6 +131,17 @@ class MoodleExporter:
         return s.replace(";","/") #possible case without space: ";" by "/"
 
 
+    #def _parse(self, ex_instance):
+    #    """
+    #    Get Moodle Type Question of the %problem and generate proper xml.
+    #    """
+    #    probtxt  =  ex_instance.problem()
+    #    if string.find(probtxt, r"%multiplechoice" )!=-1:
+    #
+    #    else:
+    #        #Assume "cloze" question type
+
+
 
 def lang_set(s):
     if s == 'pt_pt':
