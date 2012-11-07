@@ -85,7 +85,7 @@ class MegBookWeb(MegBookBase):
         # Set the Exercise print template
         # -------------------------------
         try:
-            self.cloze_template = self.megbook.env.get_template("moodle-cloze.xml")
+            self.cloze_template = self.env.get_template("moodle-cloze.xml")
         except jinja2.exceptions.TemplateNotFound as e:
             print "MegUA -- missing template moodle_cloze.xml"
             raise e
@@ -408,7 +408,7 @@ class MegBookWeb(MegBookBase):
         # output file
         # -----------------
         xmlfilename = "quiz-%s.xml" % exname
-        xmlfile = codecs.open(self.xmlfilename, encoding='utf-8', mode='w')
+        xmlfile = codecs.open(xmlfilename, encoding='utf-8', mode='w')
         xmlfile.write('<?xml version="1.0" encoding="utf-8"?>\n<quiz>\n')
         xmlfile.write(questions_xml)
         xmlfile.write("\n</quiz>")
