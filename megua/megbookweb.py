@@ -76,7 +76,7 @@ class MegBookWeb(MegBookBase):
         # Set the Exercise print template
         # -------------------------------
         try:
-            self.mchoice_template = self.megbook.env.get_template("moodle-mchoice.xml")
+            self.mchoice_template = self.env.get_template("moodle-mchoice.xml")
         except jinja2.exceptions.TemplateNotFound as e:
             print "MegUA -- missing template moodle_mchoice.xml"
             raise e
