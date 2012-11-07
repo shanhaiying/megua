@@ -54,6 +54,15 @@ class MegBookWeb(MegBookBase):
         """
         MegBookBase.__init__(self,filename=filename,natlang=natlang,markuplang='web')
 
+        # -------------------------------
+        # Set the Exercise print template
+        # -------------------------------
+        try:
+            self.problem_template = self.env.get_template("xc3web_problem.html")
+            self.problemanswer_template = self.env.get_template("xc3web_problemanswer.html")
+        except jinja2.exceptions.TemplateNotFound as e:
+            print "MegUA -- missing templates 'xc3web_problem.html' or 'xc3web_problemanswer.html'."
+            raise e
 
 
     def __str__(self):
@@ -221,6 +230,165 @@ class MegBookWeb(MegBookBase):
 
     def make_moodlexml(self,where='.',debug=False):
         MoodleExporter(self, where, debug)  
+
+
+    
+    def c3web(self, exname, ename="e", rname="r", startnumber=1, many=10,  whatinside="E", ekey=0, edict={}, where='c3web'):
+        """
+        Save an exercse to aspx page.
+
+	INPUT:
+
+	- exname: string with exercise identification name.
+	- many: how many samples (starting ekey generated key).
+        - ename: filename prefix for file with exercise text.
+        - rname: filename prefix for file with resolution text.
+        - startnumber: number for filename.
+        - whatinside: "E" for extrema, "L" for limits, whatever...
+	- ekey: random values generation key.
+	- edict: some values declared on make_random or solve functions of the exercise.
+
+        EXAMPLES:
+
+        Full use of parameters::
+
+            sage: meg.c3web("E12A34_Aplic_DerivadasE1_002", many=10, ekey=100, edict={'a': 10})
+
+        Less parameters::
+
+            sage: meg.c3web("E12A34_Aplic_DerivadasE1_002", many=10 )
+
+        NOTES:
+          See C3WebExporter for saving full database.
+        """
+
+        #If does not exist create
+        if not os.path.exists(where):
+            os.makedirs(where)
+
+
+        #Create exercise instance
+        row = self.megbook_store.get_classrow(exname)
+        if not row:
+            print "Exercise %s not found." % exname
+            return
+
+        for e_number in range(many):
+
+            #Continuous numeration of exercises
+            exnr = startnumber + e_number
+
+            #Create exercise instance
+            ex_instance = exerciseinstance(row, ekey= ekey + e_number)
+
+
+            #Print problem
+            #Template fields:
+            # {{ extitle }} Ex. Q.1
+            # {{ exsmall }} Ex. L.1
+
+            problem_html = self.problem_template.render(
+                extitle = "Ex. %s. %d" % (whatinside,exnr),
+                exsmall = "Ex. %s. %d" % (whatinside,exnr),
+                problem = ex_instance.problem()
+            )
+
+            #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-P%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+            ofile = open( os.path.join( where, "%s%d.aspx" % (ename,exnr) ), 'w')
+            ofile.write(problem_html.encode('latin1'))
+            ofile.close()
+
+            #Print problem and answer
+            problemanswer_html = self.problemanswer_template.render(
+                extitle = "Res. %s. %d" % (whatinside,exnr),
+                exsmall = "Res. %s. %d" % (whatinside,exnr),
+                problem = ex_instance.problem(),
+                answer = ex_instance.answer()
+            )
+
+	    #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-A%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+            ofile = open( os.path.join(where, "%s%d.aspx"  % (rname,exnr) ), 'w')
+            ofile.write(problemanswer_html.encode('latin1'))
+            ofile.close()
+
+
+        import subprocess
+        subprocess.call("zip %s %s" % (where, where+r'/*'), shell=True)
+
+
+    def moodle(self, exname, many=10,  ekey=0, where='moodle'):
+        """
+        Save an exercse to moodle xml file format.
+
+	INPUT:
+
+	- exname: string with exercise identification name.
+	- many: how many samples (starting ekey generated key).
+	- ekeys: random values generation key.
+        - where: local folder to store data.
+
+        EXAMPLES:
+
+        Full use of parameters::
+
+            sage: meg.moodle("E12A34_Aplic_DerivadasE1_002", many=10, ekey=100)
+
+        Less parameters::
+
+            sage: meg.moodle("E12A34_Aplic_DerivadasE1_002", many=10 )
+
+        """
+
+        #If does not exist create
+        if not os.path.exists(where):
+            os.makedirs(where)
+
+
+        #Create exercise instance
+        row = self.megbook_store.get_classrow(exname)
+        if not row:
+            print "Exercise %s not found." % exname
+            return
+
+        for e_number in range(many):
+
+            #Create exercise instance
+            ex_instance = exerciseinstance(row, ekey= ekey + e_number)
+
+
+            #Print problem
+            #Template fields:
+            # {{ extitle }} Ex. Q.1
+            # {{ exsmall }} Ex. L.1
+
+            problem_html = self.problem_template.render(
+                extitle = "Ex. %s. %d" % (whatinside,exnr),
+                exsmall = "Ex. %s. %d" % (whatinside,exnr),
+                problem = ex_instance.problem()
+            )
+
+            #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-P%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+            ofile = open( os.path.join( where, "%s%d.aspx" % (ename,exnr) ), 'w')
+            ofile.write(problem_html.encode('latin1'))
+            ofile.close()
+
+            #Print problem and answer
+            problemanswer_html = self.problemanswer_template.render(
+                extitle = "Res. %s. %d" % (whatinside,exnr),
+                exsmall = "Res. %s. %d" % (whatinside,exnr),
+                problem = ex_instance.problem(),
+                answer = ex_instance.answer()
+            )
+
+	    #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-A%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
+            ofile = open( os.path.join(where, "%s%d.aspx"  % (rname,exnr) ), 'w')
+            ofile.write(problemanswer_html.encode('latin1'))
+            ofile.close()
+
+
+        import subprocess
+        subprocess.call("zip %s %s" % (where, where+r'/*'), shell=True)
+
 
 
 #end class MegBookWeb
