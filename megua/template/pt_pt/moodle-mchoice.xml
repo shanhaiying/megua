@@ -1,0 +1,21 @@
+<!-- Sections(MEGUA) or Category(Moodle)-->
+<question type="category">
+<category>
+<text>$course$/{{sections}}</text>
+</category>
+</question>
+<!-- {{exercisename}} ekey={{ekey}} -->
+<question type="multichoice">
+<name>
+<text>{{problemname}}</text>
+</name>
+<questiontext format="html">
+<text>
+<![CDATA[{{problemtext}}]]>
+</text>
+</questiontext>
+{{answertext}}
+</question>
+
+
+
