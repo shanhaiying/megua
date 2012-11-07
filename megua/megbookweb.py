@@ -417,6 +417,7 @@ class MegBookWeb(MegBookBase):
 
 def m_get_sections(sectionstxt):
     """
+
     LINKS::
 
        http://stackoverflow.com/questions/2054746/how-to-search-and-replace-utf-8-special-characters-in-python?rq=1
