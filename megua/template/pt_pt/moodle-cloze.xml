@@ -1,24 +1,20 @@
 <!-- Sections(MEGUA) or Category(Moodle)-->
 <question type="category">
 <category>
-<text>$course$/{{sections}}</text>
+<text>$course$/{{sections}}/{{problemname}}</text>
 </category>
 </question>
 <!-- {{exercisename}} ekey={{ekey}} -->
 <question type="cloze">
-<name>
-<text>{{problemname}}</text>
-</name>
-<questiontext format="html">
-<text>
-<![CDATA[{{problemtext}}]]>
-</text>
-</questiontext>
-<generalfeedback format="html">
-<text>
-<![CDATA[{{answertext}}]]>
-</text>
-</generalfeedback>
-<shuffleanswers>1</shuffleanswers>
+  <name>
+  <text>{{problemname}} ({{ekey}})</text>
+  </name>
+  <questiontext format="html">
+  <text><![CDATA[{{problemtext}}]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+  <text><![CDATA[{{answertext}}]]></text>
+  </generalfeedback>
+  <shuffleanswers>true</shuffleanswers>
 </question>
 
