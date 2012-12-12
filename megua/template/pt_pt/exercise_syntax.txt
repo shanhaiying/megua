@@ -1,0 +1,21 @@
+
+Text must follow this template:
+
+%SUMÁRIO Nome da Secção; Subsecção; Subsubsecção
+
+Texto descritivo sumariando o exercício e palavras chave.
+
+Linha com a autori ou nome do projeto.
+
+%PROBLEMA um nome do exercício
+
+Problem text using name@ for variables.
+                    
+%RESOLUÇÃO
+
+Answer text using name@ for variables.
+
+class E62L20_aboutmean_001(Exercise):
+    etc etc
+
+
