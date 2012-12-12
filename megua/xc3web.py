@@ -149,7 +149,7 @@ class C3WebExporter:
                     problem = ex_instance.problem()
                 )
                 #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-P%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
-                ofile = open( os.path.join( self.c3web_folder, "e%s%02d.aspx" % (fn,exnr) ), 'w')
+                ofile = open( os.path.join( self.c3web_folder, "e%s%03d.aspx" % (fn,exnr) ), 'w')
                 ofile.write(problem_html.encode('latin1'))
                 ofile.close()
 
@@ -161,7 +161,7 @@ class C3WebExporter:
                     answer = ex_instance.answer()
                 )
                 #ofile = open( os.path.join( self.c3web_folder, "e%02d-%02d-A%02d.aspx" % (sec_number+1,e_number+1,ekey+1) ), 'w')
-                ofile = open( os.path.join( self.c3web_folder, "r%s%02d.aspx" % (fn,exnr) ), 'w')
+                ofile = open( os.path.join( self.c3web_folder, "r%s%03d.aspx" % (fn,exnr) ), 'w')
                 ofile.write(problemanswer_html.encode('latin1'))
                 ofile.close()
 

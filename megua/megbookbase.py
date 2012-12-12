@@ -1,13 +1,14 @@
 r"""
-BookBase -- Base class for build your own database of exercises on some markup language. 
+MegBookBase -- Base class for build your own database of exercises on some markup language.
 
-BookBase is ready for textual form exercises. See derivatives of this class for
+MegBookBase is ready for textual form exercises. See derivatives of this class for
 other markup languages.
 
 
 AUTHORS:
 
 - Pedro Cruz (2012-06): initial version (based on megbook.py)
+
 
 """
 
@@ -23,11 +24,10 @@ AUTHORS:
 #*****************************************************************************
   
 
-#Megua modules:
+#Meg modules:
 from localstore import LocalStore,ExIter
 from ex import *
 from exerparse import exerc_parse
-from xsphinx import SphinxExporter
 
 
 #Because sage.plot.plot.EMBEDDED_MODE
@@ -51,7 +51,7 @@ import jinja2
 # print "Template folders are: " + str(env.loader.searchpath)
 
 
-class BookBase:
+class MegBookBase:
     r"""
     Base routines for exercise templating. Abstract class.
 
@@ -59,7 +59,7 @@ class BookBase:
 
     - ``filename`` -- filename where the database is stored.
 
-    This module provides means to produce a database of exercises that can be seen as a book of some author or authors.
+    This module provides a means to produce a database of exercises that can be seen as a book of some author or authors.
 
     Using exercices:
 
@@ -72,19 +72,19 @@ class BookBase:
 
     Examples of use:
 
-    .. test with: sage -python -m doctest bookbase.py
+    .. test with: sage -python -m doctest megbook.py
 
     Create or edit a database::
 
        >>> from all import *
-       >>> meg = BookBase(r'.testoutput/megbasedb.sqlite')
-       Opened BookBase(.testoutput/megbasedb.sqlite) for natural language pt_pt and markup language  text.
-       Templates for 'pt_pt' language at template/pt_pt
+       >>> meg = MegBookBase(r'.testoutput/megbasedb.sqlite')
+       MegBook opened. Execute `MegBook?` for examples of usage.
+       Templates for 'pt_pt' language.
 
 
     Save a new or changed exercise::
 
-       >>> meg.save(r'''
+       >>> txt=r'''
        ... %Summary Primitives
        ... Here one can write few words, keywords about the exercise.
        ... For example, the subject, MSC code, and so on.
@@ -104,23 +104,27 @@ class BookBase:
        ...     def solve(self):
        ...         x=SR.var('x')
        ...         self.prim = integrate(self.ap * x + self.bp,x)
-       ... ''')
+       ... '''
+       >>> meg.save(txt,dest=r'.testoutput')
        Each problem can have a suggestive name. 
        Write in the '%problem' line a name, for ex., '%problem The Fish Problem'.
        <BLANKLINE>
+       Testing python/sage class 'E28E28_pdirect_001' with 100 different keys.
+           No problems found in this test.
+          Compiling 'E28E28_pdirect_001' with pdflatex.
+          No errors found during pdflatex compilation. Check E28E28_pdirect_001.log for details.
        Exercise name E28E28_pdirect_001 inserted or changed.
-
 
     Search an exercise:
 
       >>> meg.search("primitive")
       Exercise name E28E28_pdirect_001
       <BLANKLINE>
+      %problem 
       What is the primitive of ap x + bp@() ?
       <BLANKLINE>
       <BLANKLINE>
       <BLANKLINE>
-
 
     Remove an exercise:
 
@@ -135,8 +139,8 @@ class BookBase:
 
         INPUT::
         - ``filename`` -- filename where the database is stored.
-        - ``natlang`` -- For example, 'pt_pt', for portuguese of Portugal.
-        - ``markuplang`` -- 'latex' or 'web'. Derivative class could pass this argument.
+        - ``natlang`` -- For example, 'pt_pt', for portuguese (of portugal), 'en_us' for english from USA.
+        - ``markuplang`` -- 'latex' or 'web'.
 
         """
     
@@ -145,11 +149,11 @@ class BookBase:
 
         #Create or open the database
         try:
-            self.book_store = LocalStore(filename=filename,natlang=natlang,markuplang=markuplang)
-            self.local_store_filename = self.book_store.local_store_filename #keep record.
+            self.megbook_store = LocalStore(filename=filename,natlang=natlang,markuplang=markuplang)
+            self.local_store_filename = self.megbook_store.local_store_filename #keep record.
             print "Opened " + str(self)
         except sqlite3.Error as e:
-            print "BookBase couldn't be opened: " , e.args[0]
+            print "MegBook couldn't be opened: " , e.args[0]
             return
 
         #Templating (with Jinja2)
@@ -167,13 +171,10 @@ class BookBase:
 
 
     def __str__(self):
-        return "BookBase(%s) for natural language %s and markup language  %s." % \
-            (self.local_store_filename, \
-             self.book_store.natural_language, \
-             self.book_store.markup_language)
+        return "MegBookBase(%s) for natural language %s and markup language  %s." % (self.local_store_filename,self.natlang,self.markuplang)
 
     def __repr__(self):
-        return "BookBase(%s)" % (self.local_store_filename)
+        return "MegBookBase(%s)" % (self.local_store_filename)
 
     def template(self, filename, **user_context):
         """
@@ -260,9 +261,10 @@ class BookBase:
         # ----------------------------
         # Exercise seems ok: store it.
         # ----------------------------
-        inserted_row = self.book_store.insertchange(row)
+        inserted_row = self.megbook_store.insertchange(row)
         if inserted_row: 
             print 'Exercise name %s inserted or changed.' % inserted_row['owner_key']
+            self.new(row['owner_key'], ekey=10)
         else:
             print 'Problem in access to the database. Could not save the exercise on the database.'
 
@@ -341,7 +343,7 @@ class BookBase:
 
     def check_all(self,dest='.'):
         r""" 
-        Check all exercises of this book for errrors.
+        Check all exercises of this megbook for errrors.
 
         INPUT:
 
@@ -351,7 +353,7 @@ class BookBase:
         """
 
         all_ex = []
-        for row in ExIter(self.book_store):
+        for row in ExIter(self.megbook_store):
             if not self.is_exercise_ok(row,dest,silent=True):
                 print "   Exercise '%s' have python/sage or compilation errors." % row['owner_key']
                 all_ex.append(row['owner_key'])
@@ -365,22 +367,21 @@ class BookBase:
 
     def search(self,regex):
         r"""
-        Search all fields for a regular expression ``regex``.
+        Performs a search of a regular expression ``regex`` over all fields.
 
         INPUT:
         - ``regex`` -- regular expression (see regex_ module).
-
         OUTPUT:
         - 
         
         .. _regex: http://docs.python.org/release/2.6.7/library/re.html
         """
-        exlist = self.book_store.search(regex)
+        exlist = self.megbook_store.search(regex)
         for row in exlist:
-            self._search_print_row(row)
+            self.search_print_row(row)
 
 
-    def _search_print_row(self,exrow):
+    def search_print_row(self,exrow):
         r"""
         This is an helper function of ``Meg.search`` function to print the contents of a search.
         Not to be called by meg user.
@@ -413,7 +414,7 @@ class BookBase:
         """
 
         #Get the exercise
-        row = self.book_store.get_classrow(owner_keystring)
+        row = self.megbook_store.get_classrow(owner_keystring)
         if row:            
             fname = os.path.join(dest,owner_keystring+'.txt')
             #store it on a text file
@@ -426,7 +427,7 @@ class BookBase:
             print "Exercise '%s' stored on text file %s." % (owner_keystring,fname)
 
             #remove it
-            self.book_store.remove_exercise(owner_keystring)
+            self.megbook_store.remove_exercise(owner_keystring)
         else:
             print "Exercise %s is not on the database." % owner_keystring
 
@@ -446,7 +447,7 @@ class BookBase:
 
         """
         #Get summary, problem and answer and class_text
-        row = self.book_store.get_classrow(owner_keystring)
+        row = self.megbook_store.get_classrow(owner_keystring)
         if not row:
             print "%s cannot be accessed on database" % owner_keystring
             return None
@@ -478,47 +479,12 @@ class BookBase:
         print answtxt.encode('utf8')
 
 
-
     def make_sws(self, dest='.'):
         sws = SWSExporter(self,dest)
 
 
 
-    def make_index(self,where='.',debug=False):
-        """
-        Produce rst code files from the database and an index reading first line of the %summary field.
-
-        Command line use: 
-            The ``where`` input argument, when specified,  will contain all details of Sphinx compilation.
-
-        LINKS:
-
-        http://code.activestate.com/recipes/193890-using-rest-restructuredtext-to-create-html-snippet/
-
-        """
-
-        html_index = SphinxExporter(self,where,debug)
-        print "Index is at: "+ html_index.htmlfile
-
-        if is_notebook():
-            if where == '.': 
-                #To open a browser
-                pos = html_index.htmlfile.find(".")
-                html(r'<a href="%s" target=_blank>Press to open database index.</a>' % html_index.htmlfile[pos:])
-            elif 'data' in where:
-                #To open a browser
-                pos = html_index.htmlfile.find("/home")
-                pos2 = html_index.htmlfile.find("/home",pos+1)
-                if pos2>=0:
-                    pos = pos2
-                html(r'<a href="%s" target=_blank>Press to open database index.</a>' % html_index.htmlfile[pos:])
-            else:
-                #print "Index is at: "+ html_index.htmlfile
-                print "See index at Megua button at top."
-        else:
-            print "firefox -no-remote ", html_index.htmlfile
-
-#end class BookBase
+#end class MegBook
 
 
 
@@ -530,7 +496,7 @@ def is_notebook():
 
     def dbinstance(self, ex_class, ekey=None, edict=None):
         #Get summary, problem, answer and class_text
-        row = self.book_store.get_classrow(ex_class.name)
+        row = self.megbook_store.get_classrow(ex_class.name)
         #Create instance
         return self.instance(ex_class.name,ex_class, row, ekey, edict)
     '''
