@@ -81,7 +81,7 @@ from sage.all import *
 # http://www.doughellmann.com/PyMOTW/warnings/
 import warnings
 
-
+import re
 
 class Exercise:
     """Class ``Exercise`` is the base class for an exercise.
@@ -167,6 +167,8 @@ class Exercise:
         """
         Derive this function and implement rewritting rules to change latex expressions for example.
         """
+        exp_pattern = re.compile(ur'e\^\{\\left\((.+?)\\right\)\}',re.U)
+        out_text = re.sub(exp_pattern, r'e^{\1}', text)
         return text
 
     def summary(self):
@@ -179,13 +181,18 @@ class Exercise:
         """
         Use class text self._problem_text and replace for parameters on dictionary. Nothing is saved.
         """
-        return parameter_change(self._problem_text,self.__dict__)
+        in_text = parameter_change(self._problem_text,self.__dict__)
+        out_text = self.rewrite(in_text)
+        return out_text
 
     def answer(self):
         """
         Use class text self._answer_text and replace for parameters on dictionary. Nothing is saved.
         """
-        return parameter_change(self._answer_text,self.__dict__)
+        #return parameter_change(self._answer_text,self.__dict__)
+        in_text = parameter_change(self._answer_text,self.__dict__)
+        out_text = self.rewrite(in_text)
+        return out_text
 
     def name(self):
         return self.name
