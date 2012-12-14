@@ -9,6 +9,7 @@
 #Megua modules:
 from megbook import *  #latex
 from bookbase import *  #text
+from megbookweb import *  #text
 #from bookmathjax import *  #web
 #from bookrst import *  #rest
 #from bookmoodle import *  #rest
