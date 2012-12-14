@@ -248,10 +248,47 @@ def convert_to_rest(input_str):
 
 def convert_to_html(input_str):
     """
+
     See convert_to_rest notes.
+
     """
 
-    return input_str
+    #TODO: filter /; because "pandoc 1.5" application does not like them.
+
+    #Save latex string to a temp file for pandoc to translate.
+    f = codecs.open('temp.tex',encoding='utf-8', mode='w+')
+    #f =open('temp.tex','w')
+    f.write(input_str)
+    f.close()
+
+    #pandoc will translate it
+    try:
+        #TODO: review error code of this.
+        os.system("pandoc -f latex -t html temp.tex -o temp.rst")
+    except:
+        return input_str
+    f = codecs.open('temp.rst',encoding='utf-8', mode='r')
+    #f =open('temp.rst','r')
+    output_str = f.read()
+    f.close()
+
+    #os.system("rm temp.tex temp.rst")
+
+    #Convertion of :math:`$$ ... $$` into ..math: notation
+    #TODO: if line contains $$...$$ and $$...$$ then a probem: inside $$ are going to be ignored.
+    txt = re.sub(ur':math:`\$\$(.+)\$\$`', indent_repl, output_str, re.DOTALL|re.U)
+
+    #Replace `$ and $` only by `  and ` 
+    txt = re.sub(ur'`\$', r'`', txt, re.DOTALL|re.U)
+    txt = re.sub(ur'\$`', r'`', txt, re.DOTALL|re.U)
+
+    #TODO:
+    #This does not work by the above reason.
+    #txt = re.sub(r':math:`\$(.+)\$`', r':math:`\1`', txt, re.DOTALL)
+
+    print type(txt)
+    return txt
+
 
 
 def str_indent(s):

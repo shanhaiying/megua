@@ -1,5 +1,5 @@
 r"""
-MegBookRest -- Build your own database of exercises using Rest, Tikz and MathJax.
+bookrst -- Build your own database of exercises using Rest, Tikz and MathJax.
 
 AUTHORS:
 
@@ -23,7 +23,7 @@ import codecs
 
 
 #Megua modules:
-from megbookbase import *
+from bookbase import *
 from platex import pcompile
 
 
@@ -32,9 +32,9 @@ from platex import pcompile
 
 
 
-class MegBookRest(MegBookBase):
+class RstBook(BookBase):
     r"""
-    Build your own database of exercises using Rest, Tikz and MathJax.
+    Build your own database of exercises using Rst, Tikz and MathJax.
 
     INPUT::
 
@@ -51,16 +51,16 @@ class MegBookRest(MegBookBase):
         - ``natlang`` -- natural language ('pt_pt', etc).
 
         """
-        MegBookBase.__init__(self,filename=filename,natlang=natlang,markuplang='rest')
+        BookBase.__init__(self,filename=filename,natlang=natlang,markuplang='rest')
 
 
 
     def __str__(self):
-        return "MegBookRest('%s') for %s and markup language %s" % (self.local_store_filename,self.megbook_store.natural_language,self.megbook_store.markup_language)
+        return "RstBook('%s') for %s and markup language %s" % (self.local_store_filename,self.megbook_store.natural_language,self.megbook_store.markup_language)
 
 
     def __repr__(self):
-        return "MegBookRest('%s')" % (self.local_store_filename)
+        return "RstBook('%s')" % (self.local_store_filename)
 
 
     def is_exercise_ok(self,row,dest,silent=True):

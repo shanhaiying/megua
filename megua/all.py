@@ -6,12 +6,12 @@
 #*****************************************************************************
   
 
-#Meg modules:
+#Megua modules:
 from megbook import *  #latex
-from megbookbase import *  #text
-from megbookweb import *  #web
-from megbookrest import *  #rest
-
+from bookbase import *  #text
+#from bookmathjax import *  #web
+#from bookrst import *  #rest
+#from bookmoodle import *  #rest
 
 #from ur import *
 
