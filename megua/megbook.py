@@ -342,7 +342,7 @@ class MegBook:
         """
 
 
-        output = cStringIO.StringIO()
+        #output = cStringIO.StringIO()
         #output.write('First line.\n')
         #print >>output, 'Second line.'
 
@@ -353,51 +353,51 @@ class MegBook:
         try:
             #Do the test for other keys
             if not silent:
-                print >>output, "Testing python/sage class '%s' with %d different keys." % (row['owner_key'],many)
+                print  "Testing python/sage class '%s' with %d different keys." % (row['owner_key'],many)
 
             #Create a class and a first instance for ekey=start.
             ekey = start #for exceptions
-            print >>output, "Testing for ekey =",start
+            print  "Testing for ekey =",start
             ex_instance = exerciseinstance(row,ekey=start,edict=edict)
 
             for ekey in range(start+1,start+many):
-                print >>output, "Testing for ekey =",ekey
+                print  "Testing for ekey =",ekey
                 ex_instance.update(ekey=ekey)
         except SyntaxError as se:
-            print >>output, "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
+            print  "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
             cl = row['class_text'].split()
             if len(cl)>se.lineno:
-                print >>output, "      check line: %s" % cl[se.lineno-1]
+                print  "      check line: %s" % cl[se.lineno-1]
             success = False
         except Exception as ee: # Exception will be in memory.
-            print >>output, "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
-            print >>output, "   error description: ", ee
+            print  "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
+            print  "   error description: ", ee
             if is_notebook():
-                print >>output, "   Copy exercise code, only the class part, to a new cell. Then add the following command"
-                print >>output, "%s().update(ekey=%d)" % (row['owner_key'],ekey)
-                print >>output, "and execute with shift+enter. This may help finding the error line."
+                print  "   Copy exercise code, only the class part, to a new cell. Then add the following command"
+                print  "%s().update(ekey=%d)" % (row['owner_key'],ekey)
+                print  "and execute with shift+enter. This may help finding the error line."
             else:
-                print >>output, "   Test the exercise code, only the class part using the following command"
-                print >>output, "%s().update(ekey=%d)" % (row['owner_key'],ekey)
-                print >>output, "This may help finding the error line."
+                print  "   Test the exercise code, only the class part using the following command"
+                print  "%s().update(ekey=%d)" % (row['owner_key'],ekey)
+                print  "This may help finding the error line."
             success = False
         
         #Conclusion
         if not silent:
             if success:
-                print >>output, "    No problems found in this test."
+                print  "    No problems found in this test."
             else:
-                print >>output, "Review exercise '%s' based on the reported cases." % row['owner_key']
+                print  "Review exercise '%s' based on the reported cases." % row['owner_key']
 
         # Retrieve file contents -- this will be
         # 'First line.\nSecond line.\n'
-        contents = output.getvalue()
+        #contents = output.getvalue()
 
         # Close object and discard memory buffer --
         # .getvalue() will now raise an exception.
-        output.close()
+        #output.close()
 
-        return (success,contents)
+        return success
 
 
     def exercise_compiletest(self,row,dest='.',silent=False):
