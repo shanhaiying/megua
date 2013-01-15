@@ -27,6 +27,7 @@ from megbookbase import *
 from xc3web import C3WebExporter
 from platex import pcompile
 from xmoodle import MoodleExporter
+from xsphinx import SphinxExporter
 
 
 #TODO Is it necessary to import other libs?
