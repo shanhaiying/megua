@@ -8,5 +8,5 @@ ceoc.lftp
 /_build/.*
 /src/.*
 \.testoutput/
-
+\.vim
 

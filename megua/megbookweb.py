@@ -241,6 +241,41 @@ class MegBookWeb(MegBookBase):
         
         return new_html
 
+    def make_index(self,where='.',debug=False):
+        """
+        Produce rst code files from the database and an index reading first line of the %summary field.
+
+        Command line use: 
+            The ``where`` input argument, when specified,  will contain all details of Sphinx compilation.
+
+        LINKS:
+
+        http://code.activestate.com/recipes/193890-using-rest-restructuredtext-to-create-html-snippet/
+
+        """
+
+        html_index = SphinxExporter(self,where,debug)
+        print "Index is at: "+ html_index.htmlfile
+
+        if is_notebook():
+            if where == '.': 
+                #To open a browser
+                pos = html_index.htmlfile.find(".")
+                html(r'<a href="%s" target=_blank>Press to open database index.</a>' % html_index.htmlfile[pos:])
+            elif 'data' in where:
+                #To open a browser
+                pos = html_index.htmlfile.find("/home")
+                pos2 = html_index.htmlfile.find("/home",pos+1)
+                if pos2>=0:
+                    pos = pos2
+                html(r'<a href="%s" target=_blank>Press to open database index.</a>' % html_index.htmlfile[pos:])
+            else:
+                #print "Index is at: "+ html_index.htmlfile
+                print "See index at Megua button at top."
+        else:
+            print "firefox -no-remote ", html_index.htmlfile
+
+
 
     def make_c3web(self,where='.',debug=False):
         """
