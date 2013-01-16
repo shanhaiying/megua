@@ -83,14 +83,12 @@ import warnings
 
 import re
 
-class Exercise:
-    """Class ``Exercise`` is the base class for an exercise.
-
-    In fact, this is an hybrid: is an Exercise Template and a concret Exercise.
+class ExerciseTemplate:
+    """Class ``Exercise Template`` is the base class for an exercise template.
 
     Derivations of this class will be specific Exercise Templates. A template of an exercise depends on numerical parameters. 
-    The template is defined by a summary, a question and an answer text containing question parameters and solution parameters.
-    The data paramters of the class define the dictionary that contains all parameters needed for substitution.
+    The template is defined by a summary, a problem and an answer text containing question parameters and solution parameters.
+    The data parameters of the sage/python class define the dictionary that contains all parameters needed for substitution.
 
     The Exercise Template allows the following operations:
     * Return the dictionary of a specific exercise
@@ -111,8 +109,8 @@ class Exercise:
 
 
 
-    def __init__(self,name="exercise",ekey=None,edict=None,summary=None,problem=None,answer=None):
-        self.name = name
+    def __init__(self,ownerkey="exercise",ekey=None,edict=None,summary=None,problem=None,answer=None):
+        self.ownerkey = ownerkey
         #text fields: IMPORTANT: use SELF. on class globals!!!!
         if summary is not None:
             self._summary_text = summary
@@ -194,8 +192,35 @@ class Exercise:
         out_text = self.rewrite(in_text)
         return out_text
 
-    def name(self):
-        return self.name
+
+
+class ExerciseInstance:
+
+    def __init__(self, ownerkey, summtext, probtext, anstext, ekey, edict):
+
+        #UTF-8
+        self
+        self.summary = ex_model.summary()
+        self.problem = ex_model
+
+    def summary_latin1(self, mode='utf-8'):
+        return summary.encode('latin1')
+
+
+        print '-'*len(sname)
+                print summtxt.encode('utf8')
+                print probtxt.encode('utf8')
+                print answtxt.encode('utf8')
+
+
+    def print(self):
+        #print like sage/python print
+        # etc
+        chama a função self._latex
+
+    def _latex(self, options=[sum,prob,answe)    
+
+
 
 
 
@@ -209,30 +234,30 @@ ERRORS:
 - 
 """
 
-def exerciseclass(row):
+def exercisetemplate_class(row):
     r"""
     Instantiates the `exercise class` (not an object) from text fields.
     """
 
-    #Create the class (not yet the instance)
+    #Create the python class (in global memory)
 
     #TODO:
     #   put class in globals(). 
     #   Now ex_name is on global space ?? 
     #   or is in this module space?
 
-    sage_class = preparse(row['class_text'])
-    exec sage_class 
+    sage_class_text = preparse(row['class_text'])
+    exec sage_class_text 
 
     #Get class name
-    ex_class = eval(row['owner_key']) #String contents row['owner_key'] is now a valid identifier.
+    extemplate_class = eval(row['owner_key']) #String contents row['owner_key'] is now a valid identifier.
 
     #class fields
-    ex_class._summary_text = row['summary_text']
-    ex_class._problem_text = row['problem_text']
-    ex_class._answer_text  = row['answer_text']
+    extemplate_class._summary_text = row['summary_text']
+    ex_template._problem_text = row['problem_text']
+    ex_template._answer_text  = row['answer_text']
 
-    return ex_class
+    return ex_template
 
 
 
@@ -262,7 +287,7 @@ def exerciseinstance(row, ekey=None, edict=None):
 
 
     #Create the class (not yet the instance). See exerciseclass definition above.
-    ex_class = exerciseclass(row)
+    extemplate = exercisetemplate_class(row)
 
     #Create one instance of ex_class
     #With exception control:
@@ -280,7 +305,7 @@ def exerciseinstance(row, ekey=None, edict=None):
 
     #Create one instance of ex_class
     #without exception control.
-    ex_instance = ex_class(row['owner_key'],ekey,edict)
+    ex_instance = ex_template(row['owner_key'],ekey,edict).make
 
     return ex_instance
 
