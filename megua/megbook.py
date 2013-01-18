@@ -182,6 +182,7 @@ class MegBook:
         print "Templates for '%s' language: %s" % (natlang,TEMPLATE_PATH)
         #print "Templates in: " + TEMPLATE_PATH
         self.env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
+        Exercise._env = self.env
 
         #For template. See template_create function.
         self.template_row = None
@@ -362,7 +363,11 @@ class MegBook:
 
             for ekey in range(start+1,start+many):
                 print  "Testing for ekey =",ekey
-                ex_instance.update(ekey=ekey)
+                ex_instance.update(ekey=ekey,edict=edict))
+
+            #return this
+            ex_instance.update(ekey=start,edict=edict)
+
         except SyntaxError as se:
             print  "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
             cl = row['class_text'].split()
@@ -537,7 +542,8 @@ class MegBook:
             return None
         #Create and print the instance
         ex_instance = exerciseinstance(row, ekey, edict)
-        self.print_instance(ex_instance)
+        ex_instance.print()
+        #old: self.print_instance(ex_instance)
         return ex_instance
 
 

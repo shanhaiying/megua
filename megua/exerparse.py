@@ -262,7 +262,7 @@ def exerc_parse(inputtext):
                 if classlines[current].lineinfo is not None:
                     txtinfo = classlines[current].lineinfo.strip()
                     if txtinfo == '':
-                        print "Each exercise can belong to a section/subsection/subsubsection. \n"\
+                        print "Each exercise can belong to a section; subsection; subsubsection \n"\
                               "Write sections using ';' in the '%summary' line. For ex., '%summary Section; Subsection; Subsubsection'.\n"
                     txt_sections = txtinfo
                 #TODO review: txt_summary = '\n%summary ' + txtinfo + '\n'

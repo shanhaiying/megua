@@ -38,6 +38,7 @@ from string import join
 from localstore import ExIter
 from csection import SectionClassifier, Section
 
+
 class MoodleXMLExporter:
     """
     Produce rst code files from the database and an index reading first line of the %summary field.

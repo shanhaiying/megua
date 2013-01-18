@@ -9,6 +9,7 @@ AUTHORS:
 - Pedro Cruz (2010-03-01): initial version
 - Pedro Cruz (2011-05-06): redefining Exercise templating.
 - Pedro Cruz (2011-08): documentation strings with tests
+- Pedro Cruz (2013-01): Exercise can be derived for other types than pdflatex.
 
 
 EXAMPLES:
@@ -83,8 +84,8 @@ import warnings
 
 import re
 
-class ExerciseTemplate:
-    """Class ``Exercise Template`` is the base class for an exercise template.
+class Exercise:
+    """Class ``Exercise`` is the base class for an exercise **template**.
 
     Derivations of this class will be specific Exercise Templates. A template of an exercise depends on numerical parameters. 
     The template is defined by a summary, a problem and an answer text containing question parameters and solution parameters.
@@ -103,24 +104,29 @@ class ExerciseTemplate:
     - a derivation of class ``Exercise`` will inherit the values below.
     - a derivation of class ``Exercise`` should change this class parameters to new ones.
     """
-    _summary_text = "A summary (from empty template)."
-    _problem_text = "A problem (from empty template)."
-    _answer_text = "An answer (from empty template)."
+    _owner_key = None
+    _summary_text = None
+    _problem_text = None
+    _answer_text = None
+
+    #Auxiliar
+    _env
+
+    #def __init__(self,ownerkey=None,ekey=None,edict=None,summary=None,problem=None,answer=None):
+    #    self.ownerkey = ownerkey
+    #    #text fields: IMPORTANT: use SELF. on class globals!!!!
+    #    if summary is not None:
+    #        self._summary_text = summary
+    #    if problem is not None:
+    #        self._problem_text = problem
+    #    if summary is not None:
+    #        self._answer_text = answer
+    #    #Guarantee a first set of parameters
+    #    self.update(ekey,edict)
 
 
-
-    def __init__(self,ownerkey="exercise",ekey=None,edict=None,summary=None,problem=None,answer=None):
-        self.ownerkey = ownerkey
-        #text fields: IMPORTANT: use SELF. on class globals!!!!
-        if summary is not None:
-            self._summary_text = summary
-        if problem is not None:
-            self._problem_text = problem
-        if summary is not None:
-            self._answer_text = answer
-        #Guarantee a first set of parameters
+    def __init__(self,ekey=None,edict=None):
         self.update(ekey,edict)
-
 
     def __str__(self):
         return str(self.__dict__)
@@ -148,6 +154,110 @@ class ExerciseTemplate:
         #Call user derived function to solve it.
         self.solve()
 
+        #Create textual instances
+        self.owner_key = self._owner_key
+        self.summary_utf8 = self._summary()
+        self.problem_utf8 = self._problem()
+        self.answer_utf8 = self._answer()
+
+    def _summary(self):
+        """
+        Use class text self._summary_text and replace for parameters on dictionary. Nothing is saved.
+        """
+        return parameter_change(self._summary_text,self.__dict__)
+
+    def _problem(self):
+        """
+        Use class text self._problem_text and replace for parameters on dictionary. Nothing is saved.
+        """
+        in_text = parameter_change(self._problem_text,self.__dict__)
+        out_text = self.rewrite(in_text)
+        return out_text
+
+    def _answer(self):
+        """
+        Use class text self._answer_text and replace for parameters on dictionary. Nothing is saved.
+        """
+        #return parameter_change(self._answer_text,self.__dict__)
+        in_text = parameter_change(self._answer_text,self.__dict__)
+        out_text = self.rewrite(in_text)
+        return out_text
+
+    def template(self, filename, **user_context):
+        """
+        Returns HTML, CSS, LaTeX, etc., for a template file rendered in the given
+        context.
+
+        INPUT:
+
+        - ``filename`` - a string; the filename of the template relative
+          to ``sagenb/data/templates``
+
+        - ``user_context`` - a dictionary; the context in which to evaluate
+          the file's template variables
+
+        OUTPUT:
+
+        - a string - the rendered HTML, CSS, etc.
+
+        BASED ON:
+
+           /home/.../sage/devel/sagenb/sagenb/notebook/tempate.py
+
+        """
+
+        try:
+            tmpl = self._env.get_template(filename)
+        except jinja2.exceptions.TemplateNotFound:
+            return "ex.py -- missing template %s"%filename
+        r = tmpl.render(**user_context)
+        return r
+
+
+    def view(self):
+        """Print the exercise in a nice format, if possible.
+        OUTPUT:
+
+        * True if view is possible. False otherwise.
+        """
+
+        if is_notebook():
+            return self.view_nb()
+        else:
+            self.view_cl()
+
+
+    # ==========================
+    # Markup language services.
+    # ==========================
+
+    def markuplang_test(self):
+        """In case of latex, only after sucessful compilation one knows if latex markup is ok."""
+        return self.view()
+
+
+    # ============================
+    # Methods to print and export.
+    # ============================
+
+
+    def view_cl(self)
+        #Use jinja2 template to generate LaTeX.
+        self.latex_string = self.template("PDFLatexExercise_print.tex",self)
+        #Produce PDF file from LaTeX.
+        return pcompile(latex_string, '.', self.owner_key)
+
+    def view_nb(self):
+        #Use jinja2 template to generate LaTeX.
+        self.latex_string = self.template("PDFLatexExercise_print.tex",self)
+        #Produce PDF file from LaTeX.
+        return pcompile(latex_string, '.', self.owner_key)
+
+
+    # =====================================
+    # Methods to build the parametrization.
+    # =====================================
+
     def make_random(self):
         """
         Derive this function.
@@ -161,6 +271,10 @@ class ExerciseTemplate:
         """    
         pass
 
+    def print(self):
+        pass
+
+
     def rewrite(self,text):
         """
         Derive this function and implement rewritting rules to change latex expressions for example.
@@ -168,57 +282,6 @@ class ExerciseTemplate:
         exp_pattern = re.compile(ur'e\^\{\\left\((.+?)\\right\)\}',re.U)
         out_text = re.sub(exp_pattern, r'e^{\1}', text)
         return text
-
-    def summary(self):
-        """
-        Use class text self._summary_text and replace for parameters on dictionary. Nothing is saved.
-        """
-        return parameter_change(self._summary_text,self.__dict__)
-
-    def problem(self):
-        """
-        Use class text self._problem_text and replace for parameters on dictionary. Nothing is saved.
-        """
-        in_text = parameter_change(self._problem_text,self.__dict__)
-        out_text = self.rewrite(in_text)
-        return out_text
-
-    def answer(self):
-        """
-        Use class text self._answer_text and replace for parameters on dictionary. Nothing is saved.
-        """
-        #return parameter_change(self._answer_text,self.__dict__)
-        in_text = parameter_change(self._answer_text,self.__dict__)
-        out_text = self.rewrite(in_text)
-        return out_text
-
-
-
-class ExerciseInstance:
-
-    def __init__(self, ownerkey, summtext, probtext, anstext, ekey, edict):
-
-        #UTF-8
-        self
-        self.summary = ex_model.summary()
-        self.problem = ex_model
-
-    def summary_latin1(self, mode='utf-8'):
-        return summary.encode('latin1')
-
-
-        print '-'*len(sname)
-                print summtxt.encode('utf8')
-                print probtxt.encode('utf8')
-                print answtxt.encode('utf8')
-
-
-    def print(self):
-        #print like sage/python print
-        # etc
-        chama a função self._latex
-
-    def _latex(self, options=[sum,prob,answe)    
 
 
 
@@ -233,32 +296,6 @@ ERRORS:
 - during class text preparse (including class name).
 - 
 """
-
-def exercisetemplate_class(row):
-    r"""
-    Instantiates the `exercise class` (not an object) from text fields.
-    """
-
-    #Create the python class (in global memory)
-
-    #TODO:
-    #   put class in globals(). 
-    #   Now ex_name is on global space ?? 
-    #   or is in this module space?
-
-    sage_class_text = preparse(row['class_text'])
-    exec sage_class_text 
-
-    #Get class name
-    extemplate_class = eval(row['owner_key']) #String contents row['owner_key'] is now a valid identifier.
-
-    #class fields
-    extemplate_class._summary_text = row['summary_text']
-    ex_template._problem_text = row['problem_text']
-    ex_template._answer_text  = row['answer_text']
-
-    return ex_template
-
 
 
 def exerciseinstance(row, ekey=None, edict=None):
@@ -285,9 +322,32 @@ def exerciseinstance(row, ekey=None, edict=None):
 
     """
 
+    #Parse text, extract sage/python textual class definition, then
+    #interpret it and put it in memory.
+    sage_class_text = preparse(row['class_text'])
+    exec sage_class_text #here the ExerciseTemplate class gets known by python
+
+    #Now row['owner_key'] exists in memory as a class.
+    #Get class from text name
+    ex_class = eval(row['owner_key']) #String contents row['owner_key'] is now a valid identifier.
+
+    #Create one instance of ex_class
+    #class fields
+    ex_class._owner_key = row['owner_key']
+    ex_class._summary_text = row['summary_text']
+    ex_class._problem_text = row['problem_text']
+    ex_class._answer_text  = row['answer_text']
+
+    ex_instance = ex_class(ekey, edict)
+
+    return ex_instance
+
+
+
+
 
     #Create the class (not yet the instance). See exerciseclass definition above.
-    extemplate = exercisetemplate_class(row)
+    #ex_class = exerciseclass(row)
 
     #Create one instance of ex_class
     #With exception control:
@@ -303,12 +363,6 @@ def exerciseinstance(row, ekey=None, edict=None):
     #    print "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
     #    raise ee
 
-    #Create one instance of ex_class
-    #without exception control.
-    ex_instance = ex_template(row['owner_key'],ekey,edict).make
-
-    return ex_instance
-
 
 def to_unicode(s):
     if type(s)!=unicode:
@@ -316,4 +370,6 @@ def to_unicode(s):
     else:
         return s
 
+def is_notebook():
+    return sage.plot.plot.EMBEDDED_MODE
 
