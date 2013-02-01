@@ -836,11 +836,14 @@ class MegBook:
         r"""
         Create an instance based on a template with key=owner_keystring
 
+        Ecxceptions list::
+
+            http://docs.python.org/2/library/exceptions.html
         """
         #Get summary, problem and answer and class_text
         row = self.megbook_store.get_classrow(owner_keystring)
         if not row:
-            return "'%s' cannot be accessed on database '%s'" % (owner_keystring,self.local_store_filename)
+            raise NameError("'%s' cannot be accessed on database '%s'" % (owner_keystring,self.local_store_filename))
 
         return exerciseinstance(row,ekey=ekey)
 
