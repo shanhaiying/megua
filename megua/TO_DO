@@ -13,7 +13,9 @@ localstore.py
 
 1. tirar a markupllang global porque agora essa passa a fazer parte de cada exercício guardado:
  - o user prefere ter uma só base para guardar tudo.
+
 2. adiciona campo "markuplang" a cada exercício.
+
 3. Atualizar cada base de dados individualmente para o novo formato.
 
 Novos campos: 
@@ -32,6 +34,7 @@ megbook.py
 ----------
 
 1. Como mostrar output após "save" ?
+
 (a) o python (e se há erro?)
 (b) o latex (e se há erro?)
 (c) output em imagem além da PDF file.
@@ -60,6 +63,7 @@ em que C3Web é o projeto.
 
 
 * Chave ekey que não comece sempre em zero
+
 * to_marklang() -> para reescrever alguma coisa do texto na markuplang destino. Por exmplo, 
    \begin{itemize}
    \item tal e tal
@@ -67,6 +71,8 @@ em que C3Web é o projeto.
 escrever em moodle xml. O mesmo para tikz latex codes.
 
 * Usar o pygments para os comandos view().
+
+
 
 Exportar instâncias de exercícios:
 ----------------------------------
