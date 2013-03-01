@@ -1,0 +1,110 @@
+
+To do list:
+
+notebook (versão recente)
+-------------------------
+
+* Explorar funcionamento.
+
+
+
+localstore.py
+-------------
+
+1. tirar a markupllang global porque agora essa passa a fazer parte de cada exercício guardado:
+ - o user prefere ter uma só base para guardar tudo.
+2. adiciona campo "markuplang" a cada exercício.
+3. Atualizar cada base de dados individualmente para o novo formato.
+
+Novos campos: 
+ - markuplang
+ - data da revisão
+ - 
+
+Uma instância e a chave.
+        # (0 owner_key, 1 txt_sections, 2 txt_summary, 3 txt_problem, 4 txt_answer, 5 txt_class)
+        #row = {'owner_key': p[0], 'summary_text': p[2], 'problem_text': p[3], 'answer_text': p[4], 'class_text': p[5]}
+
+
+
+
+megbook.py
+----------
+
+1. Como mostrar output após "save" ?
+(a) o python (e se há erro?)
+(b) o latex (e se há erro?)
+(c) output em imagem além da PDF file.
+(d) gravar uma chave que não seja zero.
+(e) novo html output
+        #output = cStringIO.StringIO()
+        #output.write('First line.\n')
+        #print >>output, 'Second line.'
+        http://stackoverflow.com/questions/12801166/python2-6-cstringio-unicode-support
+(f) gravar exemplos de instâncias
+(g) Como usar o interact para selecionar valores?
+
+
+
+
+ex.py e derivados
+-----------------
+
+NOTA: ler http://www.sagemath.org/doc/reference/sage/misc/sage_eval.html
+
+* O nome do exercício deixa de ser E12X34_nome_001 e passa a C3Web_nome_001 ou C3_nome_001 ou ...
+em que C3Web é o projeto.
+
+* NovoExercicio(--aqui--class--apropriada--):
+ - várias classes de exercícios
+
+
+* Chave ekey que não comece sempre em zero
+* to_marklang() -> para reescrever alguma coisa do texto na markuplang destino. Por exmplo, 
+   \begin{itemize}
+   \item tal e tal
+   \end{itemize}
+escrever em moodle xml. O mesmo para tikz latex codes.
+
+* Usar o pygments para os comandos view().
+
+Exportar instâncias de exercícios:
+----------------------------------
+
+* imagens: tikz e uuencode?
+
+
+
+
+make index
+----------
+
+http://www.sagemath.org/doc/reference/sage/misc/temporary_file.html
+
+html.iframe para fazer o make index.
+http://www.sagemath.org/doc/reference/sage/misc/viewer.html
+http://www.sagemath.org/doc/reference/misc.html
+
+Será que um **interact** resolve o problema do make_index ?
+            #TODO: fazer aparecer aqui um make_index
+            #TODO: http://www.sagemath.org/doc/reference/sagenb/notebook/interact.html
+            #http://interact.sagemath.org/
+
+procurar sphinxify()
+
+
+
+MEGUA Windows
+-------------
+
+* ver em LocalStore como é feito o search com REGEX.
+
+localstore vs svn
+-----------------
+
+* rotina para colocar o conteúdo do localstore numa sequência de ficheiros e usar svn para gerir.
+- ordenado ajuda a pesquisar.
+
+
+FIM
+

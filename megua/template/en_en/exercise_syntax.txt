@@ -1,0 +1,22 @@
+
+Text must follow this template:
+
+%SUMMARY Section title; Subsection title; Subsubsection title
+
+Descriptive text and keywords.
+
+Author and project name.
+
+%PROBLEM Here a suggestive name for problem
+
+Problem text using variables.
+                    
+%ANSWER
+
+Answer text using variables.
+
+class E62L20_aboutmean_001(Exercise):
+
+    etc etc
+
+

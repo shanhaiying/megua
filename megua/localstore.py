@@ -9,6 +9,10 @@
 # 1. for unicode string cannot use u'áé' and must use u'\xe1\xe9'
 # 2. for str string can use "áé".
 
+#TODO: remove markuplanguage from metameg, set __version__ = ....
+
+
+
 r"""
 Creating and editing and exercise database file using sqlite3 module from Python standard library.
 
@@ -16,6 +20,7 @@ AUTHORS:
 
 - Pedro Cruz (2011-02-17): initial version
 - Pedro Cruz (2011-10): another version
+- Pedro Cruz (2013-02): another version
 
 NOTES:
 
@@ -55,12 +60,23 @@ from convertdb import convertdb
 from ex import to_unicode
 
 
-__VERSION__ = '0.2.1'
+__VERSION__ = '0.3' #2013-fev-07
 
 r"""
 Version description:
 
-- 0.2.1: added 'suggestive name' to %problem tag and a new column.
+Version 0.3
+-----------
+
+* ex.py now is derivable for each markuplang
+*
+
+Version 0.2.1
+-------------
+
+* added 'suggestive name' to %problem tag and a new column.
+
+
 """
 
 
@@ -285,13 +301,15 @@ class LocalStore:
             summary_text TEXT, 
             problem_text TEXT, 
             answer_text TEXT, 
-            class_text TEXT
+            class_text TEXT,
+            natural_language TEXT, #new
+            exercise_markup TEXT
             )'''
         )
 
         c.execute('''CREATE TABLE metameg (
-            natural_language TEXT, 
-            markup_language TEXT, 
+            default_natural_language TEXT, 
+            default_markup_language TEXT, 
             version TEXT )'''
         )
 
@@ -325,7 +343,7 @@ class LocalStore:
 
         OUTPUT:
 
-        -   Funtion returns a ``row`` object (see sqlite3 documentation).
+        -   Function returns a ``row`` object (see sqlite3 documentation).
         
 
         NOTES: it is implicit in each instance the columns.

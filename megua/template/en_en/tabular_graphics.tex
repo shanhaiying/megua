@@ -1,0 +1,30 @@
+{# see  megbook.print_instance() 
+
+Check this variables also:
+
+  from sage.misc.latex import LATEX_HEADER
+  from sage.misc.latex import COMMON_HEADER
+  from sage.misc.latex import latex_extra_preamble
+
+TODO: use standalone latex package. Needs to be instaled on linux server.
+
+#}
+
+\documentclass{article}
+
+
+{% include 'common.tex' %}
+
+\usepackage[active,pdftex,tightpage,floats]{preview}
+
+
+\begin{document}
+
+\begin{table*}
+{{ tabular_tex }}
+\end{table*}
+
+
+\end{document}
+
+

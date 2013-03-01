@@ -1,0 +1,84 @@
+
+
+%\documentclass[14pt,landscape]{extarticle} %Pedro
+%\documentclass[12pt]{extarticle}
+%\documentclass[12pt]{article}
+\documentclass[10pt]{article}
+
+
+{% include 'common.tex' %}
+
+
+% ============
+% Exercises
+% ============
+%\usepackage[lastexercise,answerdelayed]{exercise}
+\usepackage[lastexercise]{exercise}
+
+
+\renewcommand{\AnswerListHeader}{Answer of ex.~\ExerciseHeaderNB\ ---\ }
+\renewcommand{\theExercise}{\arabic{section}.\arabic{Exercise}} %texto da numeracao de cada exercicio
+\renewcommand{\ExerciseName}{Exercise} %\flushleft 
+\renewcommand{\AnswerName}{Exercise Answer}
+\renewcommand{\AnswerListName}{Exercise Answer}
+
+%Cor azul no air: 0x657BB5
+%RGB 101 123 181
+%RGB 0,39453125 0,48046875 0,70703125
+\definecolor{MyBlue}{rgb}{0.39453125,0.48046875,0.70703125}
+
+
+\renewcommand{\ExerciseHeader}{\color{MyBlue}
+\ExerciseName~\ExerciseHeaderNB\ExerciseHeaderTitle
+\ExerciseHeaderOrigin}
+
+\renewcommand{\AnswerHeader}{\color{MyBlue}
+Resolução~do~\ExerciseName\ \ExerciseHeaderNB \ExerciseHeaderTitle}
+
+
+%http://en.wikibooks.org/wiki/LaTeX/List_Structures#Enumerate
+\renewcommand{\labelenumi}{\color{MyBlue} \alph{enumi})\ }
+%\renewcommand{\labelenumi}{\color{blue} \arabic{enumi}.\ }
+%\renewcommand{\labelenumii}{\color{blue} (\alph{enumii})\ }
+%\renewcommand{\labelenumii}{\color{blue} (\roman{enumii})\ }
+\renewcommand{\labelenumii}{(\roman{enumii})\ }
+
+
+
+
+\usepackage[pdftex,bookmarks=true]{hyperref}
+
+% ===============
+% Geometry of page
+% ================
+%\usepackage[height=10in,a5paper,hmargin={3cm,0.8in}]{geometry}
+\usepackage[hmargin={10mm,10mm},a6paper,landscape,vmargin={10mm,10mm}]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing 
+% \singlespacing, \doublespacing, or \onehalfspacing 
+
+\setlength\parindent{0pt}
+
+
+\begin{document}
+
+\pagestyle{empty}
+
+%\LARGE
+%\Large
+
+
+\begin{center}
+\Huge
+MEGUA functions
+\end{center}
+
+\newpage
+
+{{ allsections }}
+
+
+\end{document}
+
+

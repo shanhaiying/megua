@@ -1,0 +1,35 @@
+<!-- Sections(MEGUA) or Category(Moodle)-->
+<question type="category">
+<category>
+<text>$course$/{{sections}}/{{problemname}}</text>
+</category>
+</question>
+<!-- {{exercisename}} ekey={{ekey}} -->
+<question type="multichoice">
+  <name>
+  <text>{{problemname}} ({{ekey}})</text>
+  </name>
+  <questiontext format="html">
+  <text><![CDATA[{{problemtext}}]]></text>
+  </questiontext>
+  {{answertext}}
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.1</penalty>
+    <hidden>0</hidden>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <correctfeedback>
+      <text></text>
+    </correctfeedback>
+    <partiallycorrectfeedback>
+      <text></text>
+    </partiallycorrectfeedback>
+    <incorrectfeedback>
+      <text></text>
+    </incorrectfeedback>
+    <answernumbering>none</answernumbering>
+</question>
+
+
+

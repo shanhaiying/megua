@@ -75,6 +75,9 @@ from ur import ur
 from msc15 import *
 import tikzmod
 
+from megenv import env
+
+
 #Sage
 from sage.all import *
 
@@ -108,9 +111,6 @@ class Exercise:
     _summary_text = None
     _problem_text = None
     _answer_text = None
-
-    #Auxiliar
-    _env
 
     #def __init__(self,ownerkey=None,ekey=None,edict=None,summary=None,problem=None,answer=None):
     #    self.ownerkey = ownerkey
@@ -183,39 +183,9 @@ class Exercise:
         out_text = self.rewrite(in_text)
         return out_text
 
-    def template(self, filename, **user_context):
-        """
-        Returns HTML, CSS, LaTeX, etc., for a template file rendered in the given
-        context.
-
-        INPUT:
-
-        - ``filename`` - a string; the filename of the template relative
-          to ``sagenb/data/templates``
-
-        - ``user_context`` - a dictionary; the context in which to evaluate
-          the file's template variables
-
-        OUTPUT:
-
-        - a string - the rendered HTML, CSS, etc.
-
-        BASED ON:
-
-           /home/.../sage/devel/sagenb/sagenb/notebook/tempate.py
-
-        """
-
-        try:
-            tmpl = self._env.get_template(filename)
-        except jinja2.exceptions.TemplateNotFound:
-            return "ex.py -- missing template %s"%filename
-        r = tmpl.render(**user_context)
-        return r
-
 
     def view(self):
-        """Print the exercise in a nice format, if possible.
+        """Print the exercise in a nice format, if possible, at command line or notebook.
         OUTPUT:
 
         * True if view is possible. False otherwise.

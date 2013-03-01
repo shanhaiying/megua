@@ -2,7 +2,7 @@
 
 
 
-class MoodleMLExercise(Exercise):
+class MoodleMCExercise(Exercise):
 
     def __init__(self,ekey=None,edict=None):
         Exercise.__init__(self,ekey,edict)

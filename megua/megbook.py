@@ -149,13 +149,12 @@ class MegBook:
     #TODO 3: remove html_output and latex_debug=False; create debug only.
 
 
-    def __init__(self,filename,natlang='pt_pt',markuplang='latex',html_output=False,latex_debug=False):
+    def __init__(self,filename,default_natlang='pt_pt'):
         r"""
 
         INPUT::
         - ``filename`` -- filename where the database is stored.
-        - ``natlang`` -- For example 'pt_pt' for portuguese (of portugal), 'en_us' for english from USA.
-        - ``markuplang`` -- 'latex' (currently is the only supported option.
+        - ``default_natlang`` -- For example 'pt_pt' for portuguese (of portugal), 'en_us' for english from USA.
 
         """
         #Variable DATA is only defined after worksheet is opened so it cannot be imported to here.
@@ -167,74 +166,29 @@ class MegBook:
 
         #Create or open the database
         try:
-            self.megbook_store = LocalStore(filename=self.local_store_filename,natlang=natlang,markuplang=markuplang)
+            self.megbook_store = LocalStore(filename=self.local_store_filename,default_natlang=default_natlang)
+            #TODO: fazer aparecer aqui um make_index
+            #TODO: http://www.sagemath.org/doc/reference/sagenb/notebook/interact.html
+            #http://interact.sagemath.org/
             print "MegBook opened. Execute `MegBook?` for examples of usage."
         except sqlite3.Error as e:
             print "MegBook couldn't be opened: ", e.args[0]
             return
 
         #Templating (with Jinja2)
-        if os.environ.has_key('MEGUA_TEMPLATE_PATH'):
-            TEMPLATE_PATH = os.environ['MEGUA_TEMPLATE_PATH']
-        else:
-            from pkg_resources import resource_filename
-            TEMPLATE_PATH = os.path.join(resource_filename(__name__,''),'template',natlang)
-        print "Templates for '%s' language: %s" % (natlang,TEMPLATE_PATH)
-        #print "Templates in: " + TEMPLATE_PATH
-        self.env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
-        Exercise._env = self.env
+        megenv.setlang(default_natlang)
+
 
         #For template. See template_create function.
         self.template_row = None
 
-        #TODO: remove this as it is. Adding options is best.
-        #Debug on/off
-        self.html_output = html_output
-        #if not self.html_output:
-        #    print "Use: megbook.html_output=True, if you want to see an online instance of the new exercise."
-
-        #TODO remove latex_debug. 
-        self.latex_debug = latex_debug
-        #if not self.latex_debug:
-        #    print "Use: megook.latex_debug=True, if you want to see LaTex error messages."
 
 
     def __str__(self):
-        return "MegBook(%s,%s,%s)" % (self.local_store_filename,self.natlang,self.markuplang)
+        return "MegBook(%s)" % (self.local_store_filename)
 
     def __repr__(self):
-        return "MegBook(%s,%s,%s)" % (self.local_store_filename,self.natlang,self.markuplang)
-
-
-    def template(self, filename, **user_context):
-        """
-        Returns HTML, CSS, LaTeX, etc., for a template file rendered in the given
-        context.
-
-        INPUT:
-
-        - ``filename`` - a string; the filename of the template relative
-          to ``sagenb/data/templates``
-
-        - ``user_context`` - a dictionary; the context in which to evaluate
-          the file's template variables
-
-        OUTPUT:
-
-        - a string - the rendered HTML, CSS, etc.
-
-        BASED ON:
-
-           /home/.../sage/devel/sagenb/sagenb/notebook/tempate.py
-
-        """
-
-        try:
-            tmpl = self.env.get_template(filename)
-        except jinja2.exceptions.TemplateNotFound:
-            return "MegUA -- missing template %s"%filename
-        r = tmpl.render(**user_context)
-        return r
+        return "MegBook(%s)" % (self.local_store_filename)
 
 
     def save(self,exercisestr,dest='.'):
@@ -260,6 +214,7 @@ class MegBook:
         if type(exercisestr)==str:
             exercisestr = unicode(exercisestr,'utf-8')
 
+        #TODO: orgnizar os outputs em algo de HTML
 
         # ---------------------------------------
         # Check exercise syntax: 

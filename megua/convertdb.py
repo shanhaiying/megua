@@ -43,6 +43,8 @@ def convertdb(dbname,new_store,from_v):
         convertdb_from01(dbname,new_store) #produce 0.2
     elif from_v == "0.2":
         convertdb_from02(dbname,new_store) #produce 0.2.1.
+    elif from_v == "0.2.1":
+        convertdb_from02_1(dbname,new_store) #produce 0.2.1.
     else:
         raise NotImplementedError("MegUA version control.")
 
@@ -125,6 +127,31 @@ def convertdb_from02(old_dbname, new_store):
     c.close()
     conn.close()
  
+
+def convert_from02_1(old_dbname, new_store):
+    """
+    Version 0.2.1 rows:
+
+        c.execute('''CREATE TABLE exercises ( 
+            problem_id INTEGER PRIMARY KEY ASC AUTOINCREMENT,
+            owner_key TEXT UNIQUE, 
+            sections_text TEXT,
+            suggestive_name TEXT,
+            summary_text TEXT, 
+            problem_text TEXT, 
+            answer_text TEXT, 
+            class_text TEXT,
+            )'''
+        )
+
+        c.execute('''CREATE TABLE metameg (
+            natural_language TEXT, 
+            markup_language TEXT, 
+            version TEXT )'''
+        )
+    """
+
+
 
 
 def remove_underscore2(txt):
