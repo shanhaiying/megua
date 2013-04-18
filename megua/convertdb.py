@@ -21,7 +21,7 @@ EXAMPLES:
 
 
 #*****************************************************************************
-#       Copyright (C) 2011 Pedro Cruz 
+#       Copyright (C) 2011, 2012, 2013 Pedro Cruz 
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
@@ -37,14 +37,17 @@ import sqlite3
 from ex import exerciseinstance, to_unicode
 
 
-def convertdb(dbname,new_store,from_v):
+def convertdb(dbname,new_store,from_v, new_version):
     #TODO: do this as a cycle: convert from 0.1, then from 0.2, etc one at a time.
-    if from_v == "0.1":
-        convertdb_from01(dbname,new_store) #produce 0.2
-    elif from_v == "0.2":
-        convertdb_from02(dbname,new_store) #produce 0.2.1.
-    elif from_v == "0.2.1":
-        convertdb_from02_1(dbname,new_store) #produce 0.2.1.
+
+    #
+    #if from_v == "0.1":
+    #    convertdb_from01(dbname,new_store) #produce 0.2
+    #elif from_v == "0.2":
+    #    convertdb_from02(dbname,new_store) #produce 0.2.1.
+
+    if from_v == "0.2.1" and new_version=="0.3":
+        convertdb_from_021_to_03(dbname,new_store) 
     else:
         raise NotImplementedError("MegUA version control.")
 
@@ -128,7 +131,7 @@ def convertdb_from02(old_dbname, new_store):
     conn.close()
  
 
-def convert_from02_1(old_dbname, new_store):
+def convert_from_021_to_03(old_dbname, new_store):
     """
     Version 0.2.1 rows:
 
@@ -149,9 +152,66 @@ def convert_from02_1(old_dbname, new_store):
             markup_language TEXT, 
             version TEXT )'''
         )
+
+    Version 0.3 rows:
+
+        c.execute('''CREATE TABLE exercises ( 
+            problem_id INTEGER PRIMARY KEY ASC AUTOINCREMENT,
+            owner_key TEXT UNIQUE, 
+            sections_text TEXT,
+            suggestive_name TEXT,
+            summary_text TEXT, 
+            problem_text TEXT, 
+            answer_text TEXT, 
+            class_text TEXT,
+            natural_language TEXT,
+            exercise_markup TEXT
+            )'''
+        )
+
+        c.execute('''CREATE TABLE metameg (
+            default_natural_language TEXT, 
+            default_markup_language TEXT, 
+            version TEXT )'''
+        )
     """
 
+    #Open str database
+    conn = sqlite3.connect(old_dbname)
+    if conn is not None:
+        print "Converting megua v0.2.1 archive at " + old_dbname + " to version 0.3"
+        print "Adding natural_language and exercise_markup."
+        conn.row_factory = sqlite3.Row
+        #conn.text_factory = str
+    else:
+        print "Can't open " + old_dbname
 
+    c = conn.cursor()
+    c.execute(r"""SELECT * FROM metameg""")
+    for row in c:
+        #get first row only
+        nl = row["natural_language"]
+        em = row["markup_language"]
+        break
+    c.close()
+        
+
+    c = conn.cursor()
+    c.execute(r"""SELECT * FROM exercises ORDER BY owner_key""")
+
+    for row in c:
+
+        #Add new information
+
+        #Store it
+        rowdict = dict(row)
+        rowdict['natural_language'] = nl
+        rowdict['exercise_markup'] = em
+        new_store.insert(rowdict)
+
+    c.close()
+    conn.close()
+ 
 
 
 def remove_underscore2(txt):

@@ -44,7 +44,7 @@ TODO:
 
 
 #*****************************************************************************
-#       Copyright (C) 2011 Pedro Cruz 
+#       Copyright (C) 2011,2012,2013 Pedro Cruz 
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
@@ -161,13 +161,14 @@ class LocalStore:
     #Class variable to be available to ``megregexp`` function.
     _debug = False
 
-    def __init__(self,filename=None,natlang='pt_pt',markuplang='latex'):
+    def __init__(self,filename=None,natural_language="pt_pt", markup_language="latex"):
         """
         Create a local storage for exercises.
         """
 
-        self.natural_language = natlang
-        self.markup_language = markuplang
+        self.default_natural_language = natural_language
+        self.default_markup_language = markup_language
+
 
         # =================
         # 1. Get a filename 
@@ -202,7 +203,7 @@ class LocalStore:
             #Open database to use (and receive exercises from old database)
             self._open_to_use()
             
-            convertdb(old_dbfilename, self, version)
+            convertdb(old_dbfilename, self, version, __VERSION__)
 
         else:
 
@@ -211,7 +212,7 @@ class LocalStore:
 
 
         if LocalStore._debug:
-            print "Database opened in: ", self.local_store_filename
+            print "Exercise database: ", self.local_store_filename
 
  
 
@@ -257,6 +258,9 @@ class LocalStore:
             - with metameg (includes version field)
             - TEXT fields are unicode
 
+            Version 0.3
+            - removed fileds 'natural_language' and 'markup_language' from localstore as a whole but added to each row.
+
             """
             #Check metameg
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='metameg'")
@@ -265,11 +269,9 @@ class LocalStore:
                 version = '0.1'
             else:
                 c2 = conn.cursor()
-                c2.execute("SELECT version,natural_language,markup_language from metameg")
+                c2.execute("SELECT version from metameg")
                 row = c2.fetchone()
                 version = row['version']
-                assert(self.natural_language == row['natural_language']) #TODO: check this
-                assert(self.markup_language == row['markup_language'])
                 c2.close()
 
         else:
@@ -302,7 +304,7 @@ class LocalStore:
             problem_text TEXT, 
             answer_text TEXT, 
             class_text TEXT,
-            natural_language TEXT, #new
+            natural_language TEXT,
             exercise_markup TEXT
             )'''
         )
@@ -340,6 +342,8 @@ class LocalStore:
             * ``problem_text`` -- Problem text description (unicode).
             * ``answer_text`` -- Answer text description (unicode).
             * ``classtext`` -- python class code in textual form ready for Python ``eval``.
+            * ``natural_language`` -- a string.
+            * ``exercise_markup`` -- a string.
 
         OUTPUT:
 
@@ -383,15 +387,19 @@ class LocalStore:
             summary_text, \
             problem_text, \
             answer_text, \
-            class_text) VALUES \
-            (?,?,?,?,?,?,?)""",  #ADD OR REMOVE ? for each new/removal columns
+            class_text,
+            natural_language,
+            exercise_markup) VALUES \
+            (?,?,?,?,?,?,?,?,?)""",  #ADD OR REMOVE ? for each new/removal columns
             (   row['owner_key'], 
                 row['sections_text'],
                 row['suggestive_name'],
                 row['summary_text'],
                 row['problem_text'],
                 row['answer_text'],
-                row['class_text']
+                row['class_text'],
+                row['natural_language'],
+                row['exercise_markup']
             )
         )
         self.conn.commit()
@@ -418,7 +426,9 @@ class LocalStore:
                 summary_text=?, \
                 problem_text=?, \
                 answer_text=?, \
-                class_text = ? \
+                class_text = ?, \
+                natural_language = ?, \
+                exercise_markup = ? \
              WHERE \
                 owner_key=? """,
             (   row['sections_text'],
@@ -427,6 +437,8 @@ class LocalStore:
                 row['problem_text'],
                 row['answer_text'],
                 row['class_text'],
+                row['natural_language'],
+                row['exercise_markup'],
                 row['owner_key']
             )
         )
@@ -470,6 +482,9 @@ class LocalStore:
         Present headers from problems containing keywords from regex anywhere.
 
         http://docs.python.org/release/2.6.4/library/sqlite3.html
+
+        TODO: extend search to limit natural language and markup.
+
         """
         #Connect
         #conn = sqlite3.connect(self.local_store_filename)
@@ -594,8 +609,10 @@ class ExIter:
                     problem_text REGEXP ? OR \
                     answer_text REGEXP ? OR \
                     class_text REGEXP ? \
+                    natural_language REGEXP ? \
+                    exercise_markup REGEXP ? \
                 ORDER BY owner_key \
-                """, (regex, regex, regex, regex, regex,) )
+                """, (regex, regex, regex, regex, regex, regex, regex) )
         return c
 
 
@@ -609,5 +626,6 @@ class ExIter:
             raise StopIteration
         else:
             return row
+
 
 

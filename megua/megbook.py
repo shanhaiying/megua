@@ -10,25 +10,27 @@ AUTHORS:
 
 - Pedro Cruz (2012-06): starting project for use of web and pdflatex.
 
+- Pedro Cruz (2013-03-01): megbook will contains all exercise types.
 
 """
 
 
 #*****************************************************************************
-#       Copyright (C) 2011,2012 Pedro Cruz <PedroCruz@ua.pt>
+#       Copyright (C) 2011,2012,2013 Pedro Cruz <PedroCruz@ua.pt>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
 #*****************************************************************************
   
 
-#Meg modules:
+#MEGUA modules:
 from localstore import LocalStore,ExIter
 from ex import *
 from exerparse import exerc_parse
 from xsphinx import SphinxExporter
 from platex import pcompile
 from xsws import SWSExporter
+
 
 #Because sage.plot.plot.EMBEDDED_MODE
 #This variable indicates if notebook is present.
@@ -46,6 +48,7 @@ import sqlite3 #for row objects as result from localstore.py
 import shutil
 import os
 import StringIO
+import sys
 #import codecs
 
 
@@ -60,7 +63,7 @@ import jinja2
 
 class MegBook:
     r"""
-    MEG set of routines for exercise templating.
+    MEGUA set of routines for exercise templating.
 
     INPUT::
 
@@ -84,19 +87,19 @@ class MegBook:
     Create or edit a database::
 
        >>> from all import *
-       >>> meg = MegBook(r'.testoutput/megdb.sqlite')
+       >>> meg = MegBook(r'.testoutput/megdb.sqlite',outputdir=r'.testoutput')
        MegBook opened. Execute `MegBook?` for examples of usage.
        Templates for 'pt_pt' language.
 
 
     Save a new or changed exercise::
 
-       >>> txt=r'''
+       >>> meg.save(r'''
        ... %Summary Primitives
        ... Here one can write few words, keywords about the exercise.
        ... For example, the subject, MSC code, and so on.
        ...   
-       ... %Problem
+       ... %Problem A sum problem
        ... What is the primitive of $a x + b@()$ ?
        ... 
        ... %Answer
@@ -111,8 +114,7 @@ class MegBook:
        ...     def solve(self):
        ...         x=var('x')
        ...         self.prim = integrate(self.a * x + self.b,x)
-       ... '''
-       >>> meg.save(txt,dest=r'.testoutput')
+       ... ''')
        Each problem can have a suggestive name. 
        Write in the '%problem' line a name, for ex., '%problem The Fish Problem'.
        <BLANKLINE>
@@ -148,7 +150,7 @@ class MegBook:
     #TODO 3: remove html_output and latex_debug=False; create debug only.
 
 
-    def __init__(self,filename,default_natlang='pt_pt'):
+    def __init__(self,filename,natlang='en_en',outputdir='.'):
         r"""
 
         INPUT::
@@ -189,8 +191,8 @@ class MegBook:
     def __repr__(self):
         return "MegBook(%s)" % (self.local_store_filename)
 
-
-    def save(self,exercisestr,dest='.'):
+    #TODO: inject exercise name as a class on to global workspace
+    def save(self,exercisestr):
         r"""
         Save an exercise defined on a `python string`_ using a specific sintax defined here_.
 
@@ -220,6 +222,10 @@ class MegBook:
         #    exer_parse return tuple:    
         #       summary, problem, answer and classtext.
         # ---------------------------------------
+        if is_notebook():
+            stdout_current = sys.stdout
+            sys.stdout = open('parse_exercise.log', 'w')
+
         row = exerc_parse(exercisestr)
         if not row:
             print self.template('exercise_syntax.txt')
@@ -227,6 +233,9 @@ class MegBook:
             print "Exercise was not saved on database."
             print "==================================="
             return
+        if is_notebook():
+            sys.stdout.close()
+            sys.stdout = stdout_current
 
         # (0 owner_key, 1 txt_sections, 2 txt_summary, 3 txt_problem, 4 txt_answer, 5 txt_class)
         #row = {'owner_key': p[0], 'summary_text': p[2], 'problem_text': p[3], 'answer_text': p[4], 'class_text': p[5]}
@@ -235,7 +244,7 @@ class MegBook:
         # -------------
         # Exercise ok?
         # -------------
-        if not self.is_exercise_ok(row,dest,silent=False):
+        if not self.is_exercise_ok(row,self.outputdir,silent=False):
             print "==================================="
             print "Exercise was not saved on database."
             print "==================================="

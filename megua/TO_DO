@@ -1,31 +1,84 @@
 
-To do list:
+* foi feito do converter para a nova base de exercícios.
+Verificar depois.
+
+* implementar os novos ex.py:
+- no parse do exercicio retirar "NOVO_ESTILO" do E12X34_add_001( NOVO_ESTILO )
+e colocar na base de dados esse campo.
+
+
+
+Para a documentação sobre listas de exercícios:
+
+ Um grupo (ou lista) de exercícios pode ser feita assim:
+
+   E12X34_add_001, 002, etc-----
+
+ou através das sections no summary.
+Ou por palavra chave no dumário.
+
+
+
+To do list
+==========
+
+
+
+Short list:
+
+1. Varrer todos os TODO espalhados no código.
+2. Estudar isto para a "Seed e random numbers":
+    http://www.sagemath.org/doc/reference/misc/sage/misc/randstate.html#classes-and-methods 
+
+
+Segurança
+---------
+
+
+* Guardar no DATA um ficheiro com as passwords.
+* Usar a mesma password do Sage para a base de dados.
+
+* Bases de dados partilhadas (CC, c3) por utilizador.
+
+
+
+
 
 notebook (versão recente)
 -------------------------
 
 * Explorar funcionamento.
 
+* como ler a linguagem do utilizador:
+ - linguagem do S.O. do utilizador ?
+ - linguagem em que as páginas são lidas no browser do utilizador ?
+--> tudo isto requer modificação do notebook
+--> e no modo command line?
+
+Abandonar o uso do NB mais recente e usar sempre o mesmo, modificado.
+
+
 
 
 localstore.py
 -------------
 
-1. tirar a markupllang global porque agora essa passa a fazer parte de cada exercício guardado:
+
+1. (feito) tirar a markupllang global porque agora essa passa a fazer parte de cada exercício guardado:
  - o user prefere ter uma só base para guardar tudo.
 
-2. adiciona campo "markuplang" a cada exercício.
+2.  (feito) adiciona campo "markuplang" a cada exercício.
+   e o campo natlang também !!
 
-3. Atualizar cada base de dados individualmente para o novo formato.
+3.  (feito) Atualizar cada base de dados individualmente para o novo formato.
 
-Novos campos: 
- - markuplang
- - data da revisão
- - 
+
+Segurança das alterações: pensar melhor!
 
 Uma instância e a chave.
         # (0 owner_key, 1 txt_sections, 2 txt_summary, 3 txt_problem, 4 txt_answer, 5 txt_class)
         #row = {'owner_key': p[0], 'summary_text': p[2], 'problem_text': p[3], 'answer_text': p[4], 'class_text': p[5]}
+
 
 
 
@@ -110,6 +163,18 @@ localstore vs svn
 
 * rotina para colocar o conteúdo do localstore numa sequência de ficheiros e usar svn para gerir.
 - ordenado ajuda a pesquisar.
+
+
+
+Garantir números fáceis de usar.
+--------------------------------
+
+
+* como fazer?
+* se numero é só verificar.
+* se o parametro é uma função tem que se atravessar a árvore verificando os coeficientes numericos.
+* Linguagem para definir ?
+
 
 
 FIM
