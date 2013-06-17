@@ -165,7 +165,18 @@ class MegBookWeb(MegBookBase):
         sname   =  ex_instance.name
 
         #Use jinja2 template to generate LaTeX.
-        html_string = self.template("print_instance_html.html",sname=sname,summtxt=summtxt,probtxt=probtxt,answtxt=answtxt,ekey=ex_instance.ekey)
+        answtxt_woCDATA = re.subn(
+            '<!\[CDATA\[(.*?)\]\]>', r'\1', 
+            answtxt, 
+            count=0,
+            flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+
+        html_string = self.template("print_instance_html.html",
+                sname=sname,
+                summtxt=summtxt,
+                probtxt=probtxt,
+                answtxt=answtxt_woCDATA,
+                ekey=ex_instance.ekey)
 
         #Produce files for pdf and png graphics if any tikz code embed on exercise
         html_string = self.publish_tikz(sname,html_string)

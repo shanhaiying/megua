@@ -39,7 +39,8 @@ from sage.all import *
 
 #Sage modules:
 #Check if sage.all includes this:
-from sage.misc.latex import JSMath, Latex, _run_latex_, _latex_file_
+#from sage.misc.latex import JSMath, Latex, _run_latex_, _latex_file_
+from sage.misc.latex import Latex, _run_latex_, _latex_file_
 from sage.misc.html import html
 
 #Python modules:
