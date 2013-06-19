@@ -20,6 +20,9 @@ AUTHORS:
 #Python Modules
 import re
 import codecs
+import random
+import json
+import httplib, urllib
 
 
 #Megua modules:
@@ -301,11 +304,138 @@ class MegBookWeb(MegBookBase):
         """
         html_index = C3WebExporter(self,where,debug)
 
+
     def make_moodlexml(self,where='.',debug=False):
         MoodleExporter(self, where, debug)  
 
 
+    def siacua(self,exname,ekeys=[],many=2):
+        r"""
+        LINKS:
+            http://docs.python.org/2/library/json.html
+            http://stackoverflow.com/questions/7122015/sending-post-request-to-a-webservice-from-python
+
+        Algorithm:
+            1. Read from "%ANSWER" until "</generalfeedback>" and parse this xml string.
+
+        TESTS:
+            ~/Dropbox/all/megua/archive$ sage jsontest.sage
+
+        """
+
+
+        #Create exercise instance
+        row = self.megbook_store.get_classrow(exname)
+        if not row:
+            print "Exercise %s not found." % exname
+            return
+
+        ekeys2 = self._build_ekeys(ekeys,many)
+
+        for e_number in ekeys2:
+
+            #Create exercise instance
+            ex_instance = exerciseinstance(row, ekey=e_number)
+
+            problem = ex_instance.problem()
+            answer = ex_instance.answer()
+
+            answer_list = self._siacua_answer_extract(answer)
+
+            #build json string
+            send_dict =  self._siacua_json(exname, e_number, problem, answer_list)
+
+            #Call siacua for store.
+            #call in future
+            print send_dict
+            self._siacua_send(send_dict)
+
+
+        print "Done."
+
+
+    def _siacua_send(self, send_dict):
+        params = urllib.urlencode(send_dict)
+        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+        conn = httplib.HTTPConnection("localhost")
+        conn.request("POST", "/ajax/post_work.php", params, headers)
+        response = conn.getresponse()
+        #TODO: improve message to user.
+        print response.status, response.reason
+        #data = response.read()
+        #print "============"
+        #print data
+        #print "============"
+        conn.close()
+
+
+    def _build_ekeys(self,ekeys,many=2):
+        r"""From ekeys or many build a range of ekeys."""
+
+        if ekeys is None or len(ekeys)==0:
+            
+            #generate incresing sequence of keys
+            #start = random.randint(1,100000)
+            start = ZZ.random_element(1,100000)
+            return [start + i for i in range(many)]
+        else:
+            return ekeys
+
+    def _siacua_answer_extract(self,answer_text):
+        r"""
+        Does the parsing of answer to extract options and complete answer.
+        """
+        l = re.findall('<!\[CDATA\[(.*?)\]\]>', answer_text, re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)
+        return l
+
+
+    def _siacua_json(self,exname, e_number, problem, answer_list):
+        r"""
+        LINKS:
+            http://docs.python.org/2/library/json.html
+        """
+
+        #Dictionary with fields
+        d = {}
+
+        #Wrong answers
+        d.update( self._siacua_wronganswerdict(answer_list) )
+
+        #Other fields
+        d.update( {
+            "exname": exname, 
+            "ekey": str(e_number), 
+            "problem":  json.dumps(problem, encoding="utf-8"), 
+            "answer":   json.dumps(answer_list[-1], encoding="utf-8"),
+            "rv":       json.dumps(answer_list[0], encoding="utf-8"),
+            "nre": len(answer_list) - 2
+            } )
+
+        #return json.dumps(d,
+        #    ensure_ascii=True, 
+        #    encoding="utf-8")
+        return d
+
+
+    def _siacua_wronganswerdict(self,alist):
+        r"""Wrong answer extraction"""
+
+        nre = len(alist) - 2 # 2 = "correct option" + "detailed answer"
+        #TODO: warn user from this maximum
+        #assume(0<=nre<=6)
+
+        d = dict()
+
+        d["re1"] =  json.dumps(alist[1], encoding="utf-8") if nre>=1 else ""
+        d["re2"] =  json.dumps(alist[2], encoding="utf-8") if nre>=2 else ""
+        d["re3"] =  json.dumps(alist[3], encoding="utf-8") if nre>=3 else ""
+        d["re4"] =  json.dumps(alist[4], encoding="utf-8") if nre>=4 else ""
+        d["re5"] =  json.dumps(alist[5], encoding="utf-8") if nre>=5 else ""
+        d["re6"] =  json.dumps(alist[6], encoding="utf-8") if nre>=6 else ""
+        return d
     
+
+
     def c3web(self, exname, ename="e", rname="r", startnumber=1, many=10,  whatinside="E", ekey=0, edict={}, where='c3web'):
         """
         Save an exercse to aspx page.
