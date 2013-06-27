@@ -309,7 +309,7 @@ class MegBookWeb(MegBookBase):
         MoodleExporter(self, where, debug)  
 
 
-    def siacua(self,exname,ekeys=[],many=2):
+    def siacua(self,exname,ekeys=[],many=2,sendpost=False):
         r"""
         LINKS:
             http://docs.python.org/2/library/json.html
@@ -332,6 +332,14 @@ class MegBookWeb(MegBookBase):
 
         ekeys2 = self._build_ekeys(ekeys,many)
 
+
+
+        (concept_dict,concept_list) = self._siacua_extract(row['summary_text'])
+
+        #For _siacua_sqlprint
+        f = codecs.open(exname+'.html', mode='w', encoding='utf-8')
+        f.write(u"<html><body><h2>Copy/paste do conte\xFAdo e enviar ao Sr. Si\xE1cua por email. Obrigado.</h2>")
+        
         for e_number in ekeys2:
 
             #Create exercise instance
@@ -339,19 +347,29 @@ class MegBookWeb(MegBookBase):
 
             problem = ex_instance.problem()
             answer = ex_instance.answer()
-
             answer_list = self._siacua_answer_extract(answer)
 
+
             #build json string
-            send_dict =  self._siacua_json(exname, e_number, problem, answer_list)
+            send_dict =  self._siacua_json(exname, e_number, problem, answer_list, concept_list)
+            send_dict.update(concept_dict)
 
             #Call siacua for store.
             #call in future
-            print send_dict
-            self._siacua_send(send_dict)
+            #print send_dict
+
+            if sendpost:
+                self._siacua_send(send_dict)
+
+            self._siacua_sqlprint(send_dict,concept_list,f)
 
 
-        print "Done."
+
+        #Ending _siacua_sqlprint
+        f.write(r"</body></html>")
+        f.close()
+ 
+        print r"Copy/paste of contents and send to Sr. Siacua using email. Merci."
 
 
     def _siacua_send(self, send_dict):
@@ -389,7 +407,7 @@ class MegBookWeb(MegBookBase):
         return l
 
 
-    def _siacua_json(self,exname, e_number, problem, answer_list):
+    def _siacua_json(self,exname, e_number, problem, answer_list,concepts_list):
         r"""
         LINKS:
             http://docs.python.org/2/library/json.html
@@ -405,11 +423,13 @@ class MegBookWeb(MegBookBase):
         d.update( {
             "exname": exname, 
             "ekey": str(e_number), 
-            "problem":  json.dumps(problem, encoding="utf-8"), 
-            "answer":   json.dumps(answer_list[-1], encoding="utf-8"),
-            "rv":       json.dumps(answer_list[0], encoding="utf-8"),
+            "problem":  json.dumps(problem.strip(), encoding="utf-8"), 
+            "answer":   json.dumps(answer_list[-1].strip(), encoding="utf-8"),
+            "rv":       json.dumps(answer_list[0].strip(), encoding="utf-8"),
             "nre": len(answer_list) - 2
             } )
+
+        #TODO: colocar concepts_list no dict
 
         #return json.dumps(d,
         #    ensure_ascii=True, 
@@ -426,14 +446,80 @@ class MegBookWeb(MegBookBase):
 
         d = dict()
 
-        d["re1"] =  json.dumps(alist[1], encoding="utf-8") if nre>=1 else ""
-        d["re2"] =  json.dumps(alist[2], encoding="utf-8") if nre>=2 else ""
-        d["re3"] =  json.dumps(alist[3], encoding="utf-8") if nre>=3 else ""
-        d["re4"] =  json.dumps(alist[4], encoding="utf-8") if nre>=4 else ""
-        d["re5"] =  json.dumps(alist[5], encoding="utf-8") if nre>=5 else ""
-        d["re6"] =  json.dumps(alist[6], encoding="utf-8") if nre>=6 else ""
+        d["re1"] =  json.dumps(alist[1].strip(), encoding="utf-8") if nre>=1 else ""
+        d["re2"] =  json.dumps(alist[2].strip(), encoding="utf-8") if nre>=2 else ""
+        d["re3"] =  json.dumps(alist[3].strip(), encoding="utf-8") if nre>=3 else ""
+        d["re4"] =  json.dumps(alist[4].strip(), encoding="utf-8") if nre>=4 else ""
+        d["re5"] =  json.dumps(alist[5].strip(), encoding="utf-8") if nre>=5 else ""
+        d["re6"] =  json.dumps(alist[6].strip(), encoding="utf-8") if nre>=6 else ""
+
         return d
-    
+
+    def _siacua_sqlprint(self,send_dict, concept_list,f):
+        """Print SQL INSERT instruction"""
+
+        html_string = self.template("print_instance_sql.html",
+                exname  = send_dict["exname"],
+                ekey    = send_dict["ekey"],
+                probtxt = json.loads(send_dict["problem"]),
+                answtxt = json.loads(send_dict["answer"]),
+                correct = send_dict["rv"], #"resposta verdadeira" (true answer)
+                nwrong  = send_dict["nre"],
+                wa1     = json.loads(send_dict["re1"]) if send_dict["re1"]!="" else "",
+                wa2     = json.loads(send_dict["re2"]) if send_dict["re2"]!="" else "",
+                wa3     = json.loads(send_dict["re3"]) if send_dict["re3"]!="" else "",
+                wa4     = json.loads(send_dict["re4"]) if send_dict["re4"]!="" else "",
+                wa5     = json.loads(send_dict["re5"]) if send_dict["re5"]!="" else "",
+                wa6     = json.loads(send_dict["re6"]) if send_dict["re6"]!="" else "",
+                level   = send_dict["level"],
+                slip    = send_dict["slip"],
+                guess   = send_dict["guess"],
+                discr   = 0.3,
+        )
+
+        f.write(html_string)
+
+        for c in concept_list:
+
+            html_string = self.template("print_instance_sql2.html",
+                conceptid  = c[0],
+                weight     = c[1],
+            )
+
+            f.write(html_string)
+
+
+
+    def _siacua_extract(self,summary_text):
+        """
+        Extract from summary:
+            SIACUAstart
+            guess=2;  slip= 0.2; guess=0.25
+            concepts = [(1221, 1)]
+            SIACUAend
+        export to:
+                level   = send_dict["level"],
+                slip    = send_dict["slip"],
+                guess   = send_dict["guess"],
+        """
+
+        #TODO: TERMINAR esta FUNcao
+
+        concepts_match = re.search(
+            r'SIACUAstart(.*?)SIACUAend', 
+            summary_text, 
+            flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)
+
+        if concepts_match is not None:
+            #print "GROUP 1=", concepts_match.group(1)
+            exec concepts_match.group(1)
+        else:
+            print "The summary needs the following lines:\nSIACUAstart\nguess=2;  slip= 0.2; guess=0.25\nconcepts = [(1221, 1)]\nSIACUAend\n"
+            raise ValueError
+
+        return (dict(level=level, slip=slip, guess=guess), concepts)
+
+
 
 
     def c3web(self, exname, ename="e", rname="r", startnumber=1, many=10,  whatinside="E", ekey=0, edict={}, where='c3web'):
