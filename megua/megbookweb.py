@@ -361,7 +361,7 @@ class MegBookWeb(MegBookBase):
             if sendpost:
                 self._siacua_send(send_dict)
 
-            self._siacua_sqlprint(send_dict,concept_list,f)
+            #self._siacua_sqlprint(send_dict,concept_list,f)
 
 
 
@@ -375,15 +375,15 @@ class MegBookWeb(MegBookBase):
     def _siacua_send(self, send_dict):
         params = urllib.urlencode(send_dict)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-        conn = httplib.HTTPConnection("localhost")
-        conn.request("POST", "/ajax/post_work.php", params, headers)
+        conn = httplib.HTTPConnection("siacua.web.ua.pt")
+        conn.request("POST", "/MeguaInsert.aspx", params, headers)
         response = conn.getresponse()
         #TODO: improve message to user.
         print response.status, response.reason
-        #data = response.read()
-        #print "============"
-        #print data
-        #print "============"
+        data = response.read()
+        print "============"
+        print data
+        print "============"
         conn.close()
 
 
@@ -407,7 +407,7 @@ class MegBookWeb(MegBookBase):
         return l
 
 
-    def _siacua_json(self,exname, e_number, problem, answer_list,concepts_list):
+    def _siacua_json(self,exname, e_number, problem, answer_list,concept_list):
         r"""
         LINKS:
             http://docs.python.org/2/library/json.html
@@ -420,14 +420,39 @@ class MegBookWeb(MegBookBase):
         d.update( self._siacua_wronganswerdict(answer_list) )
 
         #Other fields
+        #d.update( {
+        #    "exname": exname, 
+        #    "ekey": str(e_number), 
+        #    "problem":  json.dumps(problem.strip(), encoding="utf-8"), 
+        #    "answer":   json.dumps(answer_list[-1].strip(), encoding="utf-8"),
+        #    "rv":       json.dumps(answer_list[0].strip(), encoding="utf-8"),
+        #    "nre": len(answer_list) - 2
+        #    } )
+
         d.update( {
             "exname": exname, 
             "ekey": str(e_number), 
-            "problem":  json.dumps(problem.strip(), encoding="utf-8"), 
-            "answer":   json.dumps(answer_list[-1].strip(), encoding="utf-8"),
-            "rv":       json.dumps(answer_list[0].strip(), encoding="utf-8"),
+            "problem":  problem.strip().encode("utf-8"), 
+            "answer":   answer_list[-1].strip().encode("utf-8"),
+            "rv":       answer_list[0].strip().encode("utf-8"),
             "nre": len(answer_list) - 2
             } )
+
+        #Concept list
+        l = len(concept_list)
+        d["nc"] = l #number of concepts
+        d["tc1"] =  concept_list[0][0] if l>=1 else ""
+        d["tp1"] =  concept_list[0][1] if l>=1 else ""
+
+        d["tc2"] =  concept_list[1][0] if l>=2 else ""
+        d["tp2"] =  concept_list[1][1] if l>=2 else ""
+
+        d["tc3"] =  concept_list[2][0] if l>=3 else ""
+        d["tp3"] =  concept_list[2][1] if l>=3 else ""
+
+        d["tc4"] =  concept_list[2][0] if l>=4 else ""
+        d["tp4"] =  concept_list[2][1] if l>=4 else ""
+
 
         #TODO: colocar concepts_list no dict
 
@@ -446,35 +471,61 @@ class MegBookWeb(MegBookBase):
 
         d = dict()
 
-        d["re1"] =  json.dumps(alist[1].strip(), encoding="utf-8") if nre>=1 else ""
-        d["re2"] =  json.dumps(alist[2].strip(), encoding="utf-8") if nre>=2 else ""
-        d["re3"] =  json.dumps(alist[3].strip(), encoding="utf-8") if nre>=3 else ""
-        d["re4"] =  json.dumps(alist[4].strip(), encoding="utf-8") if nre>=4 else ""
-        d["re5"] =  json.dumps(alist[5].strip(), encoding="utf-8") if nre>=5 else ""
-        d["re6"] =  json.dumps(alist[6].strip(), encoding="utf-8") if nre>=6 else ""
+        #d["re1"] =  json.dumps(alist[1].strip(), encoding="utf-8") if nre>=1 else ""
+        #d["re2"] =  json.dumps(alist[2].strip(), encoding="utf-8") if nre>=2 else ""
+        #d["re3"] =  json.dumps(alist[3].strip(), encoding="utf-8") if nre>=3 else ""
+        #d["re4"] =  json.dumps(alist[4].strip(), encoding="utf-8") if nre>=4 else ""
+        #d["re5"] =  json.dumps(alist[5].strip(), encoding="utf-8") if nre>=5 else ""
+        #d["re6"] =  json.dumps(alist[6].strip(), encoding="utf-8") if nre>=6 else ""
+
+        d["re1"] =  alist[1].strip().encode("utf-8") if nre>=1 else ""
+        d["re2"] =  alist[2].strip().encode("utf-8") if nre>=2 else ""
+        d["re3"] =  alist[3].strip().encode("utf-8") if nre>=3 else ""
+        d["re4"] =  alist[4].strip().encode("utf-8") if nre>=4 else ""
+        d["re5"] =  alist[5].strip().encode("utf-8") if nre>=5 else ""
+        d["re6"] =  alist[6].strip().encode("utf-8") if nre>=6 else ""
 
         return d
 
     def _siacua_sqlprint(self,send_dict, concept_list,f):
         """Print SQL INSERT instruction"""
 
+        #html_string = self.template("print_instance_sql.html",
+        #        exname  = send_dict["exname"],
+        #        ekey    = send_dict["ekey"],
+        #        probtxt = json.loads(send_dict["problem"]),
+        #        answtxt = json.loads(send_dict["answer"]),
+        #        correct = send_dict["rv"], #"resposta verdadeira" (true answer)
+        #        nwrong  = send_dict["nre"],
+        #        wa1     = json.loads(send_dict["re1"]) if send_dict["re1"]!="" else "",
+        #        wa2     = json.loads(send_dict["re2"]) if send_dict["re2"]!="" else "",
+        #        wa3     = json.loads(send_dict["re3"]) if send_dict["re3"]!="" else "",
+        #        wa4     = json.loads(send_dict["re4"]) if send_dict["re4"]!="" else "",
+        #        wa5     = json.loads(send_dict["re5"]) if send_dict["re5"]!="" else "",
+        #        wa6     = json.loads(send_dict["re6"]) if send_dict["re6"]!="" else "",
+        #        level   = send_dict["level"],
+        #        slip    = send_dict["slip"],
+        #        guess   = send_dict["guess"],
+        #        discr   = 0.3,
+        #)
+
         html_string = self.template("print_instance_sql.html",
                 exname  = send_dict["exname"],
                 ekey    = send_dict["ekey"],
-                probtxt = json.loads(send_dict["problem"]),
-                answtxt = json.loads(send_dict["answer"]),
+                probtxt = send_dict["problem"],
+                answtxt = send_dict["answer"],
                 correct = send_dict["rv"], #"resposta verdadeira" (true answer)
                 nwrong  = send_dict["nre"],
-                wa1     = json.loads(send_dict["re1"]) if send_dict["re1"]!="" else "",
-                wa2     = json.loads(send_dict["re2"]) if send_dict["re2"]!="" else "",
-                wa3     = json.loads(send_dict["re3"]) if send_dict["re3"]!="" else "",
-                wa4     = json.loads(send_dict["re4"]) if send_dict["re4"]!="" else "",
-                wa5     = json.loads(send_dict["re5"]) if send_dict["re5"]!="" else "",
-                wa6     = json.loads(send_dict["re6"]) if send_dict["re6"]!="" else "",
+                wa1     = send_dict["re1"] if send_dict["re1"]!="" else "",
+                wa2     = send_dict["re2"] if send_dict["re2"]!="" else "",
+                wa3     = send_dict["re3"] if send_dict["re3"]!="" else "",
+                wa4     = send_dict["re4"] if send_dict["re4"]!="" else "",
+                wa5     = send_dict["re5"] if send_dict["re5"]!="" else "",
+                wa6     = send_dict["re6"] if send_dict["re6"]!="" else "",
                 level   = send_dict["level"],
                 slip    = send_dict["slip"],
                 guess   = send_dict["guess"],
-                discr   = 0.3,
+                discr   = "0.3",
         )
 
         f.write(html_string)
