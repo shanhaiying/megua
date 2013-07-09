@@ -524,8 +524,8 @@ class MegBookWeb(MegBookBase):
                 level   = send_dict["level"],
                 slip    = send_dict["slip"],
                 guess   = send_dict["guess"],
-                discr   = "0.3",
-        )
+                discr   = send_dict["discr"],
+	)
 
         f.write(html_string)
 
@@ -544,7 +544,7 @@ class MegBookWeb(MegBookBase):
         """
         Extract from summary:
             SIACUAstart
-            guess=2;  slip= 0.2; guess=0.25
+            guess=2;  slip= 0.2; guess=0.25; discr=0.3
             concepts = [(1221, 1)]
             SIACUAend
         export to:
@@ -567,7 +567,7 @@ class MegBookWeb(MegBookBase):
             print "The summary needs the following lines:\nSIACUAstart\nguess=2;  slip= 0.2; guess=0.25\nconcepts = [(1221, 1)]\nSIACUAend\n"
             raise ValueError
 
-        return (dict(level=level, slip=slip, guess=guess), concepts)
+        return (dict(level=level, slip=slip, guess=guess,discr=discr), concepts)
 
 
 
