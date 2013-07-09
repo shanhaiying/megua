@@ -349,7 +349,6 @@ class MegBookWeb(MegBookBase):
             answer = ex_instance.answer()
             answer_list = self._siacua_answer_extract(answer)
 
-
             #build json string
             send_dict =  self._siacua_json(exname, e_number, problem, answer_list, concept_list)
             send_dict.update(concept_dict)
