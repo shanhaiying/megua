@@ -368,7 +368,7 @@ class MegBookWeb(MegBookBase):
         f.write(r"</body></html>")
         f.close()
  
-        print r"Copy/paste of contents and send to Sr. Siacua using email. Merci."
+        #print r"Copy/paste of contents and send to Sr. Siacua using email. Merci."
 
 
     def _siacua_send(self, send_dict):
@@ -380,9 +380,9 @@ class MegBookWeb(MegBookBase):
         #TODO: improve message to user.
         print response.status, response.reason
         data = response.read()
-        print "============"
-        print data
-        print "============"
+        #print "============"
+        html(data)
+        #print "============"
         conn.close()
 
 
@@ -418,7 +418,7 @@ class MegBookWeb(MegBookBase):
         #Wrong answers
         d.update( self._siacua_wronganswerdict(answer_list) )
 
-        #Other fields
+        #USING JSON
         #d.update( {
         #    "exname": exname, 
         #    "ekey": str(e_number), 
@@ -470,6 +470,7 @@ class MegBookWeb(MegBookBase):
 
         d = dict()
 
+        #Using JSON:
         #d["re1"] =  json.dumps(alist[1].strip(), encoding="utf-8") if nre>=1 else ""
         #d["re2"] =  json.dumps(alist[2].strip(), encoding="utf-8") if nre>=2 else ""
         #d["re3"] =  json.dumps(alist[3].strip(), encoding="utf-8") if nre>=3 else ""
@@ -489,6 +490,7 @@ class MegBookWeb(MegBookBase):
     def _siacua_sqlprint(self,send_dict, concept_list,f):
         """Print SQL INSERT instruction"""
 
+        #Using JSON:
         #html_string = self.template("print_instance_sql.html",
         #        exname  = send_dict["exname"],
         #        ekey    = send_dict["ekey"],
@@ -563,8 +565,9 @@ class MegBookWeb(MegBookBase):
         if concepts_match is not None:
             #print "GROUP 1=", concepts_match.group(1)
             exec concepts_match.group(1)
+            [assert( w in globals()) for w in ['guess', 'slip', 'guess', 'discr', 'concepts'] ]
         else:
-            print "The summary needs the following lines:\nSIACUAstart\nguess=2;  slip= 0.2; guess=0.25\nconcepts = [(1221, 1)]\nSIACUAend\n"
+            print "For the siacua system %SUMMARY needs the following lines:\nSIACUAstart\nguess=2;  slip= 0.2; guess=0.25; discr=0.3;\nconcepts = [(1221, 0.5),(1222, 1)]\nSIACUAend\n"
             raise ValueError
 
         return (dict(level=level, slip=slip, guess=guess,discr=discr), concepts)
