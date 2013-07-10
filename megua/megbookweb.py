@@ -309,7 +309,7 @@ class MegBookWeb(MegBookBase):
         MoodleExporter(self, where, debug)  
 
 
-    def siacua(self,exname,ekeys=[],many=2,sendpost=False):
+    def siacua(self,exname,ekeys=[],sendpost=False):
         r"""
         LINKS:
             http://docs.python.org/2/library/json.html
@@ -330,17 +330,13 @@ class MegBookWeb(MegBookBase):
             print "Exercise %s not found." % exname
             return
 
-        ekeys2 = self._build_ekeys(ekeys,many)
-
-
-
         (concept_dict,concept_list) = self._siacua_extract(row['summary_text'])
 
         #For _siacua_sqlprint
         f = codecs.open(exname+'.html', mode='w', encoding='utf-8')
         f.write(u"<html><body><h2>Copy/paste do conte\xFAdo e enviar ao Sr. Si\xE1cua por email. Obrigado.</h2>")
         
-        for e_number in ekeys2:
+        for e_number in ekeys:
 
             #Create exercise instance
             ex_instance = exerciseinstance(row, ekey=e_number)
