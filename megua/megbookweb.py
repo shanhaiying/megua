@@ -561,7 +561,7 @@ class MegBookWeb(MegBookBase):
         if concepts_match is not None:
             #print "GROUP 1=", concepts_match.group(1)
             exec concepts_match.group(1)
-            [assert( w in globals()) for w in ['guess', 'slip', 'guess', 'discr', 'concepts'] ]
+            #[assert( w in globals()) for w in ['guess', 'slip', 'guess', 'discr', 'concepts'] ]
         else:
             print "For the siacua system %SUMMARY needs the following lines:\nSIACUAstart\nguess=2;  slip= 0.2; guess=0.25; discr=0.3;\nconcepts = [(1221, 0.5),(1222, 1)]\nSIACUAend\n"
             raise ValueError
