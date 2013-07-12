@@ -374,11 +374,16 @@ class MegBookWeb(MegBookBase):
         conn.request("POST", "/MeguaInsert.aspx", params, headers)
         response = conn.getresponse()
         #TODO: improve message to user.
-        print response.status, response.reason
-        data = response.read()
-        #print "============"
-        html(data)
-        #print "============"
+        if response.status==200:
+            #print 'Sent to server:  "', send_dict["exname"], '" with ekey=', send_dict["ekey"] 
+            #print response.status, response.reason
+            #TODO: remove extra newlines that the user sees on notebook.
+            data = response.read()
+            html(data)
+        else:
+            print "Could not send %s exercise to the server." % send_dict["exname"]
+            print response.status, response.reason
+
         conn.close()
 
 
