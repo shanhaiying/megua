@@ -83,8 +83,9 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
     error = subprocess.check_call(lt,shell=True)
 
     if error:
-        print ""
+        print "=========="
         print "ERRORS:   Possible errors during pdflatex compilation. See %s.log for a description. (%d error)" % (filename,error)
+        print "=========="
         return not error
 
     if runs>1:
