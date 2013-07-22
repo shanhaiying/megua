@@ -7,10 +7,21 @@
 
 {# See megbook.print_instance() #}
 
+<script type="text/x-mathjax-config">
 
-<!-- <script type="text/javascript" src="http://sagemath.servehttp.com/javascript/mathjax/MathJax.js?config=TeX-AMS_HTML-full"></script> -->
+  MathJax.Hub.Config({
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+    extensions: ["tex2jax.js"],
+
+    jax: ["input/TeX","output/HTML-CSS"],
+
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+
+  });
+
+</script>
+
+<script type="text/javascript" src="https://sagemath.clients.ua.pt/javascript/mathjax/MathJax.js?config=TeX-AMS_HTML-full"></script>
 
 
 <br/>
