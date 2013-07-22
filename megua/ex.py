@@ -1,15 +1,12 @@
 r"""
 This module defines the base class for exercise templating.
-
-To build a database of exercise templates read details of module ``megbook``.
  
+http://stackoverflow.com/questions/230896/given-a-list-of-variable-names-in-python-how-do-i-a-create-a-dictionary-with-th
+
 
 AUTHORS:
 
-- Pedro Cruz (2010-03-01): initial version
-- Pedro Cruz (2011-05-06): redefining Exercise templating.
-- Pedro Cruz (2011-08): documentation strings with tests
-- Pedro Cruz (2013-01): Exercise can be derived for other types than pdflatex.
+- Pedro Cruz (2013-07-16): initial version
 
 
 EXAMPLES:
@@ -107,10 +104,6 @@ class Exercise:
     - a derivation of class ``Exercise`` will inherit the values below.
     - a derivation of class ``Exercise`` should change this class parameters to new ones.
     """
-    _owner_key = None
-    _summary_text = None
-    _problem_text = None
-    _answer_text = None
 
     #def __init__(self,ownerkey=None,ekey=None,edict=None,summary=None,problem=None,answer=None):
     #    self.ownerkey = ownerkey
@@ -126,6 +119,17 @@ class Exercise:
 
 
     def __init__(self,ekey=None,edict=None):
+
+
+        #Basic
+        self.problem_text = None
+        self.answer_text = None
+        #Classification
+        self.summary_text = None
+        self.sections = None
+        self.problem_textualname = None
+
+
         self.update(ekey,edict)
 
     def __str__(self):

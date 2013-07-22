@@ -8,6 +8,7 @@
 # Warning about UNICODE: 
 # 1. for unicode string cannot use u'áé' and must use u'\xe1\xe9'
 # 2. for str string can use "áé".
+# (3. unicode is not utf8.)
 
 #TODO: remove markuplanguage from metameg, set __version__ = ....
 
@@ -21,6 +22,7 @@ AUTHORS:
 - Pedro Cruz (2011-02-17): initial version
 - Pedro Cruz (2011-10): another version
 - Pedro Cruz (2013-02): another version
+- Pedro Cruz (2013-07): SQLAlchemy
 
 NOTES:
 
