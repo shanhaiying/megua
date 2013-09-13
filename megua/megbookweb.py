@@ -450,8 +450,8 @@ class MegBookWeb(MegBookBase):
         d["tc3"] =  concept_list[2][0] if l>=3 else ""
         d["tp3"] =  concept_list[2][1] if l>=3 else ""
 
-        d["tc4"] =  concept_list[2][0] if l>=4 else ""
-        d["tp4"] =  concept_list[2][1] if l>=4 else ""
+        d["tc4"] =  concept_list[3][0] if l>=4 else ""
+        d["tp4"] =  concept_list[3][1] if l>=4 else ""
 
 
         #TODO: colocar concepts_list no dict
