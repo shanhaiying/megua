@@ -309,7 +309,7 @@ class MegBookWeb(MegBookBase):
         MoodleExporter(self, where, debug)  
 
 
-    def siacua(self,exname,ekeys=[],sendpost=False):
+    def siacua(self,exname,ekeys=[],sendpost=False,course="calculo3"):
         r"""
         LINKS:
             http://docs.python.org/2/library/json.html
@@ -346,7 +346,7 @@ class MegBookWeb(MegBookBase):
             answer_list = self._siacua_answer_extract(answer)
 
             #build json string
-            send_dict =  self._siacua_json(exname, e_number, problem, answer_list, concept_list)
+            send_dict =  self._siacua_json(course, exname, e_number, problem, answer_list, concept_list)
             send_dict.update(concept_dict)
 
             #Call siacua for store.
@@ -407,7 +407,7 @@ class MegBookWeb(MegBookBase):
         return l
 
 
-    def _siacua_json(self,exname, e_number, problem, answer_list,concept_list):
+    def _siacua_json(self,course, exname, e_number, problem, answer_list,concept_list):
         r"""
         LINKS:
             http://docs.python.org/2/library/json.html
@@ -430,6 +430,7 @@ class MegBookWeb(MegBookBase):
         #    } )
 
         d.update( {
+            "course": course,
             "exname": exname, 
             "ekey": str(e_number), 
             "problem":  problem.strip().encode("utf-8"), 
