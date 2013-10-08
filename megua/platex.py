@@ -60,14 +60,16 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
         raise ValueError, "filename must contain no spaces"
 
     #Store latexstr in filename
-    f = open(os.path.join(workdir, filename+'.tex'),'w')
+    fullpath = os.path.join(workdir, filename+'.tex')
+    f = open(fullpath,'w')
     f.write(latexstr)
     f.close()
 
     #compile
     #lt = ['sage-native-execute', 'pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
     ###lt = ['/usr/bin/pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
-    lt = r'/usr/bin/pdflatex -interaction=nonstopmode ' + filename + r'.tex'
+    #Note: to clear ideas: keep inputs and outputs in same directory
+    lt = r'cd ' + workdir + '; /usr/bin/pdflatex -interaction=nonstopmode ' + filename
 
     #TODO: study efect of this in notebook
     """
@@ -84,7 +86,7 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
 
     if error:
         print "=========="
-        print "ERRORS:   Possible errors during pdflatex compilation. See %s.log for a description. (%d error)" % (filename,error)
+        print "ERRORS:   Possible errors during pdflatex compilation. See %s.log for a description. (%d error)" % (fullpath,error)
         print "=========="
         return not error
 

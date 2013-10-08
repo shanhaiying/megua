@@ -67,6 +67,7 @@ Changing randomly but setting one of them::
 
 #Function that transforms input text in an exercise instance.
 from paramparse import parameter_change
+from platex import pcompile
 
 #Import the random generator object.
 from ur import ur 
@@ -150,6 +151,10 @@ class Exercise:
         #Call user derived function to solve it.
         self.solve()
 
+        #reset image list for the new parameters
+        #TODO: this can generate inconsistency when make_random or solve are called alone.
+        self.image_list = []
+
     def make_random(self):
         """
         Derive this function.
@@ -181,21 +186,98 @@ class Exercise:
         """
         Use class text self._problem_text and replace for parameters on dictionary. Nothing is saved.
         """
-        in_text = parameter_change(self._problem_text,self.__dict__)
-        out_text = self.rewrite(in_text)
-        return out_text
+        text1 = parameter_change(self._problem_text,self.__dict__)
+        return self._change_text(text1)
 
     def answer(self):
         """
         Use class text self._answer_text and replace for parameters on dictionary. Nothing is saved.
         """
-        #return parameter_change(self._answer_text,self.__dict__)
-        in_text = parameter_change(self._answer_text,self.__dict__)
-        out_text = self.rewrite(in_text)
-        return out_text
+        text1 = parameter_change(self._answer_text,self.__dict__)
+        return self._change_text(text1)
+
+
+    def _change_text(self,text1):
+        text2 = self.rewrite(text1)
+        text3 = self.latex_images(text2)
+        return text3
+
+
 
     def name(self):
         return self.name
+
+
+    def sage_graphic(self,graphobj,varname,dimx=5,dimy=5):
+        gfilename = '%s-%s-%d'%(self.name,varname,self.ekey)
+        #create if does not exist the "image" directory
+        os.system("mkdir -p images") #The "-p" ommits errors if it exists.
+        graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
+        #self.image_list.append(gfilename) 
+        return r"<img src=images/%s.png></img>" % gfilename
+
+
+    def latex_images(self,input_text):
+        """When <latex dimx dimy> ... </latex> is present, then 
+        it is necessary to produce them.
+        """
+
+        #VER LATEXIMG.PY
+
+
+        #important \\ and \{
+
+        #old pattern:
+        #tikz_pattern = re.compile(r'\\begin\{tikzpicture\}(.+?)\\end\{tikzpicture\}', re.DOTALL|re.UNICODE)
+
+        #print "Group 0:",match.group(0) #all
+        #print "Group 1:",match.group(1) #scale (see http://www.imagemagick.org/script/command-line-processing.php#geometry)
+        #print "Group 2:",match.group(2) #what is to compile
+
+        latex_pattern = re.compile(r'<\s*latex\s+(\d+%)\s*>(.+?)<\s*/latex\s*>', re.DOTALL|re.UNICODE)
+
+        #create if does not exist the "image" directory
+        os.system("mkdir -p images") #The "-p" ommits errors if it exists.
+
+        #Cycle through existent tikz code and produce pdf and png files.
+        graphic_number = 0
+        match_iter = re.finditer(latex_pattern,input_text)#create an iterator
+        for match in match_iter:
+            #Graphic filename
+            gfilename = '%s-%d-%02d'%(self.name,self.ekey,graphic_number)
+            print "=========="
+            print gfilename
+            print "=========="
+            #Compile what is inside <latex>...</latex> to a image
+            tikz_picture = match.group(2) 
+            #TODO: mudar tikz_graphics para latex_image.tex
+            #Note: compile only in a images/*.tex folder
+            tikz_tex = Exercise.megbook.template("tikz_graphics.tex", pgfrealjobname=r"\pgfrealjobname{%s}"%self.name, beginname=r"\beginpgfgraphicnamed{%s}"%gfilename, tikz_picture=tikz_picture)
+            pcompile(tikz_tex,'images','%s-%d-%02d'%(self.name,self.ekey, graphic_number),hideoutput=True)
+            #convert -density 600x600 pic.pdf -quality 90 -resize 800x600 pic.png
+            cmd = "cd images;convert -density 100x100 '{0}.pdf' -quality 95 -resize {1} '{0}.png'".format(
+                gfilename,match.group(1),gfilename)
+            print "============== CMD: ",cmd
+            os.system(cmd)
+            graphic_number += 1
+            self.image_list.append(gfilename) 
+
+        #Cycle through existent tikz code and produce a new html string .
+        graphic_number = 0
+        gfilename = '%s-%d-%02d'%(self.name,self.ekey,graphic_number)
+        (new_text,number) = latex_pattern.subn(r"<img src='images/%s.png'></img>" % gfilename, input_text, count=1)
+        while number>0:
+            graphic_number += 1
+            gfilename = '%s-%d-%02d'%(self.name,self.ekey,graphic_number)
+            (new_text,number) = latex_pattern.subn(r"<img src='images/%s.png'></img>" % gfilename, new_text, count=1)
+        
+        #TODO: falta gravar as imagens na lista deste exercicio.
+
+        return new_text
+
+
+
+
 
 
 

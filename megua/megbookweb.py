@@ -182,7 +182,8 @@ class MegBookWeb(MegBookBase):
                 ekey=ex_instance.ekey)
 
         #Produce files for pdf and png graphics if any tikz code embed on exercise
-        html_string = self.publish_tikz(sname,html_string)
+        #Ver ex.py: now latex images are produced in ex.problem() and ex.answer()
+        #html_string = self.publish_tikz(sname,html_string)
 
 
         if is_notebook():
@@ -222,39 +223,6 @@ class MegBookWeb(MegBookBase):
             print html_string
 
 
-
-    def publish_tikz(self,sname,html_str):
-        """ 
-        Receives a string with latex tikz begin{}...end{} environments. Extracts and produce pdf and png file for each tikz graphic.
-        """
-
-        #important \\ and \{
-        tikz_pattern = re.compile(r'\\begin\{tikzpicture\}(.+)\\end\{tikzpicture\}', re.DOTALL|re.UNICODE)
-
-        #Cycle through existent tikz code and produce pdf and png files.
-        graphic_number = 0
-        match_iter = re.finditer(tikz_pattern,html_str)#create an iterator
-        for match in match_iter:
-            #Graphic filename
-            gfilename = '%s-%02d'%(sname,graphic_number)
-            #Compile tikz picture
-            tikz_picture = match.group() 
-            tikz_tex = self.template("tikz_graphics.tex", pgfrealjobname=r"\pgfrealjobname{%s}"%sname, beginname=r"\beginpgfgraphicnamed{%s}"%gfilename, tikz_picture=tikz_picture)
-            pcompile(tikz_tex,'.','%s-%02d'%(sname,graphic_number),hideoutput=True)
-            #convert -density 600x600 pic.pdf -quality 90 -resize 800x600 pic.png
-            os.system("convert -density 300x300 '%s.pdf' -quality 90 -resize 400x300 '%s.png'"  % (gfilename,gfilename))
-            graphic_number += 1
-
-        #Cycle through existent tikz code and produce a new html string .
-        graphic_number = 0
-        gfilename = '%s-%02d'%(sname,graphic_number)
-        (new_html,number) = tikz_pattern.subn(r"<img src='%s.png'></img>" % gfilename, html_str, count=1)
-        while number>0:
-            graphic_number += 1
-            gfilename = '%s-%02d'%(sname,graphic_number)
-            (new_html,number) = tikz_pattern.subn(r"<img src='%s.png'></img>" % gfilename, new_html, count=1)
-        
-        return new_html
 
     def make_index(self,where='.',debug=False):
         """
@@ -344,6 +312,11 @@ class MegBookWeb(MegBookBase):
             problem = ex_instance.problem()
             answer = ex_instance.answer()
             answer_list = self._siacua_answer_extract(answer)
+
+            #Create images for graphics (if they exist) 
+                #for problem
+                #for each answer
+                #collect consecutive image numbers.
 
             #build json string
             send_dict =  self._siacua_json(course, exname, e_number, problem, answer_list, concept_list)

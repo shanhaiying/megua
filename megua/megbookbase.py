@@ -169,6 +169,9 @@ class MegBookBase:
         #For template. See template_create function.
         self.template_row = None
 
+        print "============== FEITO ================"
+        Exercise.megbook = self
+
 
     def __str__(self):
         return "MegBookBase(%s) for natural language %s and markup language  %s." % (self.local_store_filename,self.natlang,self.markuplang)
