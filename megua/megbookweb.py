@@ -311,6 +311,10 @@ class MegBookWeb(MegBookBase):
 
             problem = ex_instance.problem()
             answer = ex_instance.answer()
+            #Adapt for appropriate URL for images
+            problem = self._adjust_images_url(problem)
+            answer = self._adjust_images_url(answer)
+            self.send_images()
             answer_list = self._siacua_answer_extract(answer)
 
             #Create images for graphics (if they exist) 
@@ -338,6 +342,27 @@ class MegBookWeb(MegBookBase):
         f.close()
  
         #print r"Copy/paste of contents and send to Sr. Siacua using email. Merci."
+
+
+    def send_images(self):
+        """Send images to siacua: now is to put them in a drpobox public folder"""
+        # AttributeError: MegBookWeb instance has no attribute 'image_list'
+        #for fn in self.image_list:
+        #    os.system("cp -uv images/%s.png /home/nbuser/megua_images" % fn)
+        os.system("cp -ru images/*.png /home/nbuser/megua_images")
+
+
+    def _adjust_images_url(self, input_text):
+        """the url in problem() and answer() is <img src='images/filename.png'>
+        Here we replace images/ by the public dropbox folder"""
+
+        target = r"https://dl.dropboxusercontent.com/u/10518224/megua_images"
+        img_pattern = re.compile(r"src='images/", re.DOTALL|re.UNICODE)
+
+        (new_text,number) = img_pattern.subn(r"src='%s/" % target, input_text) #, count=1)
+        print "===> Replacement for %d url images." % number
+        return new_text
+
 
 
     def _siacua_send(self, send_dict):
@@ -377,6 +402,8 @@ class MegBookWeb(MegBookBase):
         Does the parsing of answer to extract options and complete answer.
         """
         l = re.findall('<!\[CDATA\[(.*?)\]\]>', answer_text, re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)
+        if len(l)<5:
+            raise NameError('Missing of options in multiple choice question or full answer. At least 4 options must be given and the first must be the correct one. Also the full answer must be given.')
         return l
 
 

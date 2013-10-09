@@ -138,6 +138,10 @@ class Exercise:
         return "To be done"
 
     def update(self,ekey=None,edict=None):
+        #reset image list for the new parameters
+        #TODO: this can generate inconsistency if make_random or solve are called alone.
+        self.image_list = []
+
         #Initialize all random generators.
         self.ekey = ur.set_seed(ekey)
 
@@ -151,9 +155,6 @@ class Exercise:
         #Call user derived function to solve it.
         self.solve()
 
-        #reset image list for the new parameters
-        #TODO: this can generate inconsistency when make_random or solve are called alone.
-        self.image_list = []
 
     def make_random(self):
         """
@@ -213,8 +214,8 @@ class Exercise:
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
         graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
-        #self.image_list.append(gfilename) 
-        return r"<img src=images/%s.png></img>" % gfilename
+        self.image_list.append(gfilename) 
+        return r"<img src='images/%s.png'></img>" % gfilename
 
 
     def latex_images(self,input_text):
