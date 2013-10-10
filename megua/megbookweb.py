@@ -311,10 +311,13 @@ class MegBookWeb(MegBookBase):
 
             problem = ex_instance.problem()
             answer = ex_instance.answer()
+    
             #Adapt for appropriate URL for images
-            problem = self._adjust_images_url(problem)
-            answer = self._adjust_images_url(answer)
-            self.send_images()
+            if ex_instance.image_list != []:
+                problem = self._adjust_images_url(problem)
+                answer = self._adjust_images_url(answer)
+                self.send_images()
+    
             answer_list = self._siacua_answer_extract(answer)
 
             #Create images for graphics (if they exist) 
