@@ -349,7 +349,7 @@ class MegBookWeb(MegBookBase):
         # AttributeError: MegBookWeb instance has no attribute 'image_list'
         #for fn in self.image_list:
         #    os.system("cp -uv images/%s.png /home/nbuser/megua_images" % fn)
-        os.system("cp -ru images/*.png /home/nbuser/megua_images")
+        os.system("cp -ru images/*.png /home/nbuser/megua_images  > /dev/null") #TODO: check this
 
 
     def _adjust_images_url(self, input_text):
@@ -360,7 +360,7 @@ class MegBookWeb(MegBookBase):
         img_pattern = re.compile(r"src='images/", re.DOTALL|re.UNICODE)
 
         (new_text,number) = img_pattern.subn(r"src='%s/" % target, input_text) #, count=1)
-        print "===> Replacement for %d url images." % number
+        #print "===> Replacement for %d url images." % number
         return new_text
 
 

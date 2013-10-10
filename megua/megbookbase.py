@@ -169,7 +169,6 @@ class MegBookBase:
         #For template. See template_create function.
         self.template_row = None
 
-        print "============== FEITO ================"
         Exercise.megbook = self
 
 
