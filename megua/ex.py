@@ -71,7 +71,7 @@ from platex import pcompile
 
 #Import the random generator object.
 from ur import ur 
-
+#, edict=" + str(edict) + ")\n")
 from msc15 import *
 import tikzmod
 
@@ -125,7 +125,7 @@ class Exercise:
         #Guarantee a first set of parameters
         self.update(ekey,edict)
 
-
+#, edict=" + str(edict) + ")\n")
     def __str__(self):
         return str(self.__dict__)
 
@@ -179,7 +179,7 @@ class Exercise:
         return text
 
     def summary(self):
-        """
+        """#, edict=" + str(edict) + ")\n")
         Use class text self._summary_text and replace for parameters on dictionary. Nothing is saved.
         """
         return parameter_change(self._summary_text,self.__dict__)
@@ -305,28 +305,28 @@ def exerciseclass(row):
     #   Now ex_name is on global space ?? 
     #   or is in this module space?
 
-    #TODO: what if preparse fails with errors?
-    sage_class = preparse(row['class_text'])
     try:
-        print "====> Antes do exec"
-        exec compile(sage_class,row["owner_key"],'eval')
-        print "====> Depois do exec"
-    except SyntaxError as se:
+        #exec compile(sage_class,row["owner_key"],'eval')
+        sage_class = preparse(row['class_text'])
+        exec sage_class
+    except: 
         tmp = tempfile.mkdtemp()
-        pfilename = tmp+"/"+row["owner_key"]+".py"
+        pfilename = tmp+"/"+row["owner_key"]+".sage"
         pcode = open(pfilename,"w")
-        pcode.write("# -*- coding: utf-8 -*\n" + sage_class.encode("utf-8") )
+        pcode.write("# -*- coding: utf-8 -*\nfrom megua.all import *\n" + row['class_text'].encode("utf-8") )
         pcode.close()
         errfilename = "%s/err.log" % tmp
         os.system("sage -python %s 2> %s" % (pfilename,errfilename) )
-        print "=====> tmp = ",tmp
         errfile = open(errfilename,"r")
         err_log = errfile.read()
         errfile.close()
+        #TODO: adjust error line number by -2 lines HERE.
+        #....
         #remove temp directory
+        #print "=====> tmp = ",tmp
         os.system("rm -r %s" % tmp)
         print err_log
-        raise SyntaxError  #to warn user
+        raise SyntaxError  #to warn user #TODO: not always SyntaxError
 
 
     #Get class name
@@ -365,27 +365,32 @@ def exerciseinstance(row, ekey=None, edict=None):
 
     """
 
-
     #Create the class (not yet the instance). See exerciseclass definition above.
     ex_class = exerciseclass(row)
 
     #Create one instance of ex_class
-    #With exception control:
-    #try:
-    #    print "ekey ", ekey, " start."
-    #    ex_instance = ex_class(row['owner_key'],ekey,edict)
-    #    print "ekey ", ekey, " end."
-    #TODO: not working
-    #except DeprecationWarning as dw:
-    #    print "Warning on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
-    #    raise dw
-    #except Exception as ee: # Exception will be in memory.
-    #    print "Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
-    #    raise ee
+    try:
+        ex_instance = ex_class(row['owner_key'],ekey,edict)
+    except: 
+        tmp = tempfile.mkdtemp()
+        pfilename = tmp+"/"+row["owner_key"]+".sage"
+        pcode = open(pfilename,"w")
+        pcode.write("# -*- coding: utf-8 -*\nfrom megua.all import *\n" + row['class_text'].encode("utf-8")+"\n")
+        pcode.write(row['owner_key'] + "(ekey=" + str(ekey) + ", edict=" + str(edict) + ")\n")
+        pcode.close()
+        errfilename = "%s/err.log" % tmp
+        os.system("sage %s 2> %s" % (pfilename,errfilename) )
+        errfile = open(errfilename,"r")
+        err_log = errfile.read()
+        errfile.close()
+        #TODO: adjust error line number by -2 lines HERE.
+        #....
+        #remove temp directory
+        #print "=====> tmp = ",tmp
+        os.system("rm -r %s" % tmp)
+        print err_log
+        raise Exception  #to warn user #TODO: not always SyntaxError
 
-    #Create one instance of ex_class
-    #without exception control.
-    ex_instance = ex_class(row['owner_key'],ekey,edict)
 
     return ex_instance
 

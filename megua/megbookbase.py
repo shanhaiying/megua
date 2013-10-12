@@ -253,7 +253,7 @@ class MegBookBase:
         # -------------
         # Exercise ok?
         # -------------
-        if not self.is_exercise_ok(row,dest,silent=False):
+        if not self.is_exercise_ok(row,dest,silent=True):
             print "==================================="
             print "Exercise was not saved on database."
             print "==================================="
@@ -300,50 +300,59 @@ class MegBookBase:
 
         success = True
 
-        #Testing        
+        
+    
+        #Testing for SyntaxErrors
+        if not silent:
+            print "Check '%s' for syntatical errors on Python code." % row['owner_key'] #TODO: add here a link to common syntatical error 
+
         try:
-            #Do the test for other keys
+            #compiles and produces a class in memory (but no instance)
+            exerciseclass(row)
             if not silent:
-                print "Testing python/sage class '%s' with %d different keys." % (row['owner_key'],many)
-
-            #Create a class and a first instance for ekey=start.
-            ekey = start #for exceptions
-            print "    Testing for ekey =",start
-            ex_instance = exerciseinstance(row,ekey=start,edict=edict)
-
-            for ekey in range(start+1,start+many):
-                print "    Testing for ekey =",ekey
-                ex_instance.update(ekey=ekey)
-
-        except SyntaxError as se:
-            #TODO: improve this. Error message and lin number is not showing write.
-            print "Error log:"
-            #print "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
-            #cl = row['class_text'].split()
-            #if len(cl)>se.lineno:
-            #    print "      check line: %s" % cl[se.lineno-1]
-            success = False
-        except Exception as ee: # Exception will be in memory.
-            print "    Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
-            print "    error description: ", ee
-            if is_notebook():
-                print "    Copy exercise code, only the class part, to a new cell. Then add the following command"
-                print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
-                print "and execute with shift+enter. This may help finding the error line."
-            else:
-                print "    Test the exercise code, only the class part using the following command"
-                print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
-                print "This may help finding the error line."
+                print "    No syntatical errors found on Python code."
+        except:
             success = False
         
+
+        if success:
+
+            #Testing for semantical errors
+            if not silent:
+                #print "Execute python class '%s' with %d different keys searching for semantical errors in the algorithm." % (row['owner_key'],many)
+                print "Execute python class '%s' with %d different keys" % (row['owner_key'],many)
+
+            try:
+
+                for ekey in range(start,start+many):
+                    if not silent:
+                        print "    Testing for random key: ekey=",ekey
+                    exerciseinstance(row,ekey=ekey,edict=edict)
+
+            except: # Exception will be in memory.
+                #TODO: check http://docs.python.org/2/tutorial/errors.html ("One may also instantiate an exception first" ...)
+                print "    Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
+                #TODO: remove this
+                #if is_notebook():
+                #    print "    Copy exercise code, only the class part, to a new cell. Then add the following command"
+                #    print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
+                #    print "and execute with shift+enter. This may help finding the error line."
+                #else:
+                #    print "    Test the exercise code, only the class part using the following command"
+                #    print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
+                #    print "This may help finding the error line."
+                success = False
+            
         #Conclusion
         if not silent:
             if success:
-                print "    No problems found in this test."
+                print "    No problems found in Python."
             else:
-                print "    Review exercise '%s' based on the reported cases." % row['owner_key']
+                print "    Please review the code '%s' based on the reported cases." % row['owner_key']
 
         return success
+
+
 
 
     def check_all(self,dest='.'):
