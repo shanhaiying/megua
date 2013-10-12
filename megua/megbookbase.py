@@ -314,11 +314,14 @@ class MegBookBase:
             for ekey in range(start+1,start+many):
                 print "    Testing for ekey =",ekey
                 ex_instance.update(ekey=ekey)
+
         except SyntaxError as se:
-            print "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
-            cl = row['class_text'].split()
-            if len(cl)>se.lineno:
-                print "      check line: %s" % cl[se.lineno-1]
+            #TODO: improve this. Error message and lin number is not showing write.
+            print "Error log:"
+            #print "   Exercise class '%s' contains a syntax error on line %d." % (row['owner_key'],se.lineno)
+            #cl = row['class_text'].split()
+            #if len(cl)>se.lineno:
+            #    print "      check line: %s" % cl[se.lineno-1]
             success = False
         except Exception as ee: # Exception will be in memory.
             print "    Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)

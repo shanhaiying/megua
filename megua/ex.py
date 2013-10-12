@@ -83,6 +83,7 @@ from sage.all import *
 import warnings
 
 import re
+import tempfile
 
 class Exercise:
     """Class ``Exercise`` is the base class for an exercise.
@@ -304,8 +305,29 @@ def exerciseclass(row):
     #   Now ex_name is on global space ?? 
     #   or is in this module space?
 
+    #TODO: what if preparse fails with errors?
     sage_class = preparse(row['class_text'])
-    exec sage_class 
+    try:
+        print "====> Antes do exec"
+        exec compile(sage_class,row["owner_key"],'eval')
+        print "====> Depois do exec"
+    except SyntaxError as se:
+        tmp = tempfile.mkdtemp()
+        pfilename = tmp+"/"+row["owner_key"]+".py"
+        pcode = open(pfilename,"w")
+        pcode.write("# -*- coding: utf-8 -*\n" + sage_class.encode("utf-8") )
+        pcode.close()
+        errfilename = "%s/err.log" % tmp
+        os.system("sage -python %s 2> %s" % (pfilename,errfilename) )
+        print "=====> tmp = ",tmp
+        errfile = open(errfilename,"r")
+        err_log = errfile.read()
+        errfile.close()
+        #remove temp directory
+        os.system("rm -r %s" % tmp)
+        print err_log
+        raise SyntaxError  #to warn user
+
 
     #Get class name
     ex_class = eval(row['owner_key']) #String contents row['owner_key'] is now a valid identifier.
