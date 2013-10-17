@@ -300,9 +300,10 @@ class MegBookWeb(MegBookBase):
 
         (concept_dict,concept_list) = self._siacua_extract(row['summary_text'])
 
+        #While POST is working do not need to print SQL statments in output.
         #For _siacua_sqlprint
-        f = codecs.open(exname+'.html', mode='w', encoding='utf-8')
-        f.write(u"<html><body><h2>Copy/paste do conte\xFAdo e enviar ao Sr. Si\xE1cua por email. Obrigado.</h2>")
+        #f = codecs.open(exname+'.html', mode='w', encoding='utf-8')
+        #f.write(u"<html><body><h2>Copy/paste do conte\xFAdo e enviar ao Sr. Si\xE1cua por email. Obrigado.</h2>")
         
         for e_number in ekeys:
 
@@ -318,7 +319,10 @@ class MegBookWeb(MegBookBase):
                 answer = self._adjust_images_url(answer)
                 self.send_images()
     
-            answer_list = self._siacua_answer_extract(answer)
+            if ex_instance.has_multiplechoicetag:
+                answer_list = self._siacua_answer_frominstance(ex_instance)
+            else:
+                answer_list = self._siacua_answer_extract(answer)
 
             #Create images for graphics (if they exist) 
                 #for problem
@@ -330,21 +334,23 @@ class MegBookWeb(MegBookBase):
             send_dict.update(concept_dict)
 
             #Call siacua for store.
-            #call in future
-            #print send_dict
-
             if sendpost:
                 self._siacua_send(send_dict)
 
+            #While POST is working do not need this.
             #self._siacua_sqlprint(send_dict,concept_list,f)
 
 
+        #When producing instances of exercise a folder images is created.
+        os.system("rm -r images")
 
+        #While POST is working do not need this.
         #Ending _siacua_sqlprint
-        f.write(r"</body></html>")
-        f.close()
- 
+        #f.write(r"</body></html>")
+        #f.close()
         #print r"Copy/paste of contents and send to Sr. Siacua using email. Merci."
+
+
 
 
     def send_images(self):
@@ -380,7 +386,7 @@ class MegBookWeb(MegBookBase):
             #print response.status, response.reason
             #TODO: remove extra newlines that the user sees on notebook.
             data = response.read()
-            html(data)
+            html(data.strip())
         else:
             print "Could not send %s exercise to the server." % send_dict["exname"]
             print response.status, response.reason
@@ -403,11 +409,30 @@ class MegBookWeb(MegBookBase):
     def _siacua_answer_extract(self,answer_text):
         r"""
         Does the parsing of answer to extract options and complete answer.
+        This routine applies when using moodle template with CDATA.
         """
         l = re.findall('<!\[CDATA\[(.*?)\]\]>', answer_text, re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)
         if len(l)<5:
             raise NameError('Missing of options in multiple choice question or full answer. At least 4 options must be given and the first must be the correct one. Also the full answer must be given.')
         return l
+
+
+    def _siacua_answer_frominstance(self,ex):
+        r"""
+        This routine applies when using <multiplechoice>...</multiplechoice>.
+        """
+        #Elements must be in same order as in function "_siacua_answer_extract"
+        l = ex.all_choices + [ex.detailed_answer] #join two lists
+
+        if len(l)<5:
+            raise NameError('Missing of options in multiple choice question or full answer. At least 4 options must be given and the first must be the correct one. Also the full answer must be given.')
+
+        #print "==========="
+        #print "For _siacua_answer:",l
+        #print "=========="
+        return l
+
+
 
 
     def _siacua_json(self,course, exname, e_number, problem, answer_list,concept_list):

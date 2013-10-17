@@ -143,6 +143,11 @@ class Exercise:
         #TODO: this can generate inconsistency if make_random or solve are called alone.
         self.image_list = []
 
+        #Case when exercise is multiplechoice
+        self.all_choices = []
+        self.has_multiplechoicetag = None #Don't know yet.
+        self.detailed_answer= None
+
         #Initialize all random generators.
         self.ekey = ur.set_seed(ekey)
 
@@ -202,7 +207,9 @@ class Exercise:
     def _change_text(self,text1):
         text2 = self.rewrite(text1)
         text3 = self.latex_images(text2)
-        return text3
+        text4 = text3 #self.choose_one(text3)
+        self.multiplechoice_parser(text4)  #extract information but don't change text
+        return text4 
 
 
 
@@ -211,6 +218,12 @@ class Exercise:
 
 
     def sage_graphic(self,graphobj,varname,dimx=5,dimy=5):
+        """This function is to be called by the author in the make_random or solve part.
+        INPUT:
+        - `graphobj`: some graphic object
+        - `varname`: filename will have this base name
+        - `dimx` and `dimy`: size in centimeters.
+        """ 
         gfilename = '%s-%s-%d'%(self.name,varname,self.ekey)
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
@@ -278,6 +291,55 @@ class Exercise:
         return new_text
 
 
+    def multiplechoice_parser(self,input_text):
+        """When <multiplechoice>...</multiplecoice> is present it parses them
+        and puts each option in exercise fields: 
+
+        * self.all_choices: list of all choices.
+        * self.detailed_answer: full detailed answer.
+        * self.has_multiplechoicetag: tell that choices came from this syntax
+
+        This routine only extracts information
+        Does not change the "answer" or "problem" part like the latex_images that
+        needs to put <img ... fig filename>
+
+        """
+
+        if "CDATA" in input_text:
+            #TODO: should issue warning when CDATA and multiplechoice are both present.
+            return 
+
+
+        #Find and extract text inside <multiplechoice>...</multiplechoice>
+        choices_match = re.search(r'<\s*multiplechoice\s*>(.+?)<\s*/multiplechoice\s*>', input_text, re.DOTALL|re.UNICODE)
+        
+        if choices_match is None:
+            return 
+        #print "group 0=",choices_match.group(0)
+        #print "group 1=",choices_match.group(1)
+
+        #Text inside tags <multiplechoice> ... </multiplechoice>
+        choice_text = choices_match.group(1)
+
+        #Get all <choice>...</choice>
+        choice_pattern = re.compile(r'<\s*choice\s*>(.+?)<\s*/choice\s*>', re.DOTALL|re.UNICODE)
+
+        #Collects all <choice>...</choice> pairs
+        match_iter = re.finditer(choice_pattern,choice_text) #create an iterator
+        self.all_choices = [ "<center>"+match.group(1)+"</center>" for match in match_iter]
+        #print "=========================="
+        #print self.all_choices
+        #print "=========================="
+        
+
+        #Find detailed answer and save it
+        self.detailed_answer = input_text[choices_match.end():].strip("\t\n ")
+        #print "=========================="
+        #print self.detailed_answer
+        #print "=========================="
+
+        #For sending it's important to know where options are stored.
+        self.has_multiplechoicetag = True
 
 
 
@@ -325,7 +387,7 @@ def exerciseclass(row):
         #remove temp directory
         #print "=====> tmp = ",tmp
         os.system("rm -r %s" % tmp)
-        print err_log
+        print err_log #user will see errors on syntax.
         raise SyntaxError  #to warn user #TODO: not always SyntaxError
 
 
