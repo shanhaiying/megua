@@ -205,9 +205,10 @@ class Exercise:
 
 
     def _change_text(self,text1):
+        """Called after parameter_change call. See above."""
         text2 = self.rewrite(text1)
         text3 = self.latex_images(text2)
-        text4 = text3 #self.choose_one(text3)
+        text4 = self.show_one(text3)
         self.multiplechoice_parser(text4)  #extract information but don't change text
         return text4 
 
@@ -216,6 +217,52 @@ class Exercise:
     def name(self):
         return self.name
 
+
+    def show_one(self,input_text):
+        """Find all <showone value>...</showone> tags and select proper <thisone>...</thisone>
+        Change it in the original text leaving only the selected ... in <thisone>...</thisone>
+        """
+
+        showone_pattern = re.compile(r'<\s*showone\s+(\d+)\s*>(.+?)<\s*/showone\s*>', re.DOTALL|re.UNICODE)
+
+        #Cycle through all <showone> tags
+        match_iter = re.finditer(showone_pattern,input_text)#create an iterator
+        new_text = input_text
+        for match in match_iter:
+
+            #Get list of possibilities
+            #print "===>",match.group(2)
+            possibilities = self._showone_possibilities(match.group(2))
+
+            #Get selected possibility
+            #TODO: check range and if group(1) is a number.
+            pnum = int(match.group(1))
+            #print "===>",pnum
+
+            #Text to be written on the place of all options
+            possibility_text = possibilities[pnum]
+
+            new_text = new_text[:match.start()] + possibility_text + new_text[match.end():] 
+
+
+        return new_text
+
+
+    def _showone_possibilities(self,text_with_options):
+        """Find all tags <thisone>...</thisone> and make a list with all `...`
+        """
+
+        thisone_pattern = re.compile(r'<\s*thisone.*?>(.+?)<\s*/thisone\s*>', re.DOTALL|re.UNICODE)
+
+        #Cycle through all <showone> tags
+        match_iter = re.finditer(thisone_pattern,text_with_options)#create an iterator
+        options = []
+        for match in match_iter:
+            options.append( match.group(1) )
+
+        return options
+
+        
 
     def sage_graphic(self,graphobj,varname,dimx=5,dimy=5):
         """This function is to be called by the author in the make_random or solve part.
