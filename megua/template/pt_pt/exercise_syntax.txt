@@ -1,19 +1,21 @@
 
-Text must follow this template:
+A criação de um exercício deve seguir este modelo:
 
-%SUMÁRIO Nome da Secção; Subsecção; Subsubsecção
+%summary Nome da Secção; Subsecção; Subsubsecção
 
 Texto descritivo sumariando o exercício e palavras chave.
 
-Linha com a autori ou nome do projeto.
+Autoria e nome do projeto.
 
-%PROBLEMA um nome do exercício
+Data 
 
-Problem text using name@ for variables.
+%problem um nome do exercício
+
+Texto do problema e suas variáveis.
                     
-%RESOLUÇÃO
+%answer
 
-Answer text using name@ for variables.
+Texto do resposta e suas variáveis.
 
 class E62L20_aboutmean_001(Exercise):
     etc etc
