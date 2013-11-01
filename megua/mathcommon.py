@@ -46,6 +46,30 @@ def showmul(x):
     else:
         return x
 
+r"""
+LOG function for high school
+"""
+
+def _LOG_latex(fun,x,base=None):
+    if b==exp(1) or b is None:
+        return r'\ln(%s)' % latex(x)
+    else:
+        return r'\log_{%s}(%s)' % (latex(base),latex(x))    
+
+x,b=SR.var('x,b')
+LOG_ = function('LOG', x, b, print_latex_func=_LOG_latex)
+
+
+def LOG(x,base=None):
+    r = log(x,base=base)
+    if SR(r).denominator()==1:
+        return r
+    else:
+        F = factor(x)
+        l = [ factor_exponent * LOG_(x=factor_base,b=base) for (factor_base,factor_exponent) in F ]
+        return add(l) 
+
+
 
 
 #END mathcommon.py

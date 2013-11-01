@@ -416,6 +416,8 @@ def exerciseclass(row):
 
     try:
         #exec compile(sage_class,row["owner_key"],'eval')
+        #TODO: http://www.sagemath.org/doc/reference/misc/sage/misc/sage_eval.html
+        # and spread this for more points in code.
         sage_class = preparse(row['class_text'])
         exec sage_class
     except: 

@@ -14,6 +14,7 @@ Conteúdo:
    rapido
    notebook
    paraweb
+   pythonsection
    randomvars 
    referencia 
 

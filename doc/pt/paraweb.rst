@@ -5,48 +5,10 @@ Exercícios para a web
 =====================
 
 
+Um dos formatos comuns para uso na internet é criar exercícios de escolha múltipla: só uma resposta correta em todas as especificadas.
+Nesta situação não dá muito jeito criar alíneas pelo que o problema colocado e a resolução detalhada é só uma, é a que conduz à única solução correta.
 
-A estrutura dum exercício para a web (siacua ou moodle) é  seguinte:
-
-::
-
-   %summary Secção; Subsecção ; Subsubsecção
-
-   Texto que descreve o exercício, catalogação e autoria.
-
-   %problem Um Nome Sugestivo
-
-   O problema parameterizado.
- 
-   %answer    
-
-   BLOCO DE ESCOLHA MÚLTIPLA
-
-   RESPOSTA COMPLETA
-
-   class nome_do_exercicio(Exercise):
-
-   <4 espaços> def make_random(s):
-
-   <4 espaços> def solve(s):
-
-
-
-O "BLOCO DE ESCOLHA MÚLTIPLA" tem (agora) a seguinte sintaxe:
-
-.. code-block:: xml
-
-   <multiplechoice>
-   <choice> $$vresposta$$ </choice>
-   <choice> $$errada1$$ </choice>
-   <choice> $$errada2$$ </choice>
-   <choice> $$errada3$$ </choice>
-   </multiplechoice>
-
-
-com qualquer número de <choice> e em que a primeira é sempre a única correta!
-
-A "RESPOSTA COMPLETA" é todo o texto que ocorre depois do bloco de escolha múltipla.
+O outro estilo que temos é em papel: então aqui sim, as alíneas são parte integrante. Numa futura secção abordaremos esse tema.
 
 
 Exercício Completo
@@ -54,12 +16,31 @@ Exercício Completo
 
 Ilustra-se agora um exercício completo para escolha múltipla:
 
+**Célula 1**
+
+Copie e cole, depois faça *shift enter* para a executar. 
+O nome *mp2013web.sqlite* é o nome escolhido para os trabalhos de mestrado de 2013/2014. Use sempre este nome se está no mestrado.
+
 ::
+  
+   #auto
+   from megua.all import *
+   meg = MegBookWeb("/home/nbuser/mp2013web.sqlite")
+
+Se ocorrer *Assert error* é porque deve usar *MegBookWeb*.
+
+
+**Célula 2**
+
+Copiar e colar e depois fazer *shift enter* para a executar.
+
+::
+
+    meg.save(r"""
 
     %summary Demonstração; Escolha múltipla     
 
-    Comandos para selecionar texto a apresentar.
-    Não se consideram todos os casos neste exercício de demonstração.
+    Este exercício considera as divisões.
 
      
     %problem Exemplo 
@@ -77,8 +58,6 @@ Ilustra-se agora um exercício completo para escolha múltipla:
 
     A resposta é $vresposta$. Faltaria detalhar os passos de uma divisão para esta resposta ficar completa.
 
-.. code-block:: python
-
     class E12X34_numeros_001(Exercise):
         
         def make_random(s):
@@ -91,6 +70,39 @@ Ilustra-se agora um exercício completo para escolha múltipla:
             s.errada2 = s.vresposta*1.2
             s.errada3 = s.vresposta*1.3
 
+    """)
+
+Após a execução da célula irá aparecer o:
+
+**Resultado**
+
+O resultado é um ficheiro `html` que pode ser visualizado com um *click* na primeira vez. Posteriores alterações podem ser vistas usando a tecla F5 que atualiza.
+
+
+
+Descrição da estrutura
+----------------------
+
+A estrutura anterior tem várias componentes que vamos descrever.
+
+O  bloco de **escolha múltipla** tem (agora) a seguinte sintaxe:
+
+.. code-block:: xml
+
+   <multiplechoice>
+   <choice> $$vresposta$$ </choice>
+   <choice> $$errada1$$ </choice>
+   <choice> $$errada2$$ </choice>
+   <choice> $$errada3$$ </choice>
+   </multiplechoice>
+
+com qualquer número de <choice> e em que a primeira é sempre a única correta!
+
+Depois do bloco de escolha múltipla ocorre a parte da respsta completa escrita em LaTeX:
+
+.. code-block:: latex
+
+    A resposta é $vresposta$. Faltaria detalhar os passos de uma divisão para esta resposta ficar completa.
 
 
 
@@ -98,31 +110,34 @@ Ilustra-se agora um exercício completo para escolha múltipla:
 Escolha de texto
 ----------------
 
-Suponha que quer escrever uma de duas frases na resolução detalhada ou outra parte do exercício:
+Uma funcionalidade em exercícios que aglomeram vários casos num único texto surge a necessidade de **escolher texto**. 
+Suponha que quer escrever *apenas* uma de duas frases na resolução detalhada ou outra parte do exercício:
 
 * o limite não existe.
 * o limite existe e o seu valor é $valor$.
 
-Para estes casos, ou outros com mais hipóteses, veja o seguinte exemplo que utiliza a seguinte sintaxe:
+Para estes casos, ou com mais hipóteses, use a sintaxe que é mostrada para o exemplo dado:
 
 
 .. code-block:: html
 
    <showone variavel>
-    <thisone Caso sem limite  - isto é comentário>
+    <thisone Caso sem limite - caso 0 - (isto é comentário)>
         O limite não existe.
     </thisone>
-    <thisone Caso em que o limite existe - isto é comentário>    
+    <thisone Caso em que o limite existe - caso 1 (isto é comentário)>    
         O limite existe e o seu valor é \$valor\$.
     </thisone>
    </showone>
 
+posteriomente, na parte da programação, é necessário escolher qual das frases irá ser escolhida. Isso é feito dando um valor apropriado à variável ``s.variavel``:
 
 .. code-block:: python
 
     class E12X34................
-        s.variavel = 0 ou 1 para decidir sobre o limite.
+        s.variavel = 0 ou 1 para decidir sobre o texto apropriado.
 
+Podem existir mais que dois casos.
 
 
 Gráficos
@@ -131,8 +146,8 @@ Gráficos
 
 Consideramos duas tecnologias para os gráficos:
 
-* LaTeX e o pacote TikZ
-* Gráficos do Sage Mathematics
+* LaTeX e o pacote TikZ (2d e 3d).
+* Gráficos do Sage Mathematics (2d e 3d).
 
 
 Para utilizar os **gráficos do Sage** considere as duas etapas seguintes.
@@ -150,20 +165,22 @@ Para utilizar os **gráficos do Sage** considere as duas etapas seguintes.
 .. code-block:: python
 
    s.param1 = ur.iunif(1,5) #um possível parâmetro.
-   g1 = plot(sin(s.param1*x),x, color='blue')
-   g2 = plot(cos(s.param1*x),x, color='red') 
+   s.inf1 = -1 #limite inferior do domínio
+   s.sup1 = 1 #limite superior do domínio
+   g1 = plot(sin(s.param1*x),x, s.inf1, s.sup1, color='blue')
+   g2 = plot(cos(s.param1*x),x, s.inf1, s.sup1,  color='red') 
    s.fig1 = s.sage_graphic( g1+g2, "fig1", dimx=7, dimy=7) #7cm
 
-Desta maneira será produzido um gráfico parameterizado. 
+Desta maneira será produzido um gráfico parametrizado.  
 
-Pode-se encontrar infomação sobre gráficos em Sage aqui:
+Pode-se encontrar infomação sobre gráficos em Sage nestas duas páginas:
 
 * `Plot 2d <http://www.sagemath.org/doc/reference/plotting/index.html>`_: gráficos de funções e construções gráficas;
 * `Plot 3d <http://www.sagemath.org/doc/reference/plot3d/index.html>`_: o mesmo para 3d.
 
 
 
-Para utilizar o **LaTeX** procede-se em dois passos.
+Para utilizar o **LaTeX** para criar imagens procede-se em dois passos.
 
 1. Na parte do texto (%problem ou %answer ou opções) coloque:
 
@@ -178,9 +195,10 @@ Para utilizar o **LaTeX** procede-se em dois passos.
 
 O valor 100% indica que o desenho aparece na escala normal mas pode ser modificado, aumentando ou reduzindo, sendo que estas transformações podem sempre piorar um pouco a qualidade.
 
-Qualquer comando normal de LaTeX pode ser usado (incluindo uma demonstração inteira) ou então podem ser usados pacotes gráficos como é o caso do 
-`Tikz <http://paws.wcu.edu/tsfoguel/tikzpgfmanual.pdf>`_  . Outra maneira de usar o TikZ é construir gráficos no Geogebra e exportar em TikZ para
-o exercício.
+Qualquer comando normal de LaTeX pode ser usado (incluindo uma demonstração inteira) ou então podem ser usados pacotes gráficos especializados 
+como é o caso do `Tikz <http://paws.wcu.edu/tsfoguel/tikzpgfmanual.pdf>`_. Existem `exemplos <http://www.texample.net/tikz/examples/>`_ 
+muito atrativos de uso do TikZ. Outra maneira de usar o TikZ é construir gráficos no Geogebra e exportar em TikZ para
+o exercício. Depois basta substituir valores numéricos concretos pelos parâmetros.
 
 Este é um caso:
 
@@ -216,10 +234,21 @@ Este é um caso:
     \end{scriptsize}
     \end{tikzpicture}
 
-Neste exemplo acima, existem imensos parâmetros, dado que a figura resultante é complexa. São exemplos: *v11@f{f}* em que @f{f} arredonda o número,
-ou então *ix0* ou ainda *labelA1*.
+No exemplo acima existem imensos parâmetros em virtude da figura resultante ser complexa. Explicam-se alguns aspetos:
 
-ou uma tabela em LaTeX pode ser também convertida numa imagem:
+* O TikZ requer números inteiros ou reais aproximados.
+* São exemplos de parâmetros: *v11@f{f}* em que **@f{f}** indica que o número racional *v11* deve ser convertido à sua aproximação real.
+* Também, são exemplos de parâmetros: *ix0*, ou ainda *labelA1*. Estes sem qualquer conversão.
+* Todos os parâmetros são calculados na parte da programação.
+
+Os gráficos do pacote TikZ são maioritariamente para 2D. Mas é ainda 
+possível criar **gráficos para 3D** recorrendo a um complemento para o TikZ chamado de
+`3dplot <ftp://ftp.tex.ac.uk/pub/tex/graphics/pgf/contrib/tikz-3dplot/tikz-3dplot_documentation.pdf>`_. Outros exemplos
+sem recurso a este pacote podem ser encontrados `aqui <http://www.texample.net/tikz/examples/tag/3d/>`_.
+
+
+Em LaTeX, além de gráficos ou demonstrações, podem também ser criadas **tabelas em LaTeX** (que serão convertidas em imagens). A tabela mencionada será convertida
+numa imagem:
 
 .. code-block:: latex
 
