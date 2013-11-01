@@ -27,7 +27,7 @@ from localstore import LocalStore,ExIter
 from ex import *
 from exerparse import exerc_parse
 from xsphinx import SphinxExporter
-from xair import AirExporter, BookmarkList
+#from xair import AirExporter, BookmarkList
 from platex import pcompile
 from xsws import SWSExporter
 
@@ -885,11 +885,11 @@ class MegBook:
             print "firefox -no-remote ", html_index.htmlfile
 
 
-    def make_air(self,repetitions=2,dest='.',exerset=None):
-        air = AirExporter(self,repetitions,exerset)
-        if pcompile(air.fulltext, dest, "air_out",hideoutput=is_notebook(),runs=2):
-            BookmarkList(os.path.join(dest,'air_out.pdf'))
-        #print bm.bm_list #TODO: export to xml
+    #def make_air(self,repetitions=2,dest='.',exerset=None):
+    #    air = AirExporter(self,repetitions,exerset)
+    #    if pcompile(air.fulltext, dest, "air_out",hideoutput=is_notebook(),runs=2):
+    #        BookmarkList(os.path.join(dest,'air_out.pdf'))
+    #    #print bm.bm_list #TODO: export to xml
 
     def make_sws(self, dest='.',tagstr='',optvalues=0):
         sws = SWSExporter(self,dest,tagstr=tagstr,optvalues=optvalues)

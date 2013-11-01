@@ -32,7 +32,7 @@ from megbookweb import *  #text
 #from csection import *
 #from ex import *
 #from localstore import *
-#from mathcommon import *
+from mathcommon import *
 
 #END meg.all.py
 
