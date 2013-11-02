@@ -17,6 +17,8 @@ Apresenta-se neste texto uma lista de possibilidades entre várias. A lista apre
 * funções da biblioteca ``random`` escrita para a linguagem **Python**;
 
 
+A biblioteca :doc:`Unified Random <ur>` que "gere" a criação de números aleatórios e pode contem informação adicional que não está nesta página.
+
 
 
 Inteiros

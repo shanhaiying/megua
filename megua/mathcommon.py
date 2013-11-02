@@ -46,56 +46,9 @@ x,y=var('x,y')
 R15=RealField(15)
 
 
-r"""
-LOG function for "high school"
-
-Use: usually ``log(105,base=10)`` is transformed by Sage (and many others) into ``log(105)/log(10)`` and sometimes this is not what we want to see as a result. This is an alternative.
-
-
-Basic cases::
-
-    sage: logb(e) #assume base=e
-    1
-    sage: logb(10,base=10)
-    1
-    sage: logb(1) #assume base=e
-    0
-    sage: logb(1,base=10) #assume base=e
-    0
-    sage: logb(e,base=10)
-    logb(e, 10)
-    sage: logb(10,base=e) #converted to Sage "log" function
-    log(10) 
-    sage: logb(sqrt(105)) #again, converted to Sage "log" function
-    log(sqrt(105)) 
-
-With and without factorization::
-
-    sage: logb(3^5,base=10)  #no factorization
-    logb(243, 10)
-    sage: logb(3^5,base=10,factorize=True)  
-    5*logb(3, 10)
-    sage: logb(3^5*2^3,base=10) #no factorization
-    logb(1944, 10)
-    sage: logb(3^5*2^3,base=10,factorize=True)  
-    5*logb(3, 10) + 3*logb(2, 10)
-
-Latex printing of logb::
-
-    sage: latex( logb(e) )
-    1
-    sage: latex( logb(1,base=10) )
-    0
-    sage: latex( logb(sqrt(105)) )
-    \log\left(\sqrt{105}\right)
-    sage: latex( logb(3^5,base=10) )
-    \log_{10}(243)
-    sage: latex( logb(3^5,base=10,factorize=True)  )
-    5 \, \log_{10}(3)
-    sage: latex( logb(3^5*2^3,base=10,factorize=True) )
-    5 \, \log_{10}(3) + 3 \, \log_{10}(2)
-
-"""
+#=======================
+# log for "high school"
+#=======================
 
 def _LOG_latex(fun,x,base=None):
     if b==e or b is None:
@@ -108,7 +61,7 @@ LOG_ = function('logb', x, b, print_latex_func=_LOG_latex)
 
 
 def logb(x,base=e,factorize=False):
-    r"""logb is an alternative to log from Sage that keeps the base.
+    r"""logb is an alternative to ``log`` from Sage. This new one keeps the base.
 
     Usually ``log(105,base=10)`` is transformed by Sage (and many others) 
     into ``log(105)/log(10)`` and sometimes this is not what we want to see as 
@@ -128,6 +81,49 @@ def logb(x,base=e,factorize=False):
 
     - an expression based on ``logb``, Sage ``log`` or any other expression.
 
+    Basic cases::
+
+        sage: logb(e) #assume base=e
+        1
+        sage: logb(10,base=10)
+        1
+        sage: logb(1) #assume base=e
+        0
+        sage: logb(1,base=10) #assume base=e
+        0
+        sage: logb(e,base=10)
+        logb(e, 10)
+        sage: logb(10,base=e) #converted to Sage "log" function
+        log(10) 
+        sage: logb(sqrt(105)) #again, converted to Sage "log" function
+        log(sqrt(105)) 
+
+    With and without factorization::
+
+        sage: logb(3^5,base=10)  #no factorization
+        logb(243, 10)
+        sage: logb(3^5,base=10,factorize=True)  
+        5*logb(3, 10)
+        sage: logb(3^5*2^3,base=10) #no factorization
+        logb(1944, 10)
+        sage: logb(3^5*2^3,base=10,factorize=True)  
+        5*logb(3, 10) + 3*logb(2, 10)
+
+    Latex printing of logb::
+
+        sage: latex( logb(e) )
+        1
+        sage: latex( logb(1,base=10) )
+        0
+        sage: latex( logb(sqrt(105)) )
+        \log\left(\sqrt{105}\right)
+        sage: latex( logb(3^5,base=10) )
+        \log_{10}(243)
+        sage: latex( logb(3^5,base=10,factorize=True)  )
+        5 \, \log_{10}(3)
+        sage: latex( logb(3^5*2^3,base=10,factorize=True) )
+        5 \, \log_{10}(3) + 3 \, \log_{10}(2)
+
     """
     #e is exp(1) in sage
     r = log(x,base=base)
@@ -144,7 +140,10 @@ def logb(x,base=e,factorize=False):
 
 
 
-
+#===================================
+# Old functions 
+#  (that are in use in old problems)
+#===================================
 
 
 def showmul(x):

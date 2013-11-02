@@ -168,11 +168,20 @@ class MegBookWeb(MegBookBase):
         sname   =  ex_instance.name
 
         #Use jinja2 template to generate LaTeX.
-        answtxt_woCDATA = re.subn(
-            '<!\[CDATA\[(.*?)\]\]>', r'\1', 
-            answtxt, 
-            count=0,
-            flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+        if 'CDATA' in answtxt:
+            answtxt_woCDATA = re.subn(
+                '<!\[CDATA\[(.*?)\]\]>', r'\1', 
+                answtxt, 
+                count=0,
+                flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+        else:
+            answtxt_woCDATA = re.subn(
+                '<choice>(.*?)</choice>', r'<b>Escolha:</b><br>\1<hr>', 
+                answtxt, 
+                count=0,
+                flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+
+
 
         html_string = self.template("print_instance_html.html",
                 sname=sname,

@@ -35,6 +35,7 @@ def before_minor(M,pivot_row,pivot_col):
     INPUT:
         
     - ``M``: a square matrix n by n.
+
     - ``pivot_row, pivot_col``: row and column nunbers (0 to n-1).
     
     OUTPUT:
