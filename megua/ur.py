@@ -82,7 +82,7 @@ Using RPy2 random numbers::
 
 Using ur (this module) random functions::
 
-    Integers:
+    Integers::
 
     sage: from megua.ur import ur
     sage: ur.set_seed(10)
@@ -98,13 +98,15 @@ Using ur (this module) random functions::
     sage: ur.iunif(-10,10)
     1
 
-    Random set:
+    Random set::
 
     sage: from megua.ur import ur
     sage: ur.set_seed(10)
     10
-    sage: ur.random_element()
+    sage: ur.random_element() 
     sqrt(2)
+    sage: ur.random_element([1,2,3,4,5,6]) 
+    4
 
 
 IMPLEMENTATION NOTES:
@@ -118,6 +120,9 @@ LINKS and FILES:
 1. Sage module prandom: sage/local/lib/python2.6/site-packages/sage/misc/prandom.py
 2. Numpy random numbers: http://docs.scipy.org/doc/numpy/reference/routines.random.html
 3. RPy2: http://rpy.sourceforge.net/rpy2/doc-2.0/html/robjects.html#r-objects
+
+
+**NEXT FUNCTIONS SHOULD NOT APPEAR IN THIS PAGE. PLEASE GO DOWN FOR THIS MODULE DOCUMENTATION.**
 
 """
 

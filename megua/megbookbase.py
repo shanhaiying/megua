@@ -330,18 +330,13 @@ class MegBookBase:
                     exerciseinstance(row,ekey=ekey,edict=edict)
 
             except: # Exception will be in memory.
-                #TODO: check http://docs.python.org/2/tutorial/errors.html ("One may also instantiate an exception first" ...)
                 print "    Error on exercise '{0}' with parameters edict={1} and ekey={2}".format(row['owner_key'],edict,ekey)
+                success = False #puxar para a frente
+                #NOTES:
+                #TODO: check http://docs.python.org/2/tutorial/errors.html 
+                # ("One may also instantiate an exception first" ...)
                 #TODO: remove this
-                #if is_notebook():
-                #    print "    Copy exercise code, only the class part, to a new cell. Then add the following command"
-                #    print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
-                #    print "and execute with shift+enter. This may help finding the error line."
-                #else:
-                #    print "    Test the exercise code, only the class part using the following command"
-                #    print "%s().update(ekey=%d)" % (row['owner_key'],ekey)
-                #    print "This may help finding the error line."
-                success = False
+
             
         #Conclusion
         if not silent:

@@ -65,14 +65,20 @@ Changing randomly but setting one of them::
 #*****************************************************************************
   
 
-#Function that transforms input text in an exercise instance.
+#MEGUA modules
 from paramparse import parameter_change
 from platex import pcompile
+from mathcommon import *
+from msc15 import * #algebra
+from msc26 import *
+from msc60 import * #probability
+from msc62 import * #statistics
+from msc65 import * #numerical
+
 
 #Import the random generator object.
 from ur import ur 
 #, edict=" + str(edict) + ")\n")
-from msc15 import *
 import tikzmod
 
 #Sage
