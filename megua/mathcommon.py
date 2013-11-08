@@ -61,13 +61,15 @@ LOG_ = function('logb', x, b, print_latex_func=_LOG_latex)
 
 
 def logb(x,base=e,factorize=False):
-    r"""logb is an alternative to ``log`` from Sage. This new one keeps the base.
+    r"""logb is an alternative to ``log`` from Sage. 
 
-    Usually ``log(105,base=10)`` is transformed by Sage (and many others) 
-    into ``log(105)/log(10)`` and sometimes this is not what we want to see as 
-    a result. 
+    This version keeps the base because ``log(105,base=10)`` is transformed by Sage (and many others CAS) 
+    into ``log(105)/log(10)`` and sometimes this is not what we want to see as a result. 
 
-    The latex representation used ``\log_{base} (arg)``.
+    LaTeX representations are:
+
+    * ``\log_{base} (x)`` if base is not ``e``.
+    * ``\log (x)`` if the base is exponential.
 
     INPUT:
 

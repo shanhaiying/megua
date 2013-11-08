@@ -280,13 +280,13 @@ class Exercise:
         gfilename = '%s-%s-%d'%(self.name,varname,self.ekey)
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
-        graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
+        graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=300)
         self.image_list.append(gfilename) 
         return r"<img src='images/%s.png'></img>" % gfilename
 
 
     def latex_images(self,input_text):
-        """When <latex dimx dimy> ... </latex> is present, then 
+        """When <latex percent%> ... </latex> is present, then 
         it is necessary to produce them.
         """
 
