@@ -216,9 +216,10 @@ class MegBookWeb(MegBookBase):
             f.close()
 
             #To be used on sphinx
-            f = codecs.open(sname+'.rst', mode='w', encoding='utf-8')
-            f.write(html_string)
-            f.close()
+            #TODO: move this somewhere.
+            #f = codecs.open(sname+'.rst', mode='w', encoding='utf-8')
+            #f.write(html_string)
+            #f.close()
 
             #file with html to export.
             #f = open(sname+'.html','w')

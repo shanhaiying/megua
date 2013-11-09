@@ -386,7 +386,7 @@ class MegBook:
         #Conclusion
         if not silent:
             if success:
-                print  "    No problems found in this test."
+                print  "    No programming errors found in this test."
             else:
                 print  "Review exercise '%s' based on the reported cases." % row['owner_key']
 
@@ -420,8 +420,30 @@ class MegBook:
         )
 
         if not silent:
-            print "   Compiling '%s' with pdflatex." % row['owner_key']
-        return pcompile(latex_string,dest,row['owner_key'], hideoutput=True,silent=silent)
+            print "Compiling '%s' with pdflatex." % row['owner_key']
+
+        #TODO: put this in other place
+        latex_error_pattern = re.compile(r"!.*?l\.\d+(.*?)$",re.DOTALL|re.M)
+
+        try:
+            pcompile(latex_string,dest,row['owner_key'])
+        except subprocess.CalledProcessError as err:
+            #Try to show the message to user
+            #print "Error:",err
+            #print "returncode:",err.returncode
+            #print "output:",err.output
+            print "================"
+            match = latex_error_pattern.search(err.output) #create an iterator
+            if match:
+                print match.group(0)
+            else:
+                print "There was a problem with an latex file."
+            print "You can download %s.tex and use your windows LaTeX editor to help find the error." % ex_instance.name 
+            print "================"
+            return False
+
+        return True
+            
 
 
     def check_all(self,dest='.'):

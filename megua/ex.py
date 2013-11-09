@@ -80,6 +80,7 @@ from msc65 import * #numerical
 from ur import ur 
 #, edict=" + str(edict) + ")\n")
 import tikzmod
+import subprocess
 
 #Sage
 from sage.all import *
@@ -280,7 +281,7 @@ class Exercise:
         gfilename = '%s-%s-%d'%(self.name,varname,self.ekey)
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
-        graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=300)
+        graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
         self.image_list.append(gfilename) 
         return r"<img src='images/%s.png'></img>" % gfilename
 
@@ -303,6 +304,7 @@ class Exercise:
         #print "Group 2:",match.group(2) #what is to compile
 
         latex_pattern = re.compile(r'<\s*latex\s+(\d+%)\s*>(.+?)<\s*/latex\s*>', re.DOTALL|re.UNICODE)
+        latex_error_pattern = re.compile(r"!.*?l\.\d+(.*?)$",re.DOTALL|re.M)
 
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
@@ -313,22 +315,43 @@ class Exercise:
         for match in match_iter:
             #Graphic filename
             gfilename = '%s-%d-%02d'%(self.name,self.ekey,graphic_number)
-            print "=========="
-            print gfilename
-            print "=========="
+            #print "=========="
+            #print gfilename
+            #print "=========="
             #Compile what is inside <latex>...</latex> to a image
             tikz_picture = match.group(2) 
             #TODO: mudar tikz_graphics para latex_image.tex
             #Note: compile only in a images/*.tex folder
-            tikz_tex = Exercise.megbook.template("tikz_graphics.tex", pgfrealjobname=r"\pgfrealjobname{%s}"%self.name, beginname=r"\beginpgfgraphicnamed{%s}"%gfilename, tikz_picture=tikz_picture)
-            pcompile(tikz_tex,'images','%s-%d-%02d'%(self.name,self.ekey, graphic_number),hideoutput=True)
-            #convert -density 600x600 pic.pdf -quality 90 -resize 800x600 pic.png
-            cmd = "cd images;convert -density 100x100 '{0}.pdf' -quality 95 -resize {1} '{0}.png'".format(
-                gfilename,match.group(1),gfilename)
-            print "============== CMD: ",cmd
-            os.system(cmd)
-            graphic_number += 1
-            self.image_list.append(gfilename) 
+            try:
+                tikz_tex = Exercise.megbook.template("tikz_graphics.tex", 
+                                pgfrealjobname=r"\pgfrealjobname{%s}"%self.name, 
+                                beginname=r"\beginpgfgraphicnamed{%s}"%gfilename, 
+                                tikz_picture=tikz_picture)
+                pcompile(tikz_tex,'images','%s-%d-%02d'%(self.name,self.ekey, graphic_number))
+                #convert -density 600x600 pic.pdf -quality 90 -resize 800x600 pic.png
+                cmd = "cd images;convert -density 100x100 '{0}.pdf' -quality 95 -resize {1} '{0}.png' 2>/dev/null".format(
+                    gfilename,match.group(1),gfilename)
+                #print "============== CMD: ",cmd
+                os.system(cmd)
+                os.system("cp images/%s.tex ." % gfilename)
+                graphic_number += 1
+                self.image_list.append(gfilename) 
+            except subprocess.CalledProcessError as err:
+                #Try to show the message to user
+                #print "Error:",err
+                #print "returncode:",err.returncode
+                #print "output:",err.output
+                print "================"
+                match = latex_error_pattern.search(err.output) #create an iterator
+                if match:
+                    print match.group(0)
+                else:
+                    print "There was a problem with an latex image file."
+                print "You can download %s.tex and use your windows LaTeX editor to help find the error." % gfilename
+                print "================"
+                os.system("cp images/%s.tex ." % gfilename)
+                raise Exception
+
 
         #Cycle through existent tikz code and produce a new html string .
         graphic_number = 0
@@ -410,7 +433,7 @@ ERRORS:
 
 def exerciseclass(row):
     r"""
-    Instantiates the `exercise class` (not an object) from text fields.
+    Interpret the `exercise class` (not an object) from text fields.
     """
 
     #Create the class (not yet the instance)

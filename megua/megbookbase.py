@@ -253,6 +253,8 @@ class MegBookBase:
         # -------------
         # Exercise ok?
         # -------------
+        #TODO: what to do when latex or latex images have errors?
+        #TODO: this is not good this way!
         if not self.is_exercise_ok(row,dest,silent=True):
             print "==================================="
             print "Exercise was not saved on database."
@@ -263,12 +265,13 @@ class MegBookBase:
         # ----------------------------
         # Exercise seems ok: store it.
         # ----------------------------
+        #TODO: it should not be in database until a good instance is produced.
         inserted_row = self.megbook_store.insertchange(row)
-        if inserted_row: 
-            print 'Exercise name %s inserted or changed.' % inserted_row['owner_key']
-            self.new(row['owner_key'], ekey=10)
-        else:
-            print 'Problem in access to the database. Could not save the exercise on the database.'
+        print "A problem is going to be generated with ekey=0"
+        try:
+            self.new(row['owner_key'], ekey=0)
+        except:
+            print 'Problem name %s must be reviewed.' % inserted_row['owner_key']
 
 
     def is_exercise_ok(self,row,dest,silent=True):
@@ -463,11 +466,12 @@ class MegBookBase:
         #Create and print the instance
         ex_instance = exerciseinstance(row, ekey, edict)
         self.print_instance(ex_instance)
-        return ex_instance
+        return None
+        #return ex_instance #removed because makes too much "noise" in output
 
 
 
-    def print_instance(self, ex_instance):
+    def print_instance(self, ex_instance, show_output=False):
         """
         After producing an exercise template or requesting a new instance of some exercise
         this routine will print it on notebook notebook or command line mode. It also should

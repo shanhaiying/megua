@@ -17,28 +17,32 @@ import subprocess
 from sage.misc.latex import have_pdflatex
 
 
-def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False):
+def pcompile(latexstr, workdir, filename, runs=1, hideoutput=True,silent=True):
     r"""
 
-    NOTES
+    NOTES:
 
-    1. mostar mensagens de output da compilacao ou nao
+    1. Don't show output messages directly when using notebook because:
+        * it too noisy in the screen.
+        * many times users are not latex professionals.
 
-    2. utf-8 ou latin1 ?
+    2. utf-8 ou latin1:
+        * use latin1 files because they can be exported to windows. 
 
-    3. subprocess.call em vez de os.system
+    3. subprocess.call instead of os.system
        file:///D:/Transfer/python-2.6.4-docs-html/library/subprocess.html
 
     4. clean latex output files?
 
-    5. chamar mais que uma vez o compilador: como detectar essa necessidade ?
+    5. TODO: call latex many times only when requested
+        * for a single problem this is not neeeded. But for booklets it could be.
 
-    6. Usar 1>&
+    6. Use 1>&  2>, etc etc
        ver http://www.linuxsa.org.au/tips/io-redirection.html
 
     7. pdflatex -halt-on-error
        pdflatex -interaction nonstopmode
-       ver man pdflatex
+       Check man pdflatex
 
     8. Remove, from megbook.py:
         self.latex_debug = latex_debug
@@ -66,13 +70,27 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
     f.close()
 
     #compile
+    lt = r'cd ' + workdir + '; /usr/bin/pdflatex -interaction=nonstopmode ' + filename
+    output = subprocess.check_output(lt,shell=True)
+
+    #TODO: analyse if it need one more run.
+    if runs>1:
+        output = subprocess.check_output(lt,shell=True)
+
+    return output
+
+
+
+"""
+
+    #compile
     #lt = ['sage-native-execute', 'pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
     ###lt = ['/usr/bin/pdflatex', r'\nonstopmode', r'\input{' + filename + '.tex}']
     #Note: to clear ideas: keep inputs and outputs in same directory
-    lt = r'cd ' + workdir + '; /usr/bin/pdflatex -interaction=nonstopmode ' + filename
+    lt = r'cd ' + workdir + '; /usr/bin/pdflatex -interaction=nonstopmode ' + filename + ' 1> /dev/null'
 
     #TODO: study efect of this in notebook
-    """
+
     if hideoutput:
         #read http://docs.python.org/library/subprocess.html about PIPE. The stdout will get full.
         #redirect = fout #None#subprocess.PIPE#With this "PIPE" argument no text is outputed neither to the commandline or notebook.
@@ -81,36 +99,7 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=False,silent=False)
         fout.close()
     else:
         error = subprocess.check_call(lt, cwd=workdir) #Output is given in both command line and notebook.
-    """
-    error = subprocess.check_call(lt,shell=True)
 
-    if error:
-        print "=========="
-        print "ERRORS:   Possible errors during pdflatex compilation. See %s.log for a description. (%d error)" % (fullpath,error)
-        print "=========="
-        return not error
-
-    if runs>1:
-        """
-        if hideoutput:
-            fout = open('/dev/null','w')
-            subprocess.check_call(lt, stdout=fout, stderr=fout, cwd=workdir)
-            fout.close()
-        else:
-            print "============================"
-            print "Second pdflatex compilation."
-            print "============================"
-            subprocess.check_call(lt, cwd=workdir)
-        """
-        subprocess.check_call(lt,shell=True)
-
-    if not silent:
-        print "\nNo errors found during pdflatex compilation. Check %s.log for details." % filename
-    
-    return not error
-
-
-r"""
 More notes:
 
 Notebook:
