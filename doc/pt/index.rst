@@ -17,11 +17,17 @@ Conteúdo:
    notebook
    paraweb
    pythonsection
+   rewrite
    randomvars 
    referencia 
 
 
 Atualizações:
+
+**2013/novembro/13**
+
+* Adicionada secção sobre :ref:`tabelas`.
+* Adicionado secção sobre :ref:`reescrita` de expressões.
 
 **2013/novembro/02** 
 

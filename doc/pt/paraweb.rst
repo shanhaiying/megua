@@ -247,18 +247,75 @@ possível criar **gráficos para 3D** recorrendo a um complemento para o TikZ ch
 sem recurso a este pacote podem ser encontrados `aqui <http://www.texample.net/tikz/examples/tag/3d/>`_.
 
 
-Em LaTeX, além de gráficos ou demonstrações, podem também ser criadas **tabelas em LaTeX** (que serão convertidas em imagens). A tabela mencionada será convertida
-numa imagem:
+.. _tabelas:
+
+Tabelas
+-------
+
+Podem-se criar tabelas em HTML ou LaTeX (convertidas numa imagem) mas usar o HTML é preferível quando se 
+produzem exercícios para a web! 
+Porém, se o exercício é uma reutilização de outro exercício que já utiliza tabelas em LaTeX 
+pode-se, em geral, reutilizar a notação LaTeX (com eventual perda de alguma qualidade gráfica). 
+
+
+Uma tabela em **HTML** tem o formato:
+
+.. code-block:: html
+
+   <table border="1">
+   <tr> <td> a11 </td> <td> a12 </td> <td> a13 </td> </tr>
+   <tr> <td> a21 </td> <td> a22 </td> <td> a23 </td> </tr>
+   <tr> <td> a31 </td> <td> a32 </td> <td> a33 </td> </tr>
+   </table>
+
+em que os ``aij`` podem tomar qualquer forma. Os marcadores ``<tr>`` designam uma linha ("row") e 
+os marcadores ``<td>`` designam as colunas. Para mais informação sugerimos a consulta de:
+
+* http://truben.no/latex/table/
+* http://www.w3schools.com/html/html_tables.asp
+
+   
+
+Em **LaTeX** e usando o **marcador** ``<latex 100%>`` podem também ser criadas tabelas (que serão convertidas em imagens). 
+A tabela mencionada neste exemplo será convertida numa imagem:
 
 .. code-block:: latex
 
-    \begin{tabular}{c|c|c}
+    <latex 100%>
+    \begin{tabular}{|c|c|c|}
     \hline
     par1 & par2 & par3 \\
     \hline
     \end{tabular}
+    </latex>
 
-em que *par1*, *par2*, e *par3* são parâmetros a serem calculados na parte da programação.
+em que *par1*, *par2*, e *par3* são parâmetros a serem calculados na parte da programação. Infelizmente há pelo
+menos uma restrição: o marcador ``<latex 100%>`` não garante correta compilação de todas as expressões 
+em LaTeX que usem ``\begin{array}`` (e poderão ocorrer outros casos).  
+
+
+Ainda **LaTeX** mas sem usar o marcador acima, podem também ser criadas tabelas 
+usando a notação matemática (o software `MathJAX <http://www.mathjax.org/>`_ é executado no 
+seu *browser* e faz o serviço de conversão da notação LaTeX no objecto gráfico):
+
+.. code-block:: latex
+
+    \begin{array}{|c|c|c|}
+    \hline
+    par1 & par2 & par3 \\
+    \hline
+    \end{array}
+
+em que *par1*, *par2*, e *par3* são parâmetros a serem calculados na parte da programação. A qualidade também pode não ser 
+perfeita.
+
+Sugere-se um possível gerador de tabelas em LaTeX e um documento muito completo sobre o tema:
+
+* http://truben.no/latex/table/
+* http://en.wikibooks.org/wiki/LaTeX/Tables
+
+
+
 
 
 

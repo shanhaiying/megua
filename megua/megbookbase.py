@@ -153,8 +153,8 @@ class MegBookBase:
             self.local_store_filename = self.megbook_store.local_store_filename #keep record.
             print "Opened " + str(self)
         except sqlite3.Error as e:
-            print "MegBook couldn't be opened: " , e.args[0]
-            return
+            print "Filename couldn't be opened: " , e.args[0], "\n"
+            raise e
 
         #Templating (with Jinja2)
         if os.environ.has_key('MEGUA_TEMPLATE_PATH'):
@@ -267,11 +267,13 @@ class MegBookBase:
         # ----------------------------
         #TODO: it should not be in database until a good instance is produced.
         inserted_row = self.megbook_store.insertchange(row)
-        print "A problem is going to be generated with ekey=0"
+        #Users don't like anoying messages: 
+        #print "A problem is going to be generated with ekey=0"
         try:
             self.new(row['owner_key'], ekey=0)
-        except:
+        except e:
             print 'Problem name %s must be reviewed.' % inserted_row['owner_key']
+            raise e
 
 
     def is_exercise_ok(self,row,dest,silent=True):

@@ -183,7 +183,7 @@ class MegBookWeb(MegBookBase):
 
 
 
-        html_string = self.template("print_instance_html.html",
+        html_string = self.template("print_instance_html_onlybody.html",
                 sname=sname,
                 summtxt=summtxt,
                 probtxt=probtxt,
@@ -226,6 +226,8 @@ class MegBookWeb(MegBookBase):
             #f.write(html_string.encode('latin1'))
             #f.close()
 
+            #Problems with many things:
+            #html(html_string.encode('utf-8'))
         else:
             # -------------------
             # Using command line.

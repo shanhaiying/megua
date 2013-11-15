@@ -214,6 +214,8 @@ class Exercise:
     def _change_text(self,text1):
         """Called after parameter_change call. See above."""
         text2 = self.rewrite(text1)
+        if text2 is None:
+            raise NameError('rewrite(s,text) function is not working.')
         text3 = self.latex_images(text2)
         text4 = self.show_one(text3)
         self.multiplechoice_parser(text4)  #extract information but don't change text
