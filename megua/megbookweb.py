@@ -183,7 +183,7 @@ class MegBookWeb(MegBookBase):
 
 
 
-        html_string = self.template("print_instance_html_onlybody.html",
+        html_string = self.template("print_instance_html.html",
                 sname=sname,
                 summtxt=summtxt,
                 probtxt=probtxt,
