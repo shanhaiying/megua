@@ -236,7 +236,8 @@ class Exercise:
 
         #Cycle through all <showone> tags
         match_iter = re.finditer(showone_pattern,input_text)#create an iterator
-        new_text = input_text
+        new_text = ''
+        last_pos = 0
         for match in match_iter:
 
             #Get list of possibilities
@@ -251,8 +252,11 @@ class Exercise:
             #Text to be written on the place of all options
             possibility_text = possibilities[pnum]
 
-            new_text = new_text[:match.start()] + possibility_text + new_text[match.end():] 
+            #new_text = new_text[:match.start()] + possibility_text + new_text[match.end():] 
+            new_text += input_text[last_pos:match.start()] + possibility_text
+            last_pos = match.end()
 
+        new_text += input_text[last_pos:]
 
         return new_text
 

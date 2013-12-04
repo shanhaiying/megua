@@ -1,4 +1,5 @@
 
+.. websection:
 
 
 Exercícios para a web
@@ -8,7 +9,7 @@ Exercícios para a web
 Um dos formatos comuns para uso na internet é criar exercícios de escolha múltipla: só uma resposta correta em todas as especificadas.
 Nesta situação não dá muito jeito criar alíneas pelo que o problema colocado e a resolução detalhada é só uma, é a que conduz à única solução correta.
 
-O outro estilo que temos é em papel: então aqui sim, as alíneas são parte integrante. Numa futura secção abordaremos esse tema.
+O outro estilo que temos é em :ref:`papelsection`: então aqui sim, as alíneas são parte integrante. Numa futura secção abordaremos esse tema.
 
 
 Exercício Completo
@@ -138,6 +139,23 @@ posteriomente, na parte da programação, é necessário escolher qual das frase
         s.variavel = 0 ou 1 para decidir sobre o texto apropriado.
 
 Podem existir mais que dois casos.
+
+Outra técnica para seleção de texto com base numa vari+avel inteira 
+é o uso do comando ``variavel@c{"Texto 0","Texto 1","Texto 2"}``. 
+O seguinte caso mostra um exemplo de aplicação em 
+que ``casov`` define qual das três frases irá aparecer::
+
+.. code-block:: latex
+
+   Neste caso como $f(-x)$
+   casov@c{"é","é","não é"} igual
+   casov@c{"à própria função","ao simétrico da função","nem à função nem
+   à sua simétrica"} então a função
+   casov@c{"é uma função par","é uma função ímpar","nem é uma função par
+   nem ímpar"}.
+
+
+
 
 
 Gráficos

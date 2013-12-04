@@ -16,6 +16,7 @@ Conteúdo:
    rapido
    notebook
    paraweb
+   papel
    pythonsection
    rewrite
    randomvars 
