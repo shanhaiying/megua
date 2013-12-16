@@ -1,14 +1,16 @@
 
 .. http://sphinx-doc.org/markup/inline.html#ref-role
+.. http://sphinx-doc.org/markup/inline.html
 
-.. papelsection:
+.. _papelsection:
 
 Exercícios em papel
 ===================
 
-Os exercícios em papel têm características diferentes dos exercícios para a :ref:`web <websection>`_ entre as quais salientamos:
+Os exercícios em papel têm características diferentes dos exercícios para 
+a :ref:`web <websection>` entre as quais salientamos:
 
-* A linguagem é estritamente LaTeX (não se usa HTML, como para os exercícios para a :ref:`web <websection>`_).
+* A linguagem é estritamente LaTeX (não se usa HTML, como para os exercícios para a :ref:`web <websection>`).
 * Cada ``worksheet`` (tal como no caso web) contém um exercício.
 
 Já com uma base de dados construída, é depois possível:
@@ -149,22 +151,31 @@ posteriomente, na parte da programação, é necessário escolher qual das frase
     class E12X34................
         s.variavel = 0 ou 1 para decidir sobre o texto apropriado.
 
-Podem existir mais que dois casos.
+Claro que podem existir mais que dois casos.
 
-Outra técnica para seleção de texto com base numa vari+avel inteira 
+
+**Outra técnica para seleção de texto** com base numa variável inteira 
 é o uso do comando ``variavel@c{"Texto 0","Texto 1","Texto 2"}``. 
 O seguinte caso mostra um exemplo de aplicação em 
 que ``casov`` define qual das três frases irá aparecer:
 
+**NOTA:** esta versão do ``var@c{....}`` só funciona com letras e espaços. Não funciona com fórmulas ou outros símbolos.
 
-.. code-block:: latex
+Exemplo de texto:
 
-   Neste caso como $f(-x)$
-   casov@c{"é","é","não é"} igual
-   casov@c{"à própria função","ao simétrico da função","nem à função nem
-   à sua simétrica"} então a função
-   casov@c{"é uma função par","é uma função ímpar","nem é uma função par
-   nem ímpar"}.
+|   Neste caso como $f(-x)$
+|   casov@c{"é","é","não é"} igual
+|   casov@c{"à própria função","ao simétrico da função","nem à função nem à sua simétrica"} então a função
+|   casov@c{"é uma função par","é uma função ímpar","nem é uma função par nem ímpar"}.
+
+O efeito para o primeiro caso, isto é, se ``casov == 0`` seleciona as frases ou palavras::
+
+    "é" "à própria função" "é uma função par" 
+
+e a frase gerada fica: "Neste caso como f(-x) é  igual à própria função então a função é uma função par."
+
+
+.. TODO No caso do LaTeX, pode ainda optar por esconder texto usando a ideia do sinal de comentário "%". s.card = '' ou s.card='%'.
 
 
 

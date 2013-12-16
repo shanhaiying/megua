@@ -14,7 +14,7 @@ Conteúdo:
    :maxdepth: 2
 
    rapido
-   notebook
+   sagemath
    paraweb
    papel
    pythonsection

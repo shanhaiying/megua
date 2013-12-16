@@ -1,5 +1,6 @@
 
-.. websection:
+
+.. _websection:
 
 
 Exercícios para a web
@@ -9,7 +10,8 @@ Exercícios para a web
 Um dos formatos comuns para uso na internet é criar exercícios de escolha múltipla: só uma resposta correta em todas as especificadas.
 Nesta situação não dá muito jeito criar alíneas pelo que o problema colocado e a resolução detalhada é só uma, é a que conduz à única solução correta.
 
-O outro estilo que temos é em :ref:`papelsection`: então aqui sim, as alíneas são parte integrante. Numa futura secção abordaremos esse tema.
+O outro estilo que o MEGUA disponibiliza é para :ref:`papel <papelsection>` e neste estilo as alíneas 
+são naturalmente parte integrante. 
 
 
 Exercício Completo
@@ -140,22 +142,27 @@ posteriomente, na parte da programação, é necessário escolher qual das frase
 
 Podem existir mais que dois casos.
 
-Outra técnica para seleção de texto com base numa vari+avel inteira 
+
+
+**Outra técnica para seleção de texto** com base numa variável inteira 
 é o uso do comando ``variavel@c{"Texto 0","Texto 1","Texto 2"}``. 
 O seguinte caso mostra um exemplo de aplicação em 
-que ``casov`` define qual das três frases irá aparecer::
+que ``casov`` define qual das três frases irá aparecer:
 
-.. code-block:: latex
+**NOTA:** esta versão do ``var@c{....}`` só funciona com letras e espaços. Não funciona com fórmulas ou outros símbolos.
 
-   Neste caso como $f(-x)$
-   casov@c{"é","é","não é"} igual
-   casov@c{"à própria função","ao simétrico da função","nem à função nem
-   à sua simétrica"} então a função
-   casov@c{"é uma função par","é uma função ímpar","nem é uma função par
-   nem ímpar"}.
+Exemplo de texto:
 
+|   Neste caso como $f(-x)$
+|   casov@c{"é","é","não é"} igual
+|   casov@c{"à própria função","ao simétrico da função","nem à função nem à sua simétrica"} então a função
+|   casov@c{"é uma função par","é uma função ímpar","nem é uma função par nem ímpar"}.
 
+O efeito para o primeiro caso, isto é, se ``casov == 0`` seleciona as frases ou palavras::
 
+    "é" "à própria função" "é uma função par" 
+
+e a frase gerada fica: "Neste caso como f(-x) é  igual à própria função então a função é uma função par."
 
 
 Gráficos

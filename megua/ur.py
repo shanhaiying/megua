@@ -328,6 +328,69 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
                 yes += 1
         return i
 
+    def different_integers(self,num=1,a=0,b=10):
+        """
+        Generate ``num`` different integers between ``a`` and ``b`` from a uniform distribution.
+
+        NOTE:
+
+        Seed is from Sage random module.
+
+        INPUT:
+
+        - ``num`` -- number of integers to generate
+        - ``a`` -- minimum integer
+        - ``b`` -- maximum integer
+
+        OUTPUT:
+
+        - Integer list.
+
+
+        ALGORITHM:
+
+        Ideas for future algorithms:
+        * http://stackoverflow.com/questions/3722430 by Sheldon L. Cooper.
+        * http://eyalsch.wordpress.com/2010/04/01/random-sample/ (Eyal Schneider)
+
+        And also, from python:
+        * http://docs.python.org/2/library/bisect.html
+        * http://www.sagemath.org/doc/reference/structure/sage/sets/set.html
+
+        EXAMPLES::
+
+            sage: from megua.ur import ur
+            sage: ur.set_seed(10)
+            10
+            sage: ur.different_integers(5,-10,10)
+            [1, -1, -4, -3, -10]
+            sage: ur.different_integers(5,-10,10)
+            [1, -5, -4, -10, 7]
+
+        """
+
+        if (b-a+1) < num:
+            print "Cannot choose %d different elements from [%d,%d]" % (num,a,b)
+            assert(0)
+
+        attempts = 0
+        chosen = set()
+        for i in range(num):
+            found = False
+            while not found and attempts<1000:
+                r = ZZ.random_element(a, (b+1))
+                found = not r in chosen
+                attempts += 1
+            if found:
+                chosen.add(r)
+            else:
+                #tiemout!
+                return [i for i in xrange(a,a+num)]
+
+        return list(chosen)
+
+
+
 
     def runif(self,a,b,prec=None):
         """
@@ -351,10 +414,14 @@ Integer(6)/Integer(7), Integer(7)/Integer(8), Integer(8)/Integer(9)]
             sage: from megua.ur import ur
             sage: ur.set_seed(10)
             10
-            sage: ur.runif(-10,10,2) 
-            -8.74
+            sage: ur.runif(-10,10,2)
+            7.44
             sage: ur.runif(-10,10) 
-            -7.17316398804125
+            -0.639847508477489
+
+        NOTE:
+            Previous result from the above tests where: 
+            -8.74 and -7.17316398804125. But from which version of sage?
 
         """
         res = RR.random_element(a,b)

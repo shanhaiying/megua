@@ -144,7 +144,7 @@ def parameter_change(inputtext,datadict):
     re_str = r'\W(\w+)@\(\)|'\
              r'\W(\w+)@f\{([\.#bcdeEfFgGnosxX<>=\^+\- 0-9\%]+)\}|'\
              r'\W(\w+)@s\{(\w+)\}|'\
-             r'\W(\w+)@c\{([\s",\-\w]+)\}|' + \
+             r'\W(\w+)@c\{([\s",\-\w\.]+)\}|' + \
              r'\W(' + c_dict_keys + ')'
 
 

@@ -37,6 +37,28 @@ does not work.
 
 from sage.all import *
 
+import jinja2
+
+
+"""
+the following code is about templating.
+
+TODO: incorporate other templating code into one module.
+
+"""
+
+#Templating (with Jinja2)
+natlang = 'pt_pt'
+if os.environ.has_key('MEGUA_TEMPLATE_PATH'):
+    TEMPLATE_PATH = os.environ['MEGUA_TEMPLATE_PATH']
+else:
+    from pkg_resources import resource_filename
+    TEMPLATE_PATH = os.path.join(resource_filename(__name__,''),'template',natlang)
+
+#print "Templates in mathcommon.py:  '%s' language at %s" % (natlang,TEMPLATE_PATH)
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
+
+
 
 #Sometimes needed.
 x,y=var('x,y')
@@ -44,6 +66,87 @@ x,y=var('x,y')
 
 #For 4 digit numbers.
 R15=RealField(15)
+
+
+# =====================
+# Google charts
+# =====================
+
+
+def svg_pie_chart(valueslist, chartid="chart1", title="Chart", width=400, height=300):
+    """
+    Plot an SVG chart pie.
+
+    Note: uses google charts.
+
+    INPUT:
+
+    - ``valueslist`` -- list of pairs
+    - ``chartname`` -- like a username 'Pizza Pie'
+    - ``title`` -- like ''How Much Pizza I Ate Last Night'
+    - ``width`` -- default 400
+    - ``height`` -- default 300
+
+    OUTPUT:
+        A HTML string with code (google chart html code) to plot a chart.
+    """
+
+    filename="svg_pie_chart.html"
+    try:
+        tmpl = env.get_template(filename)
+    except jinja2.exceptions.TemplateNotFound:
+        return "MegUA -- missing template %s"%filename
+    r = tmpl.render(valueslist=valueslist,
+                    chartid=chartid,
+                    title=title,
+                    width=width,
+                    height=height)
+
+    print "TYPE=",type(r)
+
+    return r
+
+
+
+
+def svg_pie_chart(valueslist, chartid="chart1", title="Chart", width=400, height=300):
+    """
+    Plot an SVG chart pie.
+
+    Note: uses google charts.
+
+    INPUT:
+
+    - ``valueslist`` -- list of pairs
+    - ``chartname`` -- like a username 'Pizza Pie'
+    - ``title`` -- like ''How Much Pizza I Ate Last Night'
+    - ``width`` -- default 400
+    - ``height`` -- default 300
+
+    OUTPUT:
+        A HTML string with code (google chart html code) to plot a chart.
+    """
+
+    filename="svg_pie_chart.html"
+    try:
+        tmpl = env.get_template(filename)
+    except jinja2.exceptions.TemplateNotFound:
+        return "MegUA -- missing template %s"%filename
+    r = tmpl.render(valueslist=valueslist,
+                    chartid=chartid,
+                    title=title,
+                    width=width,
+                    height=height)
+
+    return r
+
+
+def to_unicode(s):
+    if type(s)!=unicode:
+        return unicode(s,'utf-8')
+    else:
+        return s
+
 
 
 #=======================
