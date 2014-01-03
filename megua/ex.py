@@ -280,8 +280,8 @@ class Exercise:
     def sage_graphic(self,graphobj,varname,dimx=5,dimy=5):
         """This function is to be called by the author in the make_random or solve part.
         INPUT:
-        - `graphobj`: some graphic object
-        - `varname`: filename will have this base name
+        - `graphobj`: some graphic object.
+        - `varname`: user supplied string that will be part of the filename.
         - `dimx` and `dimy`: size in centimeters.
         """ 
         gfilename = '%s-%s-%d'%(self.name,varname,self.ekey)
@@ -291,6 +291,24 @@ class Exercise:
         self.image_list.append(gfilename) 
         return r"<img src='images/%s.png'></img>" % gfilename
 
+    def sage_staticgraphic(self,fullfilename,dimx=150,dimy=150):
+        """This function is to be called by the author in the make_random or solve part.
+
+        INPUT:
+
+        - `fullfilename`: full filename for the graphic or picture.
+        - `dimx` and `dimy`: display image in (dimx,dimy) pixels.
+
+        NOTES:
+            - see also ``s.sage_graphic``.
+        """ 
+        #create if does not exist the "image" directory
+        os.system("mkdir -p images") #The "-p" ommits errors if it exists.
+        os.system("cp %s images" % fullfilename)
+        gfilename = os.path.split(fullfilename)[1]
+        #print "gfilename=",gfilename
+        self.image_list.append(gfilename) 
+        return r"<img src='images/%s' alt='%s' height='%d' width='%d'></img>" % (gfilename,self.name+' graphic',dimx,dimy)
 
     def latex_images(self,input_text):
         """When <latex percent%> ... </latex> is present, then 
