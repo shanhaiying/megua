@@ -165,11 +165,17 @@ O efeito para o primeiro caso, isto é, se ``casov == 0`` seleciona as frases ou
 e a frase gerada fica: "Neste caso como f(-x) é  igual à própria função então a função é uma função par."
 
 
+
+.. _graficosweb:
+
+
 Gráficos
 --------
 
+Esta secção descreve ferramentas para se criarem objectos gráficos "dentro" dos exercícios, possivelmente como função dos 
+parâmetros que os caracterizam. Para outro tipo de gráficos ou imagens consulte a secção `Imagens <staticimages>`_.
 
-Consideramos duas tecnologias para os gráficos:
+Para tal consideramos duas tecnologias para os construir:
 
 * LaTeX e o pacote TikZ (2d e 3d).
 * Gráficos do Sage Mathematics (2d e 3d).
@@ -201,7 +207,7 @@ Desta maneira será produzido um gráfico parametrizado.
 Pode-se encontrar infomação sobre gráficos em Sage nestas duas páginas:
 
 * `Plot 2d <http://www.sagemath.org/doc/reference/plotting/index.html>`_: gráficos de funções e construções gráficas;
-* `Plot 3d <http://www.sagemath.org/doc/reference/plot3d/index.html>`_: o mesmo para 3d.
+* `Plot 3d <http://www.sagemath.org/doc/reference/plot3d/index.html>`_: o mesmo para 3d. No caso 3d nem todos os gráficos poderão ser bem convertidos em imagens de qualidade (por enquanto).
 
 
 
@@ -270,6 +276,58 @@ Os gráficos do pacote TikZ são maioritariamente para 2D. Mas é ainda
 possível criar **gráficos para 3D** recorrendo a um complemento para o TikZ chamado de
 `3dplot <ftp://ftp.tex.ac.uk/pub/tex/graphics/pgf/contrib/tikz-3dplot/tikz-3dplot_documentation.pdf>`_. Outros exemplos
 sem recurso a este pacote podem ser encontrados `aqui <http://www.texample.net/tikz/examples/tag/3d/>`_.
+
+
+
+
+
+.. _staticimages:
+
+Imagens Estáticas
+-----------------
+
+Podem-se incluir imagens estáticas como fotos ou gráficos não parametrizados, produzidas no Sage ou provenientes
+de outras fontes. Para as utilizar num exercício MEGUA siga as etapas seguintes:
+
+1. Obtenha o ficheiro com o gráfico ou imagem e faça *upload* no Sage:
+
+Notas:
+
+* por baixo do nome do *worksheet*, no Sage Notebok, existe o menu "Data:" para realizar *uploads*;
+* o gráfico pode ser gerado numa célula e gravado no Desktop para posterior *upload*. Consulte a secção `Gráficos <graficosweb>`_ sobre gráficos no Sage. 
+* sugerem-se nomes na forma: ``user_planeta_terra_001.jpg`` (ou outra extensão).
+
+2. É necessário saber o *filename* completo até ao ficheiro. Faça como no exemplo:
+
+.. code-block:: python
+
+   print DATA   #shift enter
+   /home/sageserver/sage_notebook.sagenb/home/admin/163/data/
+
+e junte o resultado ao nome do gráfico obtendo o caminho final::
+
+   "/home/sageserver/sage_notebook.sagenb/home/admin/163/data/user_planeta_terra_001.jpg"
+
+
+3. Em qualquer parte do texto do seu exercício coloque a variável que será substituída pelo gráfico, por exemplo, centrando:
+
+.. code-block:: html
+
+   <center>
+   fig1
+   </center>
+
+4. Na parte da programação (make_random ou solve) faça:
+
+.. code-block:: python
+
+   s.fig1 = s.sage_staticgraphic("/home/sageserver/sage_notebook.sagenb/home/admin/163/data/user_planeta_terra_001.jpg",dimx=200, dimy=200) 
+   # 200 x 200 pixeis
+
+
+
+Desta maneira, será reproduzida a imagem em todas as instâncias do exercício.  
+
 
 
 .. _tabelas:

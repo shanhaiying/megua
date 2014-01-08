@@ -289,8 +289,34 @@ class MegBookWeb(MegBookBase):
         MoodleExporter(self, where, debug)  
 
 
-    def siacua(self,exname,ekeys=[],sendpost=False,course="calculo3"):
+    def siacua(self,exname,ekeys=[],sendpost=False,course="calculo3",usernamesiacua=""):
         r"""
+
+        INPUT:
+
+        - ``exname``: problem name (name in "class E12X34_something_001(Exercise):").
+
+        - ``ekeys``: list of numbers that generate the same problem instance.
+
+        - ``sendpost``: if True send information to siacua.
+
+        - ``course``: Right now could be "calculo3", "calculo2". Ask siacua administrator for more.
+
+        - ``usernamesiacua``: username used by the author in the siacua system.
+
+        OUTPUT:
+
+        - this command prints the list of sended exercises for the siacua system.
+
+
+        EXAMPLE:
+
+            sage: meg.siacua(exname="E12X34",ekeys=[1,2,5],sendpost=True,course="calculo2",usernamesiacua="jeremias")
+
+        TODO:
+
+        - securitykey: implemenent in a megua-server configuration file.
+
         LINKS:
             http://docs.python.org/2/library/json.html
             http://stackoverflow.com/questions/7122015/sending-post-request-to-a-webservice-from-python
@@ -303,6 +329,9 @@ class MegBookWeb(MegBookBase):
 
         """
 
+        if usernamesiacua=="":
+            print "Please do 'meg.siacua?' in a cell for usage details."
+            return
 
         #Create exercise instance
         row = self.megbook_store.get_classrow(exname)
@@ -343,11 +372,15 @@ class MegBookWeb(MegBookBase):
 
             #build json string
             send_dict =  self._siacua_json(course, exname, e_number, problem, answer_list, concept_list)
+            send_dict.update(dict({'usernamesiacua': usernamesiacua}))
             send_dict.update(concept_dict)
 
             #Call siacua for store.
             if sendpost:
+                send_dict.update(dict({'usernamesiacua': usernamesiacua}))
                 self._siacua_send(send_dict)
+            else:
+                print "Not sending to siacua. Dictionary is", send_dict
 
             #While POST is working do not need this.
             #self._siacua_sqlprint(send_dict,concept_list,f)
