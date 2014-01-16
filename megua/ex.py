@@ -277,19 +277,41 @@ class Exercise:
 
         
 
-    def sage_graphic(self,graphobj,varname,dimx=5,dimy=5):
+    def sage_graphic(self,graphobj,varname,dimx=5,dimy=5, arrows=False):
         """This function is to be called by the author in the make_random or solve part.
         INPUT:
+
         - `graphobj`: some graphic object.
+
         - `varname`: user supplied string that will be part of the filename.
+
         - `dimx` and `dimy`: size in centimeters.
+
+        - `arrows`: if ``arrows=True`` **try** to put arrows in the axis extremes.
         """ 
+        #Arrows #TODO: this is not working
+        if arrows:
+            xmin = graphobj.xmin()
+            xmax = graphobj.xmax()
+            ymin = graphobj.ymin()
+            ymax = graphobj.ymax()
+            xdelta= (xmax-xmin)/10.0
+            ydelta= (ymax-ymin)/10.0
+            graphobj += arrow2d((xmin,0), (xmax+xdelta, 0), width=0.1, arrowsize=3, color='black') 
+            graphobj += arrow2d((0,ymin), (0, ymax+ydelta), width=0.1, arrowsize=3, color='black') 
+
         gfilename = '%s-%s-%d'%(self.name,varname,self.ekey)
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
-        graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
+        if arrows:
+            #TODO: clip figure for avoid -->---  extra ---
+            graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
+        else:
+            graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
         self.image_list.append(gfilename) 
         return r"<img src='images/%s.png'></img>" % gfilename
+
+
 
     def sage_staticgraphic(self,fullfilename,dimx=150,dimy=150):
         """This function is to be called by the author in the make_random or solve part.
