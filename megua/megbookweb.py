@@ -195,45 +195,33 @@ class MegBookWeb(MegBookBase):
         #html_string = self.publish_tikz(sname,html_string)
 
 
-        if is_notebook():
-            # ---------------
-            # Using notebook.
-            # ---------------
+        #show in notebook
+        #html(html_string.encode('utf-8'))
 
+        #file with html to export (extension txt prevents html display).
 
+        #To be viewed on browser
+        #f = open(sname+'.html','w')
+        #f.write(html_string.encode('latin1'))
+        #f.close()
+        f = codecs.open(sname+'.html', mode='w', encoding='utf-8')
+        f.write(html_string)
+        f.close()
 
-            #show in notebook
-            #html(html_string.encode('utf-8'))
+        #To be used on sphinx
+        #TODO: move this somewhere.
+        #f = codecs.open(sname+'.rst', mode='w', encoding='utf-8')
+        #f.write(html_string)
+        #f.close()
 
-            #file with html to export (extension txt prevents html display).
+        #file with html to export.
+        #f = open(sname+'.html','w')
+        #f.write(html_string.encode('latin1'))
+        #f.close()
 
-            #To be viewed on browser
-            #f = open(sname+'.html','w')
-            #f.write(html_string.encode('latin1'))
-            #f.close()
-            f = codecs.open(sname+'.html', mode='w', encoding='utf-8')
-            f.write(html_string)
-            f.close()
-
-            #To be used on sphinx
-            #TODO: move this somewhere.
-            #f = codecs.open(sname+'.rst', mode='w', encoding='utf-8')
-            #f.write(html_string)
-            #f.close()
-
-            #file with html to export.
-            #f = open(sname+'.html','w')
-            #f.write(html_string.encode('latin1'))
-            #f.close()
-
-            #Problems with many things:
-            #html(html_string.encode('utf-8'))
-        else:
-            # -------------------
-            # Using command line.
-            # -------------------
-            print html_string
-
+        #Problems with many things:
+        #html(html_string.encode('utf-8'))
+    
 
 
     def make_index(self,where='.',debug=False):
@@ -804,6 +792,89 @@ class MegBookWeb(MegBookBase):
         xmlfile.write(questions_xml)
         xmlfile.write("\n</quiz>")
         xmlfile.close()
+
+
+    def gallery(self,owner_keystring, ekey=None, edict=None):
+        r"""Prints an exercise instance of a given type and output RST file for gallery.
+
+        INPUT:
+
+         - ``owner_keystring`` -- the class name.
+         - ``ekey`` -- the parameteres will be generated for this random seed.
+         - ``edict`` --  after random generation of parameters some of them could be replaced by the ones in this dict.
+
+        OUTPUT:
+            An instance of class named ``owner_keystring`` and output RST file for gallery.
+
+        """
+        #Get summary, problem and answer and class_text
+        row = self.megbook_store.get_classrow(owner_keystring)
+        if not row:
+            print "%s cannot be accessed on database" % owner_keystring
+            return None
+        #Create and print the instance
+        ex_instance = exerciseinstance(row, ekey, edict)
+        #generate one instance
+        self.print_instance(ex_instance)
+        #generate rst file
+
+        summtxt =  ex_instance.summary()
+        probtxt =  ex_instance.problem()
+        answtxt =  ex_instance.answer()
+        sname   =  ex_instance.name
+
+        #Use jinja2 template to generate LaTeX.
+        if 'CDATA' in answtxt:
+            answtxt_woCDATA = re.subn(
+                '<!\[CDATA\[(.*?)\]\]>', r'\1', 
+                answtxt, 
+                count=0,
+                flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+        else:
+            answtxt_woCDATA = re.subn(
+                '<choice>(.*?)</choice>', r'<b>Escolha:</b><br>\1<hr>', 
+                answtxt, 
+                count=0,
+                flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+
+
+
+        html_string = self.template("print_instance_html.html",
+                sname=sname,
+                summtxt=summtxt,
+                probtxt=probtxt,
+                answtxt=answtxt_woCDATA,
+                ekey=ex_instance.ekey)
+
+        #Produce files for pdf and png graphics if any tikz code embed on exercise
+        #Ver ex.py: now latex images are produced in ex.problem() and ex.answer()
+        #html_string = self.publish_tikz(sname,html_string)
+
+
+        #file with html to export (extension txt prevents html display).
+
+        #To be viewed on browser
+        #f = open(sname+'.html','w')
+        #f.write(html_string.encode('latin1'))
+        #f.close()
+        f = codecs.open(sname+'.html', mode='w', encoding='utf-8')
+        f.write(html_string)
+        f.close()
+
+        #To be used on sphinx
+        #TODO: move this somewhere.
+        #f = codecs.open(sname+'.rst', mode='w', encoding='utf-8')
+        #f.write(html_string)
+        #f.close()
+
+        #file with html to export.
+        #f = open(sname+'.html','w')
+        #f.write(html_string.encode('latin1'))
+        #f.close()
+
+        #Problems with many things:
+        #html(html_string.encode('utf-8'))
+
 
 
 def m_get_sections(sectionstxt):

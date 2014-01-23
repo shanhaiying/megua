@@ -1,2 +1,3 @@
 #!/bin/bash
 /home/jpedro/sage-5.12/sage -docbuild pt/megua html
+cp -ru /home/jpedro/sage-5.12/devel/sage-main/doc/output/html/pt/megua/* /home/jpedro/all/megua/web.ua/site/tutorial
