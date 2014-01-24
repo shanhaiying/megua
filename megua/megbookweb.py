@@ -861,19 +861,26 @@ class MegBookWeb(MegBookBase):
         f.write(html_string)
         f.close()
 
-        #To be used on sphinx
-        #TODO: move this somewhere.
-        #f = codecs.open(sname+'.rst', mode='w', encoding='utf-8')
-        #f.write(html_string)
-        #f.close()
+        rst_string = self.template("rst_instance.rst",
+                sname=sname,
+                summtxt=summtxt,
+                probtxt=probtxt,
+                answtxt=answtxt_woCDATA,
+                ekey=ex_instance.ekey)
 
-        #file with html to export.
+        #Produce files for pdf and png graphics if any tikz code embed on exercise
+        #Ver ex.py: now latex images are produced in ex.problem() and ex.answer()
+        #html_string = self.publish_tikz(sname,html_string)
+
+        #file with html to export (extension txt prevents html display).
+
+        #To be viewed on browser
         #f = open(sname+'.html','w')
         #f.write(html_string.encode('latin1'))
         #f.close()
-
-        #Problems with many things:
-        #html(html_string.encode('utf-8'))
+        f = codecs.open(sname+'.rst', mode='w', encoding='utf-8')
+        f.write(rst_string)
+        f.close()
 
 
 

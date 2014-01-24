@@ -132,6 +132,8 @@ class SphinxExporter:
         #    self.sphinx_folder, 
         #    os.path.join(self.sphinx_folder,'build/html')]
 
+        print "Building html files using Sphinx"
+
         argv = [os.path.join(SAGE_ROOT,'local/bin/sphinx-build'), '-q', '-a', '-b', 'html', '-d', 
             os.path.join(self.sphinx_folder,'build/doctrees'), #don't put a leader / like  /build/doctrees
             self.sphinx_folder, 
@@ -171,7 +173,22 @@ class SphinxExporter:
         ofile.close()
 
 
+    def length_ok(self,row):
+        MAXL=5000 #chars
+        if  (len(row['summary_text']) < MAXL and
+                len(row['problem_text']) < MAXL and 
+                len(row['answer_text'])  < MAXL and
+                len(row['class_text'])   < MAXL):
+            return True
+        else:
+            print "Problem %s is to large to be displayed! More than %d chars." %  (row['owner_key'],MAXL)
+            return False
+
+
     def sec_print(self, section):
+        r"""Section print"""
+
+        print ' '*section.level + section.sec_name
 
         if section.level<=3:
             self.ofile.write( section.sec_name + "\n")
@@ -182,21 +199,36 @@ class SphinxExporter:
         for e in section.exercises:
 
             #Write exercise ownkey always at level 4.
-            self.ofile.write(e+"\n"+self.char_level[4]*len(e) +"\n\n")
+            #original: self.ofile.write(e+"\n"+self.char_level[4]*len(e) +"\n\n")
+            self.ofile.write(e+"\n"+self.char_level[section.level+1]*len(e) +"\n\n")
+
+            print "   ",e
 
             row = self.megbook_store.get_classrow(e) #e is exer name (same as owner_keystring)
-            etxt = self.exercise_template.render(
-                    summary=str_indent(row['summary_text']),
-                    problem=str_indent(row['problem_text']),
-                    answer=str_indent(row['answer_text']),
-                    sage_python=str_indent(row['class_text'])
-            )
+
+            #protection against large texts
+            if self.length_ok(row):
+
+                etxt = self.exercise_template.render(
+                        summary=str_indent(row['summary_text']),
+                        problem=str_indent(row['problem_text']),
+                        answer=str_indent(row['answer_text']),
+                        sage_python=str_indent(row['class_text'])
+                )
+
+            else:
+
+                etxt = r"<hr><p>Problem %s is to large to be displayed here!</p><hr>" %  e
+
 
             self.ofile.write(etxt)
             self.ofile.write("\n\n")
 
+        print "   (problem list finished)"
+
         for subsection in section.subsections.itervalues():
             self.sec_print(subsection)
+
 
 
 
