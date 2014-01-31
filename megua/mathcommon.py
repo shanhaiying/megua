@@ -250,7 +250,7 @@ def logb(x,base=e,factorize=False):
 #================
 
 
-def tikz_axis(vmin,vmax,axis='x', points=None, ticksize=3):
+def tikz_axis(vmin,vmax,axis='x', points=None, ticksize=2):
     r"""
     Draw the vertical or horizontal 2d axis.
 
@@ -285,13 +285,13 @@ def tikz_axis(vmin,vmax,axis='x', points=None, ticksize=3):
     if axis=='x':
         #integer tick marks
         tmarks = r'\foreach \x in %s' % Set(points)
-        tmarks += r'\draw[color=black] (\x,-%d pt) node[below] {$\x$} -- (\x,%d pt) ;' % (ticksize,ticksize)
+        tmarks += r'\draw[color=black] (\x,-%d pt) node[below] {\scriptsize $\x$} -- (\x,%d pt) ;' % (ticksize,ticksize)
         #main line and arrow at end
         tmain = r'\draw[->,color=black] (%f,0) -- (%f,0);' % (first_int,last_int)
     else:
         #integer tick marks
         tmarks = r'\foreach \y in %s' % Set(points)
-        tmarks += r'\draw[color=black] (-%d pt,\y) node[left] {$\y$} -- (%d pt,\y);' % (ticksize,ticksize)
+        tmarks += r'\draw[color=black] (-%d pt,\y) node[left] {\scriptsize $\y$} -- (%d pt,\y);' % (ticksize,ticksize)
         #main line and arrow at end
         tmain = r'\draw[->,color=black] (0,%f) -- (0,%f);' % (first_int,last_int)
 

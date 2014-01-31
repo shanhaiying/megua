@@ -277,7 +277,7 @@ class Exercise:
 
         
 
-    def sage_graphic(self,graphobj,varname,dimx=5,dimy=5, arrows=False):
+    def sage_graphic(self,graphobj,varname,dimx=5,dimy=5):
         """This function is to be called by the author in the make_random or solve part.
         INPUT:
 
@@ -287,27 +287,34 @@ class Exercise:
 
         - `dimx` and `dimy`: size in centimeters.
 
-        - `arrows`: if ``arrows=True`` **try** to put arrows in the axis extremes.
         """ 
         #Arrows #TODO: this is not working
-        if arrows:
-            xmin = graphobj.xmin()
-            xmax = graphobj.xmax()
-            ymin = graphobj.ymin()
-            ymax = graphobj.ymax()
-            xdelta= (xmax-xmin)/10.0
-            ydelta= (ymax-ymin)/10.0
-            graphobj += arrow2d((xmin,0), (xmax+xdelta, 0), width=0.1, arrowsize=3, color='black') 
-            graphobj += arrow2d((0,ymin), (0, ymax+ydelta), width=0.1, arrowsize=3, color='black') 
+        #if arrows:
+        #    xmin = graphobj.xmin()
+        #    xmax = graphobj.xmax()
+        #    ymin = graphobj.ymin()
+        #    ymax = graphobj.ymax()
+        #    xdelta= (xmax-xmin)/10.0
+        #    ydelta= (ymax-ymin)/10.0
+        #    graphobj += arrow2d((xmin,0), (xmax+xdelta, 0), width=0.1, arrowsize=3, color='black') 
+        #    graphobj += arrow2d((0,ymin), (0, ymax+ydelta), width=0.1, arrowsize=3, color='black') 
 
         gfilename = '%s-%s-%d'%(self.name,varname,self.ekey)
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
-        if arrows:
-            #TODO: clip figure for avoid -->---  extra ---
+
+        #graphobj could be sage or matplotlib object.
+
+        if type(graphobj)==sage.plot.graphics.Graphics:
             graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
-        else:
-            graphobj.save("images/"+gfilename+'.png',figsize=(dimx/2.54,dimy/2.54),dpi=100)
+        else: #matplotlib assumed
+            #http://stackoverflow.com/questions/9622163/matplotlib-save-plot-to-image-file-instead-of-displaying-it-so-can-be-used-in-b
+            import matplotlib.pyplot as plt
+            from pylab import savefig
+            fig = plt.gcf() #Get Current Figure: gcf
+            fig.set_size_inches(dimx/2.54,dimy/2.54)
+            savefig("images/"+gfilename+'.png') #,figsize=(dimx/2.54,dimy/2.54),dpi=100)
+            
         self.image_list.append(gfilename) 
         return r"<img src='images/%s.png'></img>" % gfilename
 

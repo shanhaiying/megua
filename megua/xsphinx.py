@@ -156,8 +156,6 @@ class SphinxExporter:
             #Get Section with sec_name (see class Section from csection.py)
             section = self.sc.contents[sec_name]
 
-            #Open file
-            self.ofile = codecs.open( os.path.join( self.sphinx_folder, "sec%02d.rst" % (sec_number+1) ),encoding='utf-8', mode='w+')
 
             #Write 
             self.sec_print(section)
@@ -185,7 +183,54 @@ class SphinxExporter:
             return False
 
 
-    def sec_print(self, section):
+    def sec_print(self, section, sec_number):
+        r"""Section print"""
+
+        print ' '*section.level + section.sec_name
+
+        #Open file
+        ofile = codecs.open( os.path.join( self.sphinx_folder, "sec%02d.rst" % (sec_number+1) ),encoding='utf-8', mode='w+')
+
+        ofile.write( self.char_level[0] * len(section.sec_name) + "\n")
+        ofile.write( section.sec_name + "\n")
+        ofile.write( self.char_level[0] * len(section.sec_name) + "\n\n")
+
+
+        for e in section.exercises:
+
+            #Write exercise ownkey always at level 4.
+            #original: self.ofile.write(e+"\n"+self.char_level[4]*len(e) +"\n\n")
+            self.ofile.write(e+"\n"+self.char_level[section.level+1]*len(e) +"\n\n")
+
+            print "   ",e
+
+            row = self.megbook_store.get_classrow(e) #e is exer name (same as owner_keystring)
+
+            #protection against large texts
+            if self.length_ok(row):
+
+                etxt = self.exercise_template.render(
+                        summary=str_indent(row['summary_text']),
+                        problem=str_indent(row['problem_text']),
+                        answer=str_indent(row['answer_text']),
+                        sage_python=str_indent(row['class_text'])
+                )
+
+            else:
+
+                etxt = r"<hr><p>Problem %s is to large to be displayed here!</p><hr>" %  e
+
+
+            self.ofile.write(etxt)
+            self.ofile.write("\n\n")
+
+        print "   (problem list finished)"
+
+        for subsection in section.subsections.itervalues():
+            self.sec_print(subsection)
+
+
+    def subsec_print(self, section):
         r"""Section print"""
 
         print ' '*section.level + section.sec_name
@@ -228,6 +273,7 @@ class SphinxExporter:
 
         for subsection in section.subsections.itervalues():
             self.sec_print(subsection)
+
 
 
 
