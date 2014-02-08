@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Visualização de LaTeX {{ sname }}</title>
+<!-- Copyright (c) 2012 Design Science, Inc. -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+{# See megbook.print_instance() #}
+
+<!-- CHANGE HERE:
+
+1. Change
+    /home/jpedro/all/meguanb/sagenb/data/
+to
+    http://www.megua.org/javascript/
+
+ -->
+
+<link rel="stylesheet" href="/home/jpedro/all/meguanb/sagenb/data/codemirror/lib/codemirror.css">
+<script src="http://www.megua.org/javascript/codemirror/lib/codemirror.js"></script>
+<script src="http://www.megua.org/javascript/codemirror/addon/edit/matchbrackets.js"></script>
+<script src="http://www.megua.org/javascript/codemirror/addon/selection/active-line.js"></script>
+<script src=" http://www.megua.org/javascript/codemirror/mode/stex/stex.js"></script>
+
+
+
+<body>
+
+
+<h2>Página de visualização</h2>
+
+<ol>
+<li> {{ linenum }} </li>
+<li> procure o erro na linha indicada ou em torno desta; </li>
+<li> apenas visualização; </li>
+<li> modifique no exercício, não nesta página.</li>
+</ol>
+
+
+<div style="border: 1px solid black; padding: 10px;">
+
+<textarea id='myTextarea'>
+
+{{ tikz_tex }}
+
+</textarea>
+
+
+<script>
+  var editor = CodeMirror.fromTextArea(myTextarea, {
+    //mode: "text/html",
+    mode: "stex",
+    lineNumbers: true,
+    matchBrackets: true,
+    readOnly: true,
+    styleActiveLine: true,
+    autofocus: true
+  });
+  editor.setSize("100%",600);
+  editor.scrollIntoView( {line: 100, ch:10} );
+
+</script>
+
+
+</body>
+
+
+
+</html>
+

@@ -81,6 +81,7 @@ from ur import ur
 #, edict=" + str(edict) + ")\n")
 import tikzmod
 import subprocess
+import codecs
 
 #Sage
 from sage.all import *
@@ -400,9 +401,24 @@ class Exercise:
                     print match.group(0)
                 else:
                     print "There was a problem with an latex image file."
-                print "You can download %s.tex and use your windows LaTeX editor to help find the error." % gfilename
+                #if latex inside codemirror does not work
+                #this is the best choice: 
+                #print "You can download %s.tex and use your windows LaTeX editor to help find the error." % gfilename
+                os.system("mv images/%s.tex ." % gfilename)
+
+                #Using HTML and CodeMirror to show the error.
+                print "You can open %s.html to help debuging." % gfilename
+                tikz_html = Exercise.megbook.template("latex_viewer.html", 
+                                pgfrealjobname=r"\pgfrealjobname{%s}"%self.name, 
+                                beginname=r"\beginpgfgraphicnamed{%s}"%gfilename, 
+                                tikz_tex=tikz_tex,
+                                sname=self.name,
+                                linenum= match.group(0))
+
+                f = codecs.open(gfilename+'.html', mode='w', encoding='utf-8')
+                f.write(tikz_html)
+                f.close()
                 print "================"
-                os.system("cp images/%s.tex ." % gfilename)
                 raise Exception
 
 
