@@ -27,10 +27,10 @@ to
 <body>
 
 
-<h2>Página de visualização</h2>
+<h2>Visualização do LaTeX</h2>
 
 <ol>
-<li> {{ linenum }} </li>
+<li style="color: 'red'"> {{ linenum }} </li>
 <li> procure o erro na linha indicada ou em torno desta; </li>
 <li> apenas visualização; </li>
 <li> modifique no exercício, não nesta página.</li>
@@ -45,6 +45,8 @@ to
 
 </textarea>
 
+</div>
+
 
 <script>
   var editor = CodeMirror.fromTextArea(myTextarea, {
@@ -53,7 +55,7 @@ to
     lineNumbers: true,
     matchBrackets: true,
     readOnly: true,
-    styleActiveLine: true,
+    //styleActiveLine: true,
     autofocus: true
   });
   editor.setSize("80%",600);
