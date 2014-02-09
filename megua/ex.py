@@ -358,7 +358,7 @@ class Exercise:
         #print "Group 2:",match.group(2) #what is to compile
 
         latex_pattern = re.compile(r'<\s*latex\s+(\d+%)\s*>(.+?)<\s*/latex\s*>', re.DOTALL|re.UNICODE)
-        latex_error_pattern = re.compile(r"!.*?l\.\d+(.*?)$",re.DOTALL|re.M)
+        latex_error_pattern = re.compile(r"!.*?l\.(\d+)(.*?)$",re.DOTALL|re.M)
 
         #create if does not exist the "image" directory
         os.system("mkdir -p images") #The "-p" ommits errors if it exists.
@@ -413,7 +413,9 @@ class Exercise:
                                 beginname=r"\beginpgfgraphicnamed{%s}"%gfilename, 
                                 tikz_tex=tikz_tex,
                                 sname=self.name,
-                                linenum= match.group(0))
+                                errmessage=match.group(0),
+                                linenum=match.group(1)
+                                )
 
                 f = codecs.open(gfilename+'.html', mode='w', encoding='utf-8')
                 f.write(tikz_html)

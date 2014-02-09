@@ -30,15 +30,15 @@ to
 
 <h2>Visualização do LaTeX</h2>
 
+<span style="color: red"> {{ errmessage }} </span>
 <ol>
-<li style="color: 'red'"> {{ linenum }} </li>
-<li> procure o erro na linha indicada ou em torno desta; </li>
-<li> apenas visualização; </li>
-<li> modifique no exercício, não nesta página.</li>
+<li> Procure o erro na linha indicada ou em torno desta. </li>
+<li> É uma janela apenas para visualização. </li>
+<li> Modifique diretamente no exercício e não nesta página.</li>
 </ol>
 
 
-<div style="border: 1px solid black; padding: 10px;">
+<!-- <div style="border: 1px solid black; padding: 10px;"> -->
 
 <textarea id='myTextarea'>
 
@@ -46,7 +46,7 @@ to
 
 </textarea>
 
-</div>
+<!-- </div> -->
 
 
 <script>
@@ -56,11 +56,11 @@ to
     lineNumbers: true,
     matchBrackets: true,
     readOnly: true,
-    //styleActiveLine: true,
+    styleActiveLine: true,
     autofocus: true
   });
-  editor.setSize("80%",400);
-  //editor.scrollIntoView( {line: 80, ch:10} );
+  editor.setSize(800,400);
+  editor.scrollIntoView( {line: {{linenum}}, ch:1} );
 
 </script>
 
