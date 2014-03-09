@@ -10,6 +10,10 @@ LINKS::
 
    http://sphinx.pocoo.org/config.html#confval-html_theme_options
 
+NOTES: 
+   from sphinx import cmdline
+   cmdline??
+
 """
 
 
@@ -19,7 +23,10 @@ LINKS::
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
 #*****************************************************************************
-  
+
+
+#sage
+from sage.all import *  
 
 
 #python package
@@ -119,7 +126,15 @@ class SphinxExporter:
         self._save_to_files()
 
         #Build HTML from rst files.
-        argv = ['/usr/bin/sphinx-build', '-a', '-b', 'html', '-d', 
+
+        #argv = ['/usr/bin/sphinx-build', '-q', '-a', '-b', 'html', '-d', 
+        #    os.path.join(self.sphinx_folder,'build/doctrees'), #don't put a leader / like  /build/doctrees
+        #    self.sphinx_folder, 
+        #    os.path.join(self.sphinx_folder,'build/html')]
+
+        print "Building html files using Sphinx"
+
+        argv = [os.path.join(SAGE_ROOT,'local/bin/sphinx-build'), '-q', '-a', '-b', 'html', '-d', 
             os.path.join(self.sphinx_folder,'build/doctrees'), #don't put a leader / like  /build/doctrees
             self.sphinx_folder, 
             os.path.join(self.sphinx_folder,'build/html')]
@@ -136,16 +151,14 @@ class SphinxExporter:
     def _save_to_files(self):
         
         #Create index.rst from xsphinx_index.rst template.
-        for sec_number,sec_name in enumerate(self.sc.contents):
+        for sec_number,sec_name in enumerate(sorted(self.sc.contents)):
 
             #Get Section with sec_name (see class Section from csection.py)
             section = self.sc.contents[sec_name]
 
-            #Open file
-            self.ofile = codecs.open( os.path.join( self.sphinx_folder, "sec%02d.rst" % (sec_number+1) ),encoding='utf-8', mode='w+')
 
             #Write 
-            self.sec_print(section)
+            self.sec_print(section,1)
 
             #close
             self.ofile.close()
@@ -158,7 +171,69 @@ class SphinxExporter:
         ofile.close()
 
 
-    def sec_print(self, section):
+    def length_ok(self,row):
+        MAXL=5000 #chars
+        if  (len(row['summary_text']) < MAXL and
+                len(row['problem_text']) < MAXL and 
+                len(row['answer_text'])  < MAXL and
+                len(row['class_text'])   < MAXL):
+            return True
+        else:
+            print "Problem %s is to large to be displayed! More than %d chars." %  (row['owner_key'],MAXL)
+            return False
+
+
+    def sec_print(self, section, sec_number):
+        r"""Section print"""
+
+        print ' '*section.level + section.sec_name
+
+        #Open file
+        ofile = codecs.open( os.path.join( self.sphinx_folder, "sec%02d.rst" % (sec_number+1) ),encoding='utf-8', mode='w+')
+
+        ofile.write( self.char_level[0] * len(section.sec_name) + "\n")
+        ofile.write( section.sec_name + "\n")
+        ofile.write( self.char_level[0] * len(section.sec_name) + "\n\n")
+
+
+        for e in section.exercises:
+
+            #Write exercise ownkey always at level 4.
+            #original: self.ofile.write(e+"\n"+self.char_level[4]*len(e) +"\n\n")
+            ofile.write(e+"\n"+self.char_level[section.level+1]*len(e) +"\n\n")
+
+            print "   ",e
+
+            row = self.megbook_store.get_classrow(e) #e is exer name (same as owner_keystring)
+
+            #protection against large texts
+            if self.length_ok(row):
+
+                etxt = self.exercise_template.render(
+                        summary=str_indent(row['summary_text']),
+                        problem=str_indent(row['problem_text']),
+                        answer=str_indent(row['answer_text']),
+                        sage_python=str_indent(row['class_text'])
+                )
+
+            else:
+
+                etxt = r"<hr><p>Problem %s is to large to be displayed here!</p><hr>" %  e
+
+
+            ofile.write(etxt)
+            ofile.write("\n\n")
+
+        print "   (problem list finished)"
+
+        for subsection in section.subsections.itervalues():
+            self.sec_print(subsection,sec_number+1)
+
+
+    def subsec_print(self, section):
+        r"""Section print"""
+
+        print ' '*section.level + section.sec_name
 
         if section.level<=3:
             self.ofile.write( section.sec_name + "\n")
@@ -169,21 +244,37 @@ class SphinxExporter:
         for e in section.exercises:
 
             #Write exercise ownkey always at level 4.
-            self.ofile.write(e+"\n"+self.char_level[4]*len(e) +"\n\n")
+            #original: self.ofile.write(e+"\n"+self.char_level[4]*len(e) +"\n\n")
+            self.ofile.write(e+"\n"+self.char_level[section.level+1]*len(e) +"\n\n")
+
+            print "   ",e
 
             row = self.megbook_store.get_classrow(e) #e is exer name (same as owner_keystring)
-            etxt = self.exercise_template.render(
-                    summary=str_indent(row['summary_text']),
-                    problem=str_indent(row['problem_text']),
-                    answer=str_indent(row['answer_text']),
-                    sage_python=str_indent(row['class_text'])
-            )
+
+            #protection against large texts
+            if self.length_ok(row):
+
+                etxt = self.exercise_template.render(
+                        summary=str_indent(row['summary_text']),
+                        problem=str_indent(row['problem_text']),
+                        answer=str_indent(row['answer_text']),
+                        sage_python=str_indent(row['class_text'])
+                )
+
+            else:
+
+                etxt = r"<hr><p>Problem %s is to large to be displayed here!</p><hr>" %  e
+
 
             self.ofile.write(etxt)
             self.ofile.write("\n\n")
 
+        print "   (problem list finished)"
+
         for subsection in section.subsections.itervalues():
             self.sec_print(subsection)
+
+
 
 
 
