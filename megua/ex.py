@@ -78,6 +78,8 @@ from msc65 import * #numerical
 
 #Import the random generator object.
 from ur import ur 
+from cr import r_stem
+
 #, edict=" + str(edict) + ")\n")
 import tikzmod
 import subprocess
@@ -647,8 +649,7 @@ def exerciseinstance(row, ekey=None, edict=None):
         os.system("rm -r %s" % tmp)
         print err_log
         raise Exception  #to warn user #TODO: not always SyntaxError
-
-
+    
     return ex_instance
 
 

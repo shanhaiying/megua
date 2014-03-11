@@ -250,7 +250,6 @@ def parameter_change(inputtext,datadict):
 
     outputtext += inputtext[text_last:]
 
-
     return outputtext
 
 

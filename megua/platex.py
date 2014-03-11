@@ -54,14 +54,25 @@ def pcompile(latexstr, workdir, filename, runs=1, hideoutput=True,silent=True):
     #See /home/jpedro/sage/devel/sage/sage/misc/latex.tex
     assert have_pdflatex()
 
-    #Unicode or latin1
-    if type(latexstr)==unicode:
-        latexstr = latexstr.encode('latin1')
 
     #filename must contain no spaces
     filename = os.path.splitext(filename)[0]  # get rid of extension
     if len(filename.split()) > 1:
         raise ValueError, "filename must contain no spaces"
+
+
+    #Unicode or latin1
+    if type(latexstr)==unicode:
+        import codecs
+        #Store latexstr in filename
+        fullpath = os.path.join(workdir, 'utf8-'+filename+'.tex')
+        f = codecs.open(fullpath,encoding='utf-8', mode='w+')
+        f.write(latexstr)
+        f.close()
+        
+        #Conversion for ISO-8859-1 http://pt.wikipedia.org/wiki/ISO_8859-1
+        latexstr = latexstr.encode('latin1')
+
 
     #Store latexstr in filename
     fullpath = os.path.join(workdir, filename+'.tex')
