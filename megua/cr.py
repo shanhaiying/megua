@@ -17,7 +17,7 @@ import rpy2.robjects as robjects
 
 #from sage.rings.integer import Integer
 
-def r_stem(p_list):
+def r_stem(p_list,html=True):
     """
     Return a string with a stem-and-leaf diagram based on R.
 
@@ -37,8 +37,6 @@ def r_stem(p_list):
        sage: r_stem( [int(100*random()) for _ in range(20)] ) 
        u'\n  O ponto decimal est\xe1 1 d\xedgito para a direita de |\n\n  0 | 60\n  2 | 1660\n  4 | 169\n  6 | 03457\n  8 | 091779\n\n'
     """
-
-    print "Entrou no r_stem"
 
     stemf = robjects.r['stem']
 
@@ -61,28 +59,48 @@ def r_stem(p_list):
     #Parsing: The decimal point is 1 digit(s) to the right of the |
     #The answer is a list of string in the "buf" variable.
 
+    #Keep record
+    buf1 = buf[1]
+    buf2 = buf[2]
+
 
     #if buf[1] == '  The decimal point is ':
-    buf[1] = "  O ponto decimal está "
+    buf[1] = u"  O ponto decimal está "
     
     #get space position after the number.
     sp = buf[2].index(' ')
 
+    
     if 'left' in buf[2]:
         sideword = 'esquerda'
-    else:
+        sideflag = True
+    elif 'right' in buf[2]:
         sideword = 'direita'
-
-
-    if buf[2][:sp]=='1':
-        buf[2] = buf[2][:sp] + " dígito para a %s de |\n\n" % sideword
+        sideflag = True
     else:
-        buf[2] = buf[2][:sp] + " dígitos para a %s de |\n\n" % sideword
+        sideword = 'em |\n'
+        sideflag = False
 
-    jbuf = ''.join(buf)
+    
+    if sideflag:
+        if buf[2][:sp]=='1':
+            buf[2] = buf[2][:sp] + u" dígito para a %s de |\n\n" % sideword
+        else:
+            buf[2] = buf[2][:sp] + u" dígitos para a %s de |\n\n" % sideword
+    else:
+        buf[2] = sideword
+
+    #For debug only
+    buf.insert(3,buf1)
+    buf.insert(4,buf2)
+
+    jbuf = u''.join(buf)
 
     #print jbuf
     #print type(jbuf)
+
+    if html:
+        jbuf = u'''<div style="font-family: 'Courier New', monospace;"><pre>''' + jbuf + u"</pre></div>"
 
     return jbuf
 
