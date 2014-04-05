@@ -250,7 +250,7 @@ def logb(x,base=e,factorize=False):
 #================
 
 
-def tikz_axis(vmin,vmax,axis='x', points=None, ticksize=2):
+def tikz_axis(vmin,vmax,axis='x', points=None, ticksize=2, originlabels=True):
     r"""
     Draw the vertical or horizontal 2d axis.
 
@@ -263,6 +263,8 @@ def tikz_axis(vmin,vmax,axis='x', points=None, ticksize=2):
     - ``axis``: 'x' or 'y'.
 
     - ``points``: if None, points are guessed. Otherwise they are used to place marks.
+
+    - ``originlabels'': (dafault True) If false (0,0) won't have labels.
 
 
     Specials thanks to Paula Oliveira for the first version.
@@ -278,6 +280,9 @@ def tikz_axis(vmin,vmax,axis='x', points=None, ticksize=2):
         #last_int - first_int + 1 gives all integers,
         #but the last point is the arrow vertice: no label and no tick mark so "+1" is not added.
         points = [ i+first_int for i in range(last_int - first_int) ] 
+        if not originlabels and 0 in points:
+            pos = points.index(0)
+            del points[pos]
     else:
         first_int = min(points)
         last_int  = max(points) + 1 #added +1 for the reason above.
