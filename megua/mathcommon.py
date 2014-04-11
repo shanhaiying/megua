@@ -154,8 +154,10 @@ def to_unicode(s):
 #=======================
 
 def _LOG_latex(fun,x,base=None):
-    if b==e or b is None:
+    if base==e or base is None:
         return r'\ln(%s)' % latex(x)
+    elif base==10:
+        return r'\log(%s)' % latex(x)
     else:
         return r'\log_{%s}(%s)' % (latex(base),latex(x))    
 
@@ -220,14 +222,18 @@ def logb(x,base=e,factorize=False):
         1
         sage: latex( logb(1,base=10) )
         0
+        sage: latex( logb(e,base=10) )
+        \log(e)
         sage: latex( logb(sqrt(105)) )
         \log\left(\sqrt{105}\right)
         sage: latex( logb(3^5,base=10) )
-        \log_{10}(243)
+        \log(243)
         sage: latex( logb(3^5,base=10,factorize=True)  )
-        5 \, \log_{10}(3)
+        5 \, \log(3)
         sage: latex( logb(3^5*2^3,base=10,factorize=True) )
-        5 \, \log_{10}(3) + 3 \, \log_{10}(2)
+        5 \, \log(3) + 3 \, \log(2)
+        sage: latex( logb(3^5*2^3,base=3,factorize=True) )
+        5 \, \log_{3}(3) + 3 \, \log_{3}(2)
 
     """
     #e is exp(1) in sage
