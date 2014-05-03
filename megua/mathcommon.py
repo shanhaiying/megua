@@ -200,10 +200,14 @@ def logb(x,base=e,factorize=False):
         0
         sage: logb(e,base=10)
         logb(e, 10)
-        sage: logb(10,base=e) #converted to Sage "log" function
-        log(10) 
-        sage: logb(sqrt(105)) #again, converted to Sage "log" function
-        log(sqrt(105)) 
+        sage: logb(10,base=e) 
+        logb(10, e) 
+        sage: logb(sqrt(105)) 
+        logb(sqrt(105), e) 
+        sage: logb(5,base=e)
+        logb(5, e)     
+        sage: logb(e^2,base=e)
+        2   
 
     With and without factorization::
 
@@ -225,7 +229,7 @@ def logb(x,base=e,factorize=False):
         sage: latex( logb(e,base=10) )
         \log\left(e\right)
         sage: latex( logb(sqrt(105)) )
-        \log\left(\sqrt{105}\right)
+        \ln\left(\sqrt{105}\right)
         sage: latex( logb(3^5,base=10) )
         \log\left(243\right)
         sage: latex( logb(3^5,base=10,factorize=True)  )
@@ -238,7 +242,7 @@ def logb(x,base=e,factorize=False):
     """
     #e is exp(1) in sage
     r = log(x,base=base)
-    if SR(r).denominator()==1:
+    if r in ZZ or r in QQ: #Note: r in RR results in true if r=log(2/3,e)    #OLD: SR(r).denominator()==1:
         return r
     else:
         if factorize:
