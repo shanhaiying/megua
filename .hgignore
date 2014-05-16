@@ -9,4 +9,5 @@ ceoc.lftp
 /src/.*
 \.testoutput/
 \.vim
+mconfig.py
 

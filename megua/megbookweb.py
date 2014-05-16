@@ -31,6 +31,7 @@ from xc3web import C3WebExporter
 from platex import pcompile
 from xmoodle import MoodleExporter
 from xsphinx import SphinxExporter
+from megconfig import *
 
 
 #TODO Is it necessary to import other libs?
@@ -188,7 +189,8 @@ class MegBookWeb(MegBookBase):
                 summtxt=summtxt,
                 probtxt=probtxt,
                 answtxt=answtxt_woCDATA,
-                ekey=ex_instance.ekey)
+                ekey=ex_instance.ekey,
+                mathjax_link=mathjax_link)
 
         #Produce files for pdf and png graphics if any tikz code embed on exercise
         #Ver ex.py: now latex images are produced in ex.problem() and ex.answer()
