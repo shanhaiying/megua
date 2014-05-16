@@ -496,6 +496,7 @@ class MegBookWeb(MegBookBase):
         #    } )
 
         d.update( {
+            "siacua_key": siacua_key,
             "course": course,
             "exname": exname, 
             "ekey": str(e_number), 
