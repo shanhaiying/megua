@@ -31,7 +31,7 @@ from xc3web import C3WebExporter
 from platex import pcompile
 from xmoodle import MoodleExporter
 from xsphinx import SphinxExporter
-from megconfig import *
+from mconfig import *
 
 
 #TODO Is it necessary to import other libs?
