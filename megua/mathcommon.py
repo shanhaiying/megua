@@ -208,6 +208,8 @@ def logb(x,base=e,factorize=False):
         logb(5, e)     
         sage: logb(e^2,base=e)
         2   
+        sage: logb(0,base=10)
+        -Infinity
 
     With and without factorization::
 
@@ -242,7 +244,7 @@ def logb(x,base=e,factorize=False):
     """
     #e is exp(1) in sage
     r = log(x,base=base)
-    if r in ZZ or r in QQ: #Note: r in RR results in true if r=log(2/3,e)    #OLD: SR(r).denominator()==1:
+    if r in ZZ or r in QQ or r==-Infinity: #Note: r in RR results in true if r=log(2/3,e)    #OLD: SR(r).denominator()==1:
         return r
     else:
         if factorize:

@@ -349,7 +349,10 @@ class MegBookWeb(MegBookBase):
                 self.send_images()
     
             if ex_instance.has_multiplechoicetag:
-                answer_list = self._siacua_answer_frominstance(ex_instance)
+                if ex_instance.image_list != []:
+                    answer_list = [self._adjust_images_url(choicetxt) for choicetxt in self._siacua_answer_frominstance(ex_instance)]
+                else:
+                    answer_list = self._siacua_answer_frominstance(ex_instance)
             else:
                 answer_list = self._siacua_answer_extract(answer)
 
