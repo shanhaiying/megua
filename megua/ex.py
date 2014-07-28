@@ -223,8 +223,9 @@ class Exercise:
             raise NameError('rewrite(s,text) function is not working.')
         text3 = self.latex_images(text2)
         text4 = self.show_one(text3)
-        self.multiplechoice_parser(text4)  #extract information but don't change text
-        return text4 
+        text5 = self.old_html(text4)
+        self.multiplechoice_parser(text5)  #extract information but don't change text
+        return text5
 
 
 
@@ -538,6 +539,49 @@ class Exercise:
 
 
 
+    def old_html(self,input_text):
+        r"""Remove tags like the example and let
+        only the "show" part between <center>.        
+
+        EXAMPLE:: (testing this is not done with: sage -t ex.py)
+
+            sage: from ex import *
+            sage: ex = Exercise() #dummy
+            sage: print ex.old_html(r'''
+                <center>
+                <div style="display: None">
+                 closed set.
+                </div>
+                <div style="display: None">
+                 closed set.
+                </div>
+                <div style="display: Show">
+                open set 1.
+                </div>
+                <div style="display: None">
+                open set 2.
+                </div>
+                </center> 
+                ''')
+            open set 1.
+
+        """
+
+        # Replace all "display: None" by empty string.
+        (newtext1, nr) = re.subn(
+            ur'<div style="display: None">(.+?)</div>', '', 
+            input_text, count=0, flags=re.DOTALL|re.UNICODE|re.MULTILINE)
+
+        #print "old_html():", nr
+
+        # Replace all "display: Show" by \1.
+        (newtext2, nr) = re.subn(
+            ur'<div style="display: Show">(.+?)</div>', ur'\1', 
+            newtext1, count=0, flags=re.DOTALL|re.UNICODE|re.MULTILINE)
+
+        #print "old_html():", nr
+
+        return newtext2
 
 
 # --------------

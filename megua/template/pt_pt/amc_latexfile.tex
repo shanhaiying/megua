@@ -1,0 +1,196 @@
+{# see MegBookWeb.py amc functions #}
+
+\documentclass[a4paper]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+
+%Como instalar o automultiplechoice package no Windows ?
+\usepackage[box,completemulti]{automultiplechoice}
+
+%Este ficheiro deve ser o jpedro a fornecer e 
+%a ser colocado ao lado do ficheiro de exame/teste/tpc a compilar
+\usepackage{amsfonts}
+\usepackage{amcpt}
+
+
+%Tirar comentário quando a versão for definitiva.
+%Este comando escreve "rascunho" na folha A4.
+%\AMCtext{draft}{}
+%\AMCtext{none}{Nenhuma das respostas fornecidas é correta.}
+
+
+\begin{document}
+
+
+%%% Exemplo de utilização de questões agrupadas por tópicos
+%%% As questões "\begin{question}" geradas estão no final deste ficheiro mas
+%%% podem ser agrupadas como os exemplos seguintes.
+
+\element{grupogeografia}{ %elemento do grupogeografia
+  \begin{question}{Paris}
+    Em que continente fica Paris?
+    \begin{choices}
+      \correctchoice{Europa}
+      \wrongchoice{África}
+      \wrongchoice{Ásia}
+      \wrongchoice{Oceania}
+    \end{choices}
+  \end{question}
+}
+
+\element{grupogeografia}{ %elemento do grupogeografia
+  \begin{question}{Cameroon}
+    Qual é a capital dos Camarões?
+    \begin{choices}
+      \correctchoice{Yaoundé}
+      \wrongchoice{Douala}
+      \wrongchoice{Abou-Dabi}
+    \end{choices}
+  \end{question}
+}
+
+\element{grupohistoria}{ %elemento do grupohistoria
+  \begin{question}{Bucaco}
+    Em que ano ocorreu a batalha do Buçaco?
+    \begin{choiceshoriz}
+      \correctchoice{1810}
+      \wrongchoice{1910}
+      \wrongchoice{1710}
+      \wrongchoice{1974}
+    \end{choiceshoriz}
+  \end{question}
+}
+
+\element{grupohistoria}{
+  \begin{questionmult}{Bucaco2}
+    O que pode ser afirmado sobre a batalha do Buçaco?
+    \begin{choices}
+      \correctchoice{Foi uma batalha aquando das invasões francesas}
+      \correctchoice{As forças francesas entraram pelo eixo Ciudad Rodrigo -- Almeida -- Coimbra}
+      \wrongchoice{No fim da batalha, a vitória mostrava-se nitidamente do lado francês}
+    \end{choices}
+  \end{questionmult}
+}
+
+%%% Questões vindas do MEGUA daqui para baixo.
+
+{{ungroupedamcquestions}}
+
+
+%%% copies
+
+\onecopy{3}{   %%% especificar o número de réplicas (com questões e escolhas baralhadas).  
+
+
+%%% Início do cabeçalho da prova
+
+\noindent{\bf DISCIPLINA  \hfill Teste 1 de DISCIPLINA}
+
+\vspace*{5mm}
+\large\bf Número mecanográfico \hfill  
+DATA
+\vspace*{5mm}
+
+
+{  % Número mecanográfico com bolinhas.
+\setlength{\parindent}{0pt}\hspace*{\fill}\AMCcode{etu}{5}\hspace*{\fill}
+\begin{minipage}[b]{9cm}
+\begin{itemize}
+\item $\longleftarrow{}$ Anote o seu número mecanográfico pintando cada retângulo apropriado. Se o seu número mecanográfico tiver menos de 5 algarismos use `0' no início.
+\item Escreva o seu nome na caixa em baixo.
+\end{itemize}
+\vspace{3ex}
+\hfill\namefield{\fbox{
+\begin{minipage}{.95\linewidth}
+Nome:\\
+\vspace*{5mm} \\
+%\dotfill
+%\vspace*{1mm}
+\end{minipage}
+}}
+%\hfill
+%\vspace{5ex}
+\end{minipage}
+\hspace*{\fill}
+}
+
+%%% Fim do cabeçalho da prova
+
+
+%%%Espaço para questões abertas
+%%%O professor marca a pontuação antes da digitalização.
+
+\begin{question}{open}
+  Define \emph{democracia}.
+  \AMCOpen{lines=10}{
+        \wrongchoice[P0]{0}\scoring{0}
+        \wrongchoice[P1]{1}\scoring{1}
+        \correctchoice[P2]{2 (100\%)}\scoring{2}
+  }
+\end{question}
+
+
+%%% Seleção de temas: cada tema tem várias questões.
+
+\begin{center}
+  \hrule\vspace{2mm}
+  \bf\Large Geografia
+  \vspace{1mm}\hrule
+\end{center}
+
+\shufflegroup{grupogeografia}
+\insertgroup{grupogeografia}
+
+\begin{center}
+  \hrule\vspace{2mm}
+  \bf\Large História
+  \vspace{2mm}\hrule
+\end{center}
+
+\shufflegroup{grupohistoria}
+\insertgroup{grupohistoria}
+
+\begin{center}
+  \hrule\vspace{2mm}
+  \bf\Large Matemática
+  \vspace{2mm}\hrule
+\end{center}
+
+% Comando opcional para formatar, por exemplo, em duas ou mais páginas A4.
+% \clearpage 
+
+\shufflegroup{grupomatematica}
+\insertgroup{grupomatematica}
+
+
+\clearpage %Obrigatório
+
+}
+
+\end{document}
+
+
+%%% EXEMPLO de QUESTAO NAO AGRUPADA caso seja para criar à mão.
+%
+%\begin{question}{E51M25_NTopologicas_0001}
+%O conjunto    
+%$$D= \{ (x,y) \in \mathbb{R}^2 : 3 \, x^{2} + y^{2} < 1 \}$$
+%\begin{choices}
+%\correctchoice{ 
+%é um conjunto aberto.
+%}
+%\wrongchoice{ 
+%é um conjunto fechado.
+%}
+%\wrongchoice{ 
+%é um conjunto que não é aberto nem fechado.
+%}
+%\wrongchoice{ 
+%é um conjunto simultaneamente aberto e  fechado.
+%}
+%\end{choices}
+%\end{question}
+%
+%

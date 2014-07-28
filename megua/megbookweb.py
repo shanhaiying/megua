@@ -20,7 +20,7 @@ AUTHORS:
 #Python Modules
 import re
 import codecs
-import random
+import random as randomlib #random is imported as a funtion somewhere
 import json
 import httplib, urllib
 
@@ -154,7 +154,7 @@ class MegBookWeb(MegBookBase):
         else:
             print sname + '\n' + exrow['problem_text'].encode('utf8') + '\n'
 
-        
+            
 
     def print_instance(self, ex_instance):
         """
@@ -163,7 +163,7 @@ class MegBookWeb(MegBookBase):
         give a file were the user can find text markup (latex or html, etc).
         """
 
-        summtxt =  ex_instance.summary()
+        summtxt =  ex_instance.summary()   
         probtxt =  ex_instance.problem()
         answtxt =  ex_instance.answer()
         sname   =  ex_instance.name
@@ -350,6 +350,8 @@ class MegBookWeb(MegBookBase):
                 answer = self._adjust_images_url(answer)
                 self.send_images()
     
+
+            #TODO: pass this to ex.py
             if ex_instance.has_multiplechoicetag:
                 if ex_instance.image_list != []:
                     answer_list = [self._adjust_images_url(choicetxt) for choicetxt in self._siacua_answer_frominstance(ex_instance)]
@@ -888,6 +890,357 @@ class MegBookWeb(MegBookBase):
         f.write(rst_string)
         f.close()
 
+
+
+    def amc(self,sheet_structure):
+        r"""
+        Generates a tex file ready to use in AMC for multiple choice 
+        questions with:
+
+        * "No one of the previous answers is correct",
+        * groups or no groups of questions.
+
+        INPUT:
+        
+        - `structure`: see below.
+
+        Structure:
+            Simple: no division in groups ("sections") in the final examination sheet.
+            [ 
+                exercise_name, optinal ekey,
+                exercise_name, optinal ekey,
+                exercise_name, optinal ekey,
+            ]
+
+            Grouped: division in groups ("sections") in the final examination sheet.
+            [ 
+              [group_id,
+                exercise_name, optinal ekey,
+                exercise_name, optinal ekey,
+                exercise_name, optinal ekey,
+              ],
+              [group_id,
+                exercise_name, optinal ekey,
+                exercise_name, optinal ekey,
+                exercise_name, optinal ekey,
+              ],
+            ]
+
+
+        """
+
+        if type(sheet_structure[0]) == list:
+            self.amc_grouped(sheet_structure)        
+        else:
+            self.amc_single(sheet_structure)
+            
+    def amc_grouped(self,problem_list):
+        print "Not yet implemented: use only meg.amc( [exercise,ekey, exercise, ekey,... pairs] )"
+
+
+    def amc_single(self,problem_list):
+        r"""
+        Generates a tex file ready to use in AMC for multiple choice 
+        questions.
+        See amc() first.
+
+        Added options:
+        * "No one of the previous answers is correct",
+
+        INPUT:
+        
+        - `problem_list`: see below.
+
+        Structure example:
+            Simple: no division in groups ("sections") in the final examination sheet.
+            [ 
+                "E12X34_Calc_001", 10,  #specific problem key
+                "E12X34_Calc_001", 20,  #specific problem key (repeat the template)
+                "E12X34_Deriv_001"      #select a random key for this problem
+            ]
+
+        """
+
+        #Build paired list (ex,ekey) adding a random ekey when
+        #no key is given.
+        i = 0
+        n = len(problem_list)
+        paired_list = []
+        #print random.__module__
+        rn = randomlib.randint(0,10**5) #if user did not supplied an ekey.
+        while i < (n-1):
+            if type(problem_list[i])==str and type(problem_list[i+1])==str: #two problems
+                paired_list.append( (problem_list[i], rn) ) 
+                i += 1 #advance to position i+1
+            elif type(problem_list[i])==str and type(problem_list[i+1])!=str: #!= probably a number
+                paired_list.append( (problem_list[i], problem_list[i+1]) )
+                i += 2 #advance to position i+2, consuming the ekey
+        if i < n: #add last problem 
+            paired_list.append( (problem_list[i], rn) )
+
+
+
+        #amc template without groups for each question
+        allproblems_text = ''
+        for (problem_name,ekey) in paired_list:
+
+            #generate problem and answer text (choices are in the answer part)
+
+            #Get summary, problem and answer and class_text
+            row = self.megbook_store.get_classrow(problem_name)
+            if not row:
+                print "amc_single: %s cannot be accessed on database" % problem_name
+                continue
+            #Create and print the instance
+            ex_instance = exerciseinstance(row, int(ekey) )
+
+            summary =  ex_instance.summary() 
+            problem = ex_instance.problem()
+            answer = ex_instance.answer()
+            problem_name =  ex_instance.name
+    
+            #Adapt for appropriate URL for images
+            if ex_instance.image_list != []:
+                problem = self._adjust_images_url(problem)
+                answer = self._adjust_images_url(answer)
+                #see siacua functions: self.send_images()
+
+
+            #TODO: this lines are a copy of code in "siacua()".
+            if ex_instance.has_multiplechoicetag:
+                if ex_instance.image_list != []:
+                    answer_list = [self._adjust_images_url(choicetxt) for choicetxt in self._siacua_answer_frominstance(ex_instance)]
+                else:
+                    answer_list = self._siacua_answer_frominstance(ex_instance)
+            else:
+                answer_list = self._siacua_answer_extract(answer)
+
+
+            #TODO: os CDATA tem que ser recuperados neste ficheiro e os <choice> ja estao no campo ex.all_choices.
+
+            #generate amc problemtext
+
+            problem_string = self.template("amc_element.tex",
+                    problem_name=problem_name,
+                    problem_text=html2latex(problem),
+                    correcttext=html2latex(answer_list[0]),
+                    wrongtext1=html2latex(answer_list[1]),
+                    wrongtext2=html2latex(answer_list[2]),
+                    wrongtext3=html2latex(answer_list[3]),
+                    summtxt=self._latexcommentthis(summary),
+                    detailedanswer=latexcommentthis(html2latex(answer_list[4])) 
+                      #expected at position 4 the full answer.
+            )
+
+            #Convert the link below to \includegraphics{images/E12A34_cilindricas_0001-fig4-10.png}
+            #<img src='https://dl.dropboxusercontent.com/u/10518224/megua_images/E12A34_cilindricas_0001-fig4-10.png'></img>
+            problem_string = re.subn(
+                """<img src='https://dl.dropboxusercontent.com/u/10518224/megua_images/(.*?)'></img>""",
+                r'\n\includegraphics{images/\1}\n', 
+                problem_string, 
+                count=0,
+                flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+
+            #add this to allproblems_text
+            allproblems_text += problem_string
+
+
+        #Make a latex file to be compiled using amc program (or pdflatex).
+        latextext_string = self.template("amc_latexfile.tex",
+            ungroupedamcquestions=allproblems_text
+        )
+
+        f = open('amc_test.tex','w')
+        f.write(latextext_string.encode('utf8'))  #latin1  <-- another option
+        f.close()
+
+        f = open('amcpt.sty','w')
+        f.write(self.template("amcpt.sty"))
+        f.close()
+
+        f = open('amc_instructions.html','w')
+        f.write(self.template("amc_instructions.html").encode('utf8'))
+        f.close()
+
+        os.system("zip -r images images > /dev/null 2>&1")
+
+        os.system("pdflatex -interact=nonstopmode {0} > /dev/null 2>&1".format("amc_test.tex"))
+        os.system("rm amc_test.amc amc_test.log amc_test.aux > /dev/null 2>&1") 
+        #os.system("rm -r images > /dev/null 2>&1")
+    
+     
+
+
+
+    def thesis(self,problem_list):
+        r"""
+        Generates a tex file ready in standard LaTeX to put in a thesis.
+
+        INPUT:
+        
+        - `problem_list`: see below.
+
+        Structure example:
+            Simple: no division in groups ("sections") in the final examination sheet.
+            [ 
+                "E12X34_Calc_001", 10,  #specific problem key
+                "E12X34_Calc_001", 20,  #specific problem key (repeat the template)
+                "E12X34_Deriv_001"      #select a random key for this problem
+            ]
+
+        """
+
+        #Build paired list (ex,ekey) adding a random ekey when
+        #no key is given.
+        i = 0
+        n = len(problem_list)
+        paired_list = []
+        #print random.__module__
+        rn = randomlib.randint(0,10**5) #if user did not supplied an ekey.
+        while i < (n-1):
+            if type(problem_list[i])==str and type(problem_list[i+1])==str: #two problems
+                paired_list.append( (problem_list[i], rn) ) 
+                i += 1 #advance to position i+1
+            elif type(problem_list[i])==str and type(problem_list[i+1])!=str: #!= probably a number
+                paired_list.append( (problem_list[i], problem_list[i+1]) )
+                i += 2 #advance to position i+2, consuming the ekey
+        if i < n: #add last problem 
+            paired_list.append( (problem_list[i], rn) )
+
+
+
+        #amc template without groups for each question
+        allproblems_text = ''
+        for (problem_name,ekey) in paired_list:
+
+            #generate problem and answer text (choices are in the answer part)
+
+            #Get summary, problem and answer and class_text
+            row = self.megbook_store.get_classrow(problem_name)
+            if not row:
+                print "meg.thesis(): %s cannot be accessed on database" % problem_name
+                continue
+            #Create and print the instance
+            ex_instance = exerciseinstance(row, int(ekey) )
+
+            summary =  ex_instance.summary() 
+            problem = ex_instance.problem()
+            answer = ex_instance.answer()
+            problem_name =  ex_instance.name
+    
+            #Adapt for appropriate URL for images
+            if ex_instance.image_list != []:
+                problem = self._adjust_images_url(problem)
+                answer = self._adjust_images_url(answer)
+                #see siacua functions: self.send_images()
+
+
+            #TODO: this lines are a copy of code in "siacua()".
+            if ex_instance.has_multiplechoicetag:
+                if ex_instance.image_list != []:
+                    answer_list = [self._adjust_images_url(choicetxt) for choicetxt in self._siacua_answer_frominstance(ex_instance)]
+                else:
+                    answer_list = self._siacua_answer_frominstance(ex_instance)
+            else:
+                answer_list = self._siacua_answer_extract(answer)
+
+
+            #TODO: os CDATA tem que ser recuperados neste ficheiro e os <choice> ja estao no campo ex.all_choices.
+
+            #generate amc problemtext
+
+            problem_string = self.template("thesis_problem.tex",
+                    problem_name=latexunderscore(problem_name),
+                    problem_text=html2latex(problem),
+                    correcttext=equation2display( html2latex(answer_list[0]) ),
+                    wrongtext1=equation2display( html2latex(answer_list[1]) ),
+                    wrongtext2=equation2display( html2latex(answer_list[2]) ),
+                    wrongtext3=equation2display( html2latex(answer_list[3]) ),
+                    summtxt=latexcommentthis(summary),
+                    detailedanswer=html2latex(answer_list[4]) 
+                      #expected at position 4 the full answer.
+            )
+
+            #Convert the link below to \includegraphics{images/E12A34_cilindricas_0001-fig4-10.png}
+            #<img src='https://dl.dropboxusercontent.com/u/10518224/megua_images/E12A34_cilindricas_0001-fig4-10.png'></img>
+            problem_string = re.subn(
+                """<img src='https://dl.dropboxusercontent.com/u/10518224/megua_images/(.*?)'></img>""",
+                r'\n\\begin{center}\n\includegraphics[width=8cm]{images/\1}\n\end{center}\n', 
+                problem_string, 
+                count=0,
+                flags=re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+
+            #add this to allproblems_text
+            allproblems_text += problem_string
+
+
+        #Make a latex file to be compiled using amc program (or pdflatex).
+        latextext_string = self.template("thesis_latexfile.tex",
+            ungroupedamcquestions=allproblems_text
+        )
+
+        f = open('thesis_problems.tex','w')
+        f.write(latextext_string.encode('latin1')) #utf8 #latin1  <-- another option
+        f.close()
+
+        os.system("zip -r images images > /dev/null 2>&1")
+
+        os.system("pdflatex -interact=nonstopmode {0} > /dev/null 2>&1".format("thesis_problems.tex"))
+        os.system("rm thesis_problems.log thesis_problems.aux > /dev/null 2>&1") 
+        #os.system("rm -r images > /dev/null 2>&1")
+    
+
+
+
+def latexcommentthis(txt):
+    """Put % signs in each line"""
+    txt += '\n' #assure last line has "\n"
+    tlist = re.findall('(.*?)\n', txt, re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)
+    return '\n'.join( [ '%'+t for t in tlist] ) + '\n'
+        
+
+
+def latexunderscore(txt):
+    """Put \_  in each underscore"""
+    return re.subn("_","\_",txt)[0]
+
+def equation2display(txt):
+    """Put \displaystyle\$  in each $$"""
+    return re.subn(r"\$\$(.*?)\$\$",r"$\displaystyle \1$",txt, re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)[0]
+        
+
+
+
+def html2latex(htmltext):
+    r"""
+    Replace:
+
+    * \n\n\n by \n\n (reduce to much blank lines);
+    * <p> by \n\n; </p> by empty string;
+    * <center> by \n\n; </center> by empty string;
+    """
+
+    #No groups, direct replacements
+    lr = [  (ur'(\d)%', ur'\1\%'),  # 3% --> 3\%
+            (ur'(\d) %', ur'\1\%'),  # 3 % --> 3\%
+            (ur'<br>', '\n\n'),
+            (ur'<p>', '\n\n'),
+            (ur'</p>', '\n'),
+            (ur'<center>', '\n\n'),
+            (ur'</center>', '\n'),
+            (ur'<style>(.*?)</style>', '\n') 
+        ]
+
+    newtext = htmltext
+    for pr in lr:
+        (newtext, nr) = re.subn(pr[0], pr[1], newtext, count=0, flags=re.DOTALL|re.UNICODE)
+
+    nr = 1
+    while nr >= 1:
+        (newtext, nr) = re.subn('\n\n\n', '\n\n', newtext, count=0, flags=re.UNICODE)
+        #print "html2latex():", nr
+
+    return newtext
 
 
 def m_get_sections(sectionstxt):

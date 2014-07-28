@@ -1,0 +1,22 @@
+{# see MegBookWeb.py thesis function #}
+
+\documentclass[a4paper]{article}
+
+{% include 'common.tex' %}
+
+
+%Usado na escolha múltipla para desenhar um quadradinho
+\newcommand{\quadra}{$\sqcup \!\!\!\!\sqcap$}
+\def\questao{\item[] \quadra\hspace*{0.5cm}}
+
+
+\begin{document}
+
+%%% Questões vindas do MEGUA daqui para baixo.
+
+{{ungroupedamcquestions}}
+
+
+\end{document}
+
+

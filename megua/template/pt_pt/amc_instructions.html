@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Instruções para uso com AutoMultipleChoice</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+{# See megbook.print_instance() #}
+
+<body>
+
+<p>
+O software <a href="http://home.gna.org/auto-qcm/index.en">Auto Multiple Choice</a> permite criar testes de escolha múltipla com variantes como questões abertas em que o docente marca a cotação ou questões em que várias opções estão corretas. No final os testes são digitalizados e o processo de marcação de respostas erradas ou corretas e soma de pontuação é automatizado com base no ficheiro digitalizado. Um ficheiro de cotações é construído. Eventualmente a correção do teste é enviada por email ao estudante.
+</p>
+
+
+<p>
+Instruções breves:
+<ol>
+<li>Verifique se o PDF está de acordo com o planificado ou selecione novas chaves ou exercícios. É normal que o ficheiro contenha marcas HTML que podem ser removidas ou transformadas.</li>
+<li>Abra um projeto novo usando o software AMC.</li>
+<li>Descarregue o ficheiro <b>amc_test.tex</b> e o ficheiro <b>amcpt.sty</b> para a pasta do projeto. (Talvez seja necessário mudar onome do ficheiro para groups.tex)</li>
+<li>Descarregue o zip com as imagens para essa mesma pasta e faça "unzip"</li>
+<li>Dentro do ficheiro <b>amc_test.tex</b> existe o comando <code>\onecopy{3}{</code>: modifique o <b>3</b> para o número de cópias com as questões baralhadas que pretende.</li>
+<li>Existe um <b>grupomatematica</b> dentro do ficheiro <b>amc_test.tex</b>. Se entender pode dividir esse grupo em outros grupos como por exemplo grupoalgebra, gruponumerica, etc, e modificar na parte final do ficheiro tex os comandos insertgroup e shufflegroup.</li>
+<li>Use o programa AMC para compilar e gerar um ficheiro final a imprimir e distribuir pelos alunos.</li>
+</ol>
+
+</body>
+</html>
+
+
