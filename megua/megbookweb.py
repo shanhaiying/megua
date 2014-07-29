@@ -1173,10 +1173,39 @@ class MegBookWeb(MegBookBase):
             #add this to allproblems_text
             allproblems_text += problem_string
 
+        #Apply to all "allproblems_text"
+        
+        r"""2. Convert
+                \questao{ 
+    
+                 $\displaystyle 7.95$ 
+                 }
+            to 
+                \questao{$\displaystyle 7.95$}
+            but it does not work right with
+                \questao{ 
+ 
+                    \begin{center}
+                    \includegraphics[width=8cm]{images/E97k40_grafico_tabela_001-fig1-9.png}
+                    \end{center}
+ 
+                 }
+        """
+
+        pos = 0
+        new_allproblems_text = ''  #below pattern is not perfect because last } could match \begin{center} <-- this }
+        for m in re.finditer(r'\\questao\{(.*?)\}', allproblems_text, re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE):
+            inside = m.group(1)
+            inside,nc = re.subn("\n","",inside,re.DOTALL | re.MULTILINE | re.IGNORECASE | re.UNICODE)
+            new_allproblems_text += allproblems_text[pos:m.start(1)] + inside  
+            pos = m.end(1)
+
+        new_allproblems_text += allproblems_text[pos:]
+
 
         #Make a latex file to be compiled using amc program (or pdflatex).
         latextext_string = self.template("thesis_latexfile.tex",
-            ungroupedamcquestions=allproblems_text
+            ungroupedamcquestions=new_allproblems_text
         )
 
         f = open('thesis_problems.tex','w')
@@ -1228,7 +1257,8 @@ def html2latex(htmltext):
             (ur'</p>', '\n'),
             (ur'<center>', '\n\n'),
             (ur'</center>', '\n'),
-            (ur'<style>(.*?)</style>', '\n') 
+            (ur'<style>(.*?)</style>', '\n'),
+            (ur'<pre>(.*?)</pre>',ur'\n%Falta colocar linhas vazias em baixo\n\\begin{alltt}\n\1\n\\end{alltt}\n\n'), 
         ]
 
     newtext = htmltext
