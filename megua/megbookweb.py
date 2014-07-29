@@ -1217,6 +1217,7 @@ class MegBookWeb(MegBookBase):
         os.system("pdflatex -interact=nonstopmode {0} > /dev/null 2>&1".format("thesis_problems.tex"))
         os.system("rm thesis_problems.log thesis_problems.aux > /dev/null 2>&1") 
         #os.system("rm -r images > /dev/null 2>&1")
+        print '\nAVISO: Use o botao direito e "Save link as..." para guardar "thesis_problems.tex" no seu computador.'
     
 
 
