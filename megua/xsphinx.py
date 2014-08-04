@@ -169,14 +169,16 @@ class SphinxExporter:
         for e in section.exercises:
 
             #Write exercise ownkey always at level 4.
-            self.ofile.write(e+"\n"+self.char_level[4]*len(e) +"\n\n")
+            self.ofile.write(e+"\n"+self.char_level[section.level+1]*len(e) +"\n\n")
 
             row = self.megbook_store.get_classrow(e) #e is exer name (same as owner_keystring)
             etxt = self.exercise_template.render(
                     summary=str_indent(row['summary_text']),
                     problem=str_indent(row['problem_text']),
                     answer=str_indent(row['answer_text']),
-                    sage_python=str_indent(row['class_text'])
+                    sage_python=str_indent( row['class_text'] ),
+                    sections_text = row["sections_text"],
+                    suggestive_name= row["suggestive_name"]
             )
 
             self.ofile.write(etxt)

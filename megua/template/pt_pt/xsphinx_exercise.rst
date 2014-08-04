@@ -1,20 +1,56 @@
 
+.. code-block:: python
+
+   meg.save(r'''
+
+.. code-block:: html
+
+   %SUMMARY {{ sections_text }}
+{{ summary }}
 
 
 
-.. code-block:: latex
+.. code-block:: html
 
-    %SUMMARY {sections_text}}
-    {{summary_text}}
-    %PROBLEM {{suggestive_name}}
-    {{problem_text}}
-    %ANSWER
-    {{answer_text}}
+   %PROBLEM {{ suggestive_name }}
+{{ problem }}
+
+
+.. code-block:: html
+
+   %ANSWER
+{{ answer }}
+
 
 .. code-block:: python
-    
-    {{class_text}}
 
+{{ sage_python }}
+
+.. code-block:: python
+
+   ''')
+
+
+{#
+.. code-block:: python
+
+   meg.save(r'''
+
+   %SUMMARY {{ sections_text }}
+    {{ summary }}
+
+   %PROBLEM {{ suggestive_name }}
+    {{ problem }}
+
+   %ANSWER
+    {{ answer }}
+
+   {{sage_python}}
+
+   ''')
+#}
+
+{#
 
 **Sumário**
 
@@ -41,6 +77,8 @@
 .. code-block:: python
 
 {{ sage_python }}
+
+#}
 
 
 
