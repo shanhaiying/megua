@@ -1266,12 +1266,37 @@ def html2latex(htmltext):
     for pr in lr:
         (newtext, nr) = re.subn(pr[0], pr[1], newtext, count=0, flags=re.DOTALL|re.UNICODE)
 
+    #Convert from <table> to \begin{tabular}
+    newtext = table2tabular(newtext)
+    
+
+    #Removing spaces and lots of blank lines.
     nr = 1
     while nr >= 1:
         (newtext, nr) = re.subn('\n\n\n', '\n\n', newtext, count=0, flags=re.UNICODE)
         #print "html2latex():", nr
 
     return newtext
+
+
+def table2tabular(text):
+    r"""Convert <table>...</table> to \begin{tabular} ... \end{tabular}"""
+
+    lista = [
+            (ur'<table(.*?)>', ur'\n\n\\begin{tabular}{...}\n'),
+            (ur'</table>', ur'\n\end{tabular}\n'),
+            (ur'<tr(.*?)>', ur'\n'),
+            (ur'</tr>', ur' \\\\ \hline\n'), 
+            (ur'<td(.*?)>', ' '),
+            (ur'</td>', ' & '),
+        ]
+
+    newtext = text
+    for pr in lista:
+        (newtext, nr) = re.subn(pr[0], pr[1], newtext, count=0, flags=re.DOTALL|re.UNICODE)
+    
+    return newtext
+
 
 
 def m_get_sections(sectionstxt):
