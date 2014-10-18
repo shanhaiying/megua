@@ -30,8 +30,16 @@ class SectionClassifier:
     STRUTURE SAMPLE::
 
         contents -> { 'Section1': Section('Section1',0), 'Section2': Section('Section2',0) }
-        Each Section object see below.
-
+        For each Section object see below in this file.
+        A brief description is:
+            * a SectionClassifier is the "book" made with keys (chapter names) that are keys of a dictionary.
+            * SectionClassifier is a dictionary: keys are the chapter names and the values are Section objects.
+            * a Section object is defined by 
+                * a name (the key of the SectionClassifiers appears again in sec_name)
+                * level (0 if it is top level sections: chapters, and so on)
+                *  a list of exercises beloging to the section and
+                * a dictionary of subsections (again Section objects)
+            * Section = (sec_name, level, [list of exercises names], dict( subsections ) )
 
     EXAMPLES::
 
@@ -187,7 +195,11 @@ class SectionClassifier:
 
 
 class Section:
+    r"""
 
+    Section = (sec_name, level, [list of exercises names], dict( subsections ) )
+
+    """
     def __init__(self,sec_name,level=0):
         self.sec_name = sec_name
         self.level = level

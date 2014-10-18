@@ -31,6 +31,7 @@ from xc3web import C3WebExporter
 from platex import pcompile
 from xmoodle import MoodleExporter
 from xsphinx import SphinxExporter
+from xlatex import PDFLaTeXExporter
 from mconfig import *
 
 
@@ -260,6 +261,17 @@ class MegBookWeb(MegBookBase):
         else:
             print "firefox -no-remote ", html_index.htmlfile
 
+    def make_latex(self,where='.', exerset=None, debug=False):
+        """
+        Produce a pdflatex file from the database and an index reading first line of the %summary field.
+
+        Command line use: 
+            The ``where`` input argument, when specified,  will contain all details of Sphinx compilation.
+        """
+
+        PDFLaTeXExporter(self,where=where,exerset=exerset,debug=debug)
+
+        #say to user download and compile 
 
 
     def make_c3web(self,where='.',debug=False):
