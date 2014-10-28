@@ -30,6 +30,7 @@ import shutil
 import codecs
 import jinja2
 from string import join
+import re
 
 #megua package
 from localstore import ExIter
@@ -60,7 +61,16 @@ class PDFLaTeXExporter:
         self.megbook = megbook
         self.megbook_store = self.megbook.megbook_store
         self.xlatex_folder = where
-        self.exerset = exerset
+
+        #Filter exerset to remove integers
+        self.exerset = [c[0] for c in exerset]
+
+        #for c in exerset:
+        #    print type(c)
+        #    if type(c)==str:
+        #        self.exerset.append( c )
+
+        print "List of exercises:",self.exerset
 
         # -------------------------------
         # Set the Exercise print template
@@ -72,18 +82,12 @@ class PDFLaTeXExporter:
             raise e
 
 
-        try:
-            self.main_template = self.megbook.env.get_template("xlatex_main.tex")
-        except jinja2.exceptions.TemplateNotFound as e:
-            print "MegUA -- missing template xlatex_main.tex"
-            raise e
-
         #Open file 
         #self.ofile = open( os.path.join(where,'megua_ex.tex'), 'w') 
-        #self.ofile = open( 'megua_ex.tex', 'w') 
+        self.ofile = open( 'megua_ex.tex', 'w') 
         #self.ofile = codecs.open( os.path.join( self.xlatex_folder, "megua_ex.tex" ), encoding='utf-8', mode='w+')
-        self.ofile = codecs.open( "megua_ex.tex", encoding='utf-8', mode='w+')
-        self.ofile.write(self.main_template.render())
+        #self.ofile = codecs.open( "megua_ex.tex", encoding='utf-8', mode='w+') 
+        #now see thesis_latexfile.texself.ofile.write(self.main_template.render().encode('latin1'))
 
         #Open pdflatex template
 
@@ -93,19 +97,6 @@ class PDFLaTeXExporter:
         #Save to files and build html.
         self._save_to_file()
 
-        #Build HTML from rst files.
-        #argv = ['/usr/bin/sphinx-build', '-a', '-b', 'html', '-d', 
-        #    os.path.join(self.sphinx_folder,'build/doctrees'), #don't put a leader / like  /build/doctrees
-        #    self.sphinx_folder, 
-        #    os.path.join(self.sphinx_folder,'build/html')]
-        #if debug:
-        #    print str(argv)
-        #    print sphinx.main(argv)
-        #else:
-        #    sphinx.main(argv)
-        #self.htmlfile = os.path.join(self.sphinx_folder,'build/html/index.html')
-
-        self.ofile.write(ur'\end{document}\n')
         self.ofile.close()
 
 
@@ -125,21 +116,23 @@ class PDFLaTeXExporter:
     def sec_print(self, section):
 
         if section.level==0: # \section
-            self.ofile.write(ur'\section{%s}' % section.sec_name + "\n\n")
+            self.ofile.write(r'\section{%s}' % section.sec_name.encode("latin1") + "\n\n")
         elif section.level==1: # \subsection
-            self.ofile.write(ur'\subsection{%s}' % section.sec_name + "\n\n")
+            self.ofile.write(r'\subsection{%s}' % section.sec_name.encode("latin1") + "\n\n")
         elif section.level==2: # \subsubsection
-            self.ofile.write(ur'\subsubsection{%s}' % section.sec_name + "\n\n")
+            self.ofile.write(r'\subsubsection{%s}' % section.sec_name.encode("latin1") + "\n\n")
         elif section.level==3: # \subsubsubsection
-            self.ofile.write(ur'\subsubsubsection{%s}' % section.sec_name + "\n\n")
+            self.ofile.write(r'\subsubsubsection{%s}' % section.sec_name.encode("latin1") + "\n\n")
         else: # it will just bold
-            self.ofile.write(ur'\textbf{%s}' % section.sec_name + "\n\n")
+            self.ofile.write(r'\textbf{%s}' % section.sec_name.encode("latin1") + "\n\n")
 
 
         for e in section.exercises:
 
             row = self.megbook_store.get_classrow(e) #e is exer name (same as owner_keystring)
             etxt = self.exercise_template.render(
+                    problem_name=row['owner_key'],
+                    slashedproblem_name=latexunderscore(row['owner_key']),
                     summary=str_indent(row['summary_text']),
                     problem=str_indent(row['problem_text']),
                     answer=str_indent(row['answer_text']),
@@ -148,13 +141,17 @@ class PDFLaTeXExporter:
                     suggestive_name= row["suggestive_name"]
             )
 
-            self.ofile.write(etxt)
+            self.ofile.write(etxt.encode("latin1"))
             self.ofile.write("\n\n")
 
         for subsection in section.subsections.itervalues():
             self.sec_print(subsection)
 
 
+
+def latexunderscore(txt):
+    """Put \_  in each underscore"""
+    return re.subn("_","\_",txt)[0]
 
 def str_indent(s):
     return "   " + s.replace("\n","\n   ")

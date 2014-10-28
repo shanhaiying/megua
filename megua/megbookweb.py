@@ -1147,6 +1147,7 @@ class MegBookWeb(MegBookBase):
                 #see siacua functions: self.send_images()
 
 
+
             #TODO: this lines are a copy of code in "siacua()".
             if ex_instance.has_multiplechoicetag:
                 if ex_instance.image_list != []:
@@ -1162,7 +1163,8 @@ class MegBookWeb(MegBookBase):
             #generate amc problemtext
 
             problem_string = self.template("thesis_problem.tex",
-                    problem_name=latexunderscore(problem_name),
+                    problem_name=problem_name,
+                    slashedproblem_name=latexunderscore(problem_name),
                     problem_text=html2latex(problem),
                     correcttext=equation2display( html2latex(answer_list[0]) ),
                     wrongtext1=equation2display( html2latex(answer_list[1]) ),
@@ -1184,6 +1186,10 @@ class MegBookWeb(MegBookBase):
 
             #add this to allproblems_text
             allproblems_text += problem_string
+
+
+        os.system("zip -r images images > /dev/null 2>&1")
+
 
         #Apply to all "allproblems_text"
         
@@ -1214,22 +1220,34 @@ class MegBookWeb(MegBookBase):
 
         new_allproblems_text += allproblems_text[pos:]
 
+        #Produce "Source Code" from each problem.
+        PDFLaTeXExporter(self,where='.',exerset=paired_list,debug=False)
+        f = codecs.open( "megua_ex.tex", encoding='latin1', mode='r') 
+        #f = open("megua_ex.tex","r")
+        source_code = f.read()
+        print "type=",type(source_code)
+        f.close()
 
         #Make a latex file to be compiled using amc program (or pdflatex).
         latextext_string = self.template("thesis_latexfile.tex",
-            ungroupedamcquestions=new_allproblems_text
+            ungroupedquestions=new_allproblems_text,
+            sourcecode=source_code
         )
+
 
         f = open('thesis_problems.tex','w')
         f.write(latextext_string.encode('latin1')) #utf8 #latin1  <-- another option
         f.close()
 
-        os.system("zip -r images images > /dev/null 2>&1")
-
-        os.system("pdflatex -interact=nonstopmode {0} > /dev/null 2>&1".format("thesis_problems.tex"))
-        os.system("rm thesis_problems.log thesis_problems.aux > /dev/null 2>&1") 
+        #os.system("pdflatex -interact=nonstopmode {0} > /dev/null 2>&1".format("thesis_problems.tex"))
+        #os.system("rm thesis_problems.log thesis_problems.aux > /dev/null 2>&1") 
         #os.system("rm -r images > /dev/null 2>&1")
-        print '\nAVISO: Use o botao direito e "Save link as..." para guardar "thesis_problems.tex" no seu computador.'
+
+
+        print '\nInstrucoes:\n1. Use o botao direito e "Save link as..." para guardar "thesis_problems.tex" no seu computador.'
+        print '2. O conteudo do ficheiro images.zip deve ser colocado numa pasta "images".'
+        print '3. Sera necessaria paciencia para finalizar a pre conversao de HTML para LaTeX em cada exercicio.'
+        print '4. Recomenda-se adaptar um exercicio de cada vez.'
     
 
 

@@ -3,22 +3,26 @@
 
 
 
-
 %%% ========================================
 %%% Problem summary (only for author to see)
 %%% ========================================
 
 %%% {{problem_name}}
-{{summtxt}}
 
 % Problem text starts here:
 
 
 %\begin{minipage}[pos][height][contentpos]{12cm}
 
+\vspace{0.3cm}
+\reffonte{ {{slashedproblem_name}} }{ {{problem_name}} }
+
+\begin{verbatim}
+
+
 \fbox{
 \begin{minipage}{12cm}
-\noindent Enunciado:~\textbf{ {{problem_name}} }
+\noindent\textbf{Enunciado:}
 
 {{problem_text}}
 
@@ -37,6 +41,12 @@
 \end{minipage} 
 }
 
+
+\textbf{Descrição sumária do exercício:}
+
+{{summtxt}}
+
+
 %%% ======================================
 %%% Detailed Answer 
 %%% (uncomment latex for showing solution)
@@ -45,6 +55,7 @@
 
 {{detailedanswer}}
 
+\end{verbatim}
 
 %% problem end.
 

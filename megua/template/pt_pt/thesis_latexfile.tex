@@ -1,10 +1,16 @@
 {# see MegBookWeb.py thesis function #}
 
-\documentclass[a4paper]{article}
+\documentclass[a4paper]{book}
 
 {% include 'common.tex' %}
 
 \usepackage{alltt}
+
+
+\usepackage[layoutwidth=210mm,layoutheight=295mm,nomarginpar,nofoot,
+textwidth=170mm,textheight=240mm,inner=25mm,verbose,outer=20mm,top=25mm,centering,
+footskip=22pt]{geometry}
+
 
 
 %Usado na escolha múltipla para desenhar um quadradinho
@@ -12,11 +18,66 @@
 \def\questao{\item[] \quadra\hspace*{0.5cm}}
 
 
+{# NOTE:  {{ '{#' }} means '{#' in the output #}
+
+
+\newcommand{\reffonte}[2]{
+\vfill\noindent Concretização do exercício~\textbf{{ '{#1}' }}~(ver código fonte na pág. \pageref{{ '{#2}' }}): \par
+}
+
+
+\newcommand{\cfonte}[2]{
+\noindent \hrulefill~\textbf{{ '{#1}' }}~\hrulefill\label{{ '{#2}' }}
+}
+
+
 \begin{document}
+
+
+\frontmatter
+
+\tableofcontents
+
+
+\mainmatter
+
+\chapter{Introdução}
+
+Aqui algum texto.
+
+\chapter{Questões concretizadas}
+
+\textbf{INSTRUÇÕES:}
+\begin{itemize}
+\item AS CONCRETIZAÇÕES ABAIXO PRECISAM DE AFINAÇÃO CASO A CASO POIS SÃO CONVERSÕES DO HTML PARA O LATEX. 
+\item ALGUMAS ESTÃO PRONTAS E OUTRAS PRECISAM DE BASTANTE TRABALHO DE CONVERSÃO.
+\item POR ISSO ESTÃO EM MODO VERBATIM. 
+\begin{center}
+\verb+\begin{verbatim}.....\end{verbatim}+
+\end{center}
+QUE DEVE SER REMOVIDO, EXERCÍCIO A EXERCÍCIO, COMPILANDO PRIMEIRO.
+\end{itemize}
+
+
 
 %%% Questões vindas do MEGUA daqui para baixo.
 
-{{ungroupedamcquestions}}
+{{ungroupedquestions}}
+
+
+
+\appendix
+
+\chapter{Código Fonte}
+
+
+\textbf{INSTRUÇÕES:}
+\begin{itemize}
+\item O MODO VERBATIM NÃO DEVE SER REMOVIDO.
+\item SE DESEJAR QUEBRE ALGUMAS LINHAS PARA QUE O CONTEÚDO SEJA VISÍVEL NA FOLHA DE PAPEL.
+\end{itemize}
+
+{{sourcecode}}
 
 
 \end{document}

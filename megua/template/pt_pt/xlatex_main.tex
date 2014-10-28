@@ -1,3 +1,10 @@
+
+Template usado inicialmente juntamente com xlatex_exercise.tex
+
+Agora o template passou a ser "thesis_latexfile.tex"
+
+
+
 \documentclass[a4paper]{article}
 
 %\usepackage[T1]{fontenc}
@@ -24,6 +31,12 @@
     breaklines=true,
     postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
     extendedchars=true
+}
+
+
+
+\newcommand{\cfonte}[2]{
+\noindent \hrulefill~\textbf{#1}~\hrulefill\label{#2}
 }
 
 
