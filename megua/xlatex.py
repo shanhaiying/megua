@@ -31,6 +31,8 @@ import codecs
 import jinja2
 from string import join
 import re
+import textwrap
+import unicodedata
 
 #megua package
 from localstore import ExIter
@@ -133,10 +135,10 @@ class PDFLaTeXExporter:
             etxt = self.exercise_template.render(
                     problem_name=row['owner_key'],
                     slashedproblem_name=latexunderscore(row['owner_key']),
-                    summary=str_indent(row['summary_text']),
-                    problem=str_indent(row['problem_text']),
-                    answer=str_indent(row['answer_text']),
-                    sage_python=str_indent( row['class_text'] ),
+                    summary=textwrap.fill( perc_str_indent(row['summary_text']), 80,replace_whitespace=False).strip(),
+                    problem=textwrap.fill( str_indent(row['problem_text']), 80,replace_whitespace=False).strip(),
+                    answer=textwrap.fill( str_indent(row['answer_text']), 80,replace_whitespace=False).strip(),
+                    sage_python=remove_accents(str_indent( row['class_text'] )).strip(),
                     sections_text = row["sections_text"],
                     suggestive_name= row["suggestive_name"]
             )
@@ -148,12 +150,21 @@ class PDFLaTeXExporter:
             self.sec_print(subsection)
 
 
+def remove_accents(input_str):
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    only_ascii = nkfd_form.encode('ASCII', 'ignore')
+    return only_ascii
+
+
 
 def latexunderscore(txt):
     """Put \_  in each underscore"""
     return re.subn("_","\_",txt)[0]
 
 def str_indent(s):
+    return "   " + s.replace("\n","\n   ")
+
+def perc_str_indent(s):
     return "   " + s.replace("\n","\n   ")
 
 def lang_set(s):

@@ -30,6 +30,21 @@ footskip=22pt]{geometry}
 \noindent \hrulefill~\textbf{{ '{#1}' }}~\hrulefill\label{{ '{#2}' }}
 }
 
+%================
+% Listings
+%================
+\usepackage{listings}
+
+\renewcommand{\lstlistingname}{Listagem}
+\renewcommand{\lstlistlistingname}{Listagens}
+
+\lstset{
+    frame=single,
+    breaklines=true,
+    postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
+    extendedchars=true
+}
+
 
 \begin{document}
 

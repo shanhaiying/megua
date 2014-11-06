@@ -39,6 +39,7 @@ from sage.all import *
 import sqlite3 #for row objects as result from localstore.py
 import shutil
 import os
+import random 
 #import codecs
 
 
@@ -378,18 +379,54 @@ class MegBookBase:
         else:
             print "No problem found."
 
+    def select(self,regex=None, addkeys=False):
+        r"""
+        Performs a search of a regular expression over all fields.
+        Regular expressions examples: 
+        * "prim" for all words containing prim
+        * TO DO: IMPROVE
+
+        Examples:
+
+            meg.select("primitive*")
+
+        INPUT:
+        - ``regex`` -- regular expression (see `Regular Expression`_ module). None will get all.
+        - ``addkeys`` -- if True then randomly chooses a key for the exercise.
+
+        OUTPUT:
+        - List of strings (each string is the name of the exercise).
+        - If ``addkeys`` then returns a list ``["exerc1", 10, "exerc2", 20, ...]``
+        
+        .. _Regular Expression: http://docs.python.org/release/2.6.7/library/re.html
+        """
+        exlist = [row[1] for row in self.megbook_store.search(regex)] #row[0] is owner_key
+        print exlist
+        if addkeys:
+            pairs = [ (e,random.randint(0,1000)) for e in exlist]
+            flat = [ v for p in pairs for v in p] #flatten
+        else:
+            flat = exlist
+        return flat
+
 
     def search(self,regex):
         r"""
-        Performs a search of a regular expression ``regex`` over all fields.
+        Performs a search of a regular expression over all fields.
+
+        Examples:
+
+            meg.search("primitive*")
 
         INPUT:
-        - ``regex`` -- regular expression (see regex_ module).
+        - ``regex`` -- regular expression (see `Regular Expression`_ module).
+
         OUTPUT:
-        - 
+        - print of a sample of each exercise
         
-        .. _regex: http://docs.python.org/release/2.6.7/library/re.html
+        .. _Regular Expression: http://docs.python.org/release/2.6.7/library/re.html
         """
+
         exlist = self.megbook_store.search(regex)
         for row in exlist:
             self.search_print_row(row)
