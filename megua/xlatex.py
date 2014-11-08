@@ -72,7 +72,7 @@ class PDFLaTeXExporter:
         #    if type(c)==str:
         #        self.exerset.append( c )
 
-        print "List of exercises:",self.exerset
+        #print "List of exercises:",self.exerset
 
         # -------------------------------
         # Set the Exercise print template

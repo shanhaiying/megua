@@ -1136,7 +1136,7 @@ class MegBookWeb(MegBookBase):
         allproblems_text = ''
         for (problem_name,ekey) in paired_list:
 
-            print "Write",(problem_name,ekey),"in thesis."
+            #print "Write",(problem_name,ekey),"in thesis."
 
             #generate problem and answer text (choices are in the answer part)
 
@@ -1238,7 +1238,7 @@ class MegBookWeb(MegBookBase):
         f = codecs.open( "megua_ex.tex", encoding='latin1', mode='r') 
         #f = open("megua_ex.tex","r")
         source_code = f.read()
-        print "type=",type(source_code)
+        #print "type=",type(source_code)
         f.close()
 
         #Make a latex file to be compiled using amc program (or pdflatex).
@@ -1258,9 +1258,9 @@ class MegBookWeb(MegBookBase):
 
 
         print '\nInstrucoes:\n1. Use o botao direito e "Save link as..." para guardar "thesis_problems.tex" no seu computador.'
-        print '2. O conteudo do ficheiro images.zip deve ser colocado numa pasta "images".'
+        print '2. Se houver imagens, o conteudo do ficheiro "images.zip" deve ser colocado numa pasta "images".'
         print '3. Sera necessaria paciencia para finalizar a pre conversao de HTML para LaTeX em cada exercicio.'
-        print '4. Recomenda-se adaptar um exercicio de cada vez.'
+        print '4. Recomenda-se adaptar um exercicio de cada vez compilado um por um.'
     
 
 
