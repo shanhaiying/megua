@@ -310,6 +310,9 @@ class MegBookWeb(MegBookBase):
 
         - this command prints the list of sended exercises for the siacua system.
 
+        NOTE:
+
+        - you can export between 3 and 6 wrong options and 1 right.
 
         EXAMPLE:
 

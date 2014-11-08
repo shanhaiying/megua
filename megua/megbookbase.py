@@ -386,6 +386,7 @@ class MegBookBase:
         * "prim" for all words containing prim
         * TO DO: IMPROVE
 
+        TO DO:  time out operation, this!
         Examples:
 
             meg.select("primitive*")
@@ -400,8 +401,10 @@ class MegBookBase:
         
         .. _Regular Expression: http://docs.python.org/release/2.6.7/library/re.html
         """
+        if regex is None:
+            regex=""
         exlist = [row[1] for row in self.megbook_store.search(regex)] #row[0] is owner_key
-        print exlist
+        #print exlist
         if addkeys:
             pairs = [ (e,random.randint(0,1000)) for e in exlist]
             flat = [ v for p in pairs for v in p] #flatten
