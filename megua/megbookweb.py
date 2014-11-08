@@ -1109,10 +1109,18 @@ class MegBookWeb(MegBookBase):
         #no key is given.
         i = 0
         n = len(problem_list)
+
+        for j in range(n):
+            #if problem_list[i] is unicode convert to str 
+            #for the next ifs
+            if type(problem_list[j])==unicode:
+                problem_list[j] = str(problem_list[j])
+
         paired_list = []
         #print random.__module__
         rn = randomlib.randint(0,10**5) #if user did not supplied an ekey.
         while i < (n-1):
+
             if type(problem_list[i])==str and type(problem_list[i+1])==str: #two problems
                 paired_list.append( (problem_list[i], rn) ) 
                 i += 1 #advance to position i+1
@@ -1127,6 +1135,8 @@ class MegBookWeb(MegBookBase):
         #amc template without groups for each question
         allproblems_text = ''
         for (problem_name,ekey) in paired_list:
+
+            print "Write",(problem_name,ekey),"in thesis."
 
             #generate problem and answer text (choices are in the answer part)
 
