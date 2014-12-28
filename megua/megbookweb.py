@@ -291,7 +291,7 @@ class MegBookWeb(MegBookBase):
         MoodleExporter(self, where, debug)  
 
 
-    def siacua(self,exname,ekeys=[],sendpost=False,course="calculo3",usernamesiacua=""):
+    def siacua(self,exname,ekeys=[],sendpost=False,course="calculo3",usernamesiacua="",grid2x2=0):
         r"""
 
         INPUT:
@@ -305,6 +305,8 @@ class MegBookWeb(MegBookBase):
         - ``course``: Right now could be "calculo3", "calculo2". Ask siacua administrator for more.
 
         - ``usernamesiacua``: username used by the author in the siacua system.
+
+        - ``grid2x2``: write user options in multiplechoice in a 2x2 grid (useful for graphics) values in {0,1}.
 
         OUTPUT:
 
@@ -382,7 +384,7 @@ class MegBookWeb(MegBookBase):
 
             #build json string
             send_dict =  self._siacua_json(course, exname, e_number, problem, answer_list, concept_list)
-            send_dict.update(dict({'usernamesiacua': usernamesiacua}))
+            send_dict.update(dict({'usernamesiacua': usernamesiacua, 'grid2x2': grid2x2}))
             send_dict.update(concept_dict)
 
             #Call siacua for store.
