@@ -257,7 +257,53 @@ def logb(x,base=e,factorize=False):
 
 
 
-#================
+#=======================
+# factorial for "high school"
+#=======================
+
+def _FACT_latex(fun,x):
+    #fun is the new function name
+    return r'%s!' % latex(x)
+
+
+x=SR.var('x') 
+#inerte: does not calulate factorial, only put "!".
+FACT_ = function('factb', x, print_latex_func=_FACT_latex)
+
+
+def factb(x):
+    r"""factb is an alternative to ``factorial`` from Sage. 
+
+    This version correct latex(120/factorial(5), hold=true) bug.
+
+    INPUT:
+
+    - ``x`` - the argument of log.
+
+    OUTPUT:
+
+    - x! without calculating
+
+    Basic cases::
+
+        sage: factb(0)
+        factb(0)
+        sage: factb(1)
+        factb(1)
+        sage: factb(2)
+        factb(2)
+        sage: factb(5)
+        factb(5)
+        sage: latex( factb(5) )
+        5!
+        sage: latex( 120/ factb(5) )
+        \frac{120}{5!}
+
+    """
+    return FACT_(x)
+
+
+# =========
 # TikZ Graphics
 #================
 
