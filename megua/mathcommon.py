@@ -256,6 +256,55 @@ def logb(x,base=e,factorize=False):
             return LOG_(x=x,b=base)
 
 
+#=======================
+# pow for "high school"
+#=======================
+
+def _POW_latex(fun,basev,expv):
+    if basev==0 and expv!=0:
+        return r'0'
+    elif basev==1:
+        return r'1'
+    else:
+        return r'%s^{%s}' % (latex(basev),latex(expv))    
+
+bv,ev=SR.var('bv,ev')
+POW_ = function('powb', bv, ev, print_latex_func=_POW_latex)
+
+def powb(basev,expv):
+    r"""powb is an alternative to ``^`` from Sage that preserves ^ in latex.
+
+    See similar idea for logb.
+
+    INPUT:
+
+    - ``basev`` - the basis argument.
+
+    - ``expv`` - the exponent value.
+
+    OUTPUT:
+
+    - an expression based on ``powb`` that is converted by latex() to a^b without calculating.
+
+    Basic cases::
+
+        sage: powb(0,1)
+        0
+        sage: powb(1,2)
+        1
+        sage: powb(2,3)
+        powb(2, 3)
+        sage: latex( powb(2,3) )
+        2^{3}
+
+    """
+    if basev==0 and expv!=0:
+        return 0
+    elif basev==1:
+        return 1
+    else:
+        return POW_(bv=basev,ev=expv)
+
 
 #=======================
 # factorial for "high school"
@@ -266,19 +315,19 @@ def _FACT_latex(fun,x):
     return r'%s!' % latex(x)
 
 
-x=SR.var('x') 
+# x=SR.var('x')  see above.
 #inerte: does not calulate factorial, only put "!".
 FACT_ = function('factb', x, print_latex_func=_FACT_latex)
 
 
-def factb(x):
-    r"""factb is an alternative to ``factorial`` from Sage. 
+def factb(xv):
+    r"""factb is an alternative to ``factorial`` from Sage in the sense of representation: factb(x) is never calculated.
 
     This version correct latex(120/factorial(5), hold=true) bug.
 
     INPUT:
 
-    - ``x`` - the argument of log.
+    - ``xv`` - the argument of log.
 
     OUTPUT:
 
@@ -300,7 +349,7 @@ def factb(x):
         \frac{120}{5!}
 
     """
-    return FACT_(x)
+    return FACT_(x=xv)
 
 
 # =========
