@@ -527,7 +527,12 @@ class MegBookWeb(MegBookBase):
 
         #Concept list
         l = len(concept_list)
+        if l>8:
+            print "Number of concepts cannot exceed 8."
+            return {}
+
         d["nc"] = l #number of concepts
+
         d["tc1"] =  concept_list[0][0] if l>=1 else ""
         d["tp1"] =  concept_list[0][1] if l>=1 else ""
 
@@ -539,6 +544,18 @@ class MegBookWeb(MegBookBase):
 
         d["tc4"] =  concept_list[3][0] if l>=4 else ""
         d["tp4"] =  concept_list[3][1] if l>=4 else ""
+
+        d["tc5"] =  concept_list[0][0] if l>=5 else ""
+        d["tp5"] =  concept_list[0][1] if l>=5 else ""
+
+        d["tc6"] =  concept_list[1][0] if l>=6 else ""
+        d["tp6"] =  concept_list[1][1] if l>=6 else ""
+
+        d["tc7"] =  concept_list[2][0] if l>=7 else ""
+        d["tp7"] =  concept_list[2][1] if l>=7 else ""
+
+        d["tc8"] =  concept_list[3][0] if l>=8 else ""
+        d["tp8"] =  concept_list[3][1] if l>=8 else ""
 
 
         #TODO: colocar concepts_list no dict
