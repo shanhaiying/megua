@@ -502,7 +502,7 @@ class Exercise:
         """
 
         if "CDATA" in input_text:
-            #TODO: should issue warning when CDATA and multiplechoice are both present.
+            print "#TODO: should issue warning when CDATA and multiplechoice are both present."
             return 
 
 
