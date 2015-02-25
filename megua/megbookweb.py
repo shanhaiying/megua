@@ -375,6 +375,7 @@ class MegBookWeb(MegBookBase):
                 else:
                     answer_list = self._siacua_answer_frominstance(ex_instance)
             else:
+                print ex_instance.name,"has [CDATA] field. Please change to <showone> ... </showone> markers."
                 answer_list = self._siacua_answer_extract(answer)
 
             #Create images for graphics (if they exist) 
