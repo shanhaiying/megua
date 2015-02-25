@@ -1156,6 +1156,8 @@ class MegBookWeb(MegBookBase):
         allproblems_text = ''
         for (problem_name,ekey) in paired_list:
 
+            print "Generating sample of",problem_name
+
             #print "Write",(problem_name,ekey),"in thesis."
 
             #generate problem and answer text (choices are in the answer part)
